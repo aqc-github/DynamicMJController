@@ -21,37 +21,44 @@ namespace constants
 // Properties
 const double steps_per_position_units_default[step_dir_controller::constants::CHANNEL_COUNT] =
   {
-    12.88, // steps/pellet
-    31.496, // steps/mm = (200steps/rev)/((0.250in/rev)*(25.4mm/in))
-    31.496, // steps/mm = (200steps/rev)/((0.250in/rev)*(25.4mm/in))
+    0.05,
+    0.05,
+    0.05,
   };
 
 const double velocity_max_default[step_dir_controller::constants::CHANNEL_COUNT] =
   {
-    20,
-    40,
-    40,
+    200,
+    200,
+    200,
   };
 
 const double velocity_min_default[step_dir_controller::constants::CHANNEL_COUNT] =
   {
-    1,
-    2,
-    2,
+    20,
+    20,
+    20,
   };
 
 const double acceleration_max_default[step_dir_controller::constants::CHANNEL_COUNT] =
   {
-    50,
-    100,
-    100,
+    200,
+    200,
+    200,
   };
 
 const double home_velocity_default[step_dir_controller::constants::CHANNEL_COUNT] =
   {
-    5,
-    -20,
-    -20,
+    -50,
+    -50,
+    -50,
+  };
+
+const bool invert_driver_direction_default[step_dir_controller::constants::CHANNEL_COUNT] =
+  {
+    false,
+    true,
+    false,
   };
 
 const long run_current_default[stepper_controller::constants::DRIVER_COUNT] =
@@ -81,39 +88,39 @@ const long stage_channel_count_default = step_dir_controller::constants::CHANNEL
 
 const double stage_positions_min_default[step_dir_controller::constants::CHANNEL_COUNT] =
   {
-    -19,
+    0,
     0,
     0,
   };
 
 const double stage_positions_max_default[step_dir_controller::constants::CHANNEL_COUNT] =
   {
-    0,
-    80,
-    80,
+    200,
+    200,
+    200,
   };
 
-const double base_positions_default[step_dir_controller::constants::CHANNEL_COUNT] =
-  {
-    -17.5,
-    70,
-    20,
-  };
+// const double base_positions_default[step_dir_controller::constants::CHANNEL_COUNT] =
+//   {
+//     -17.5,
+//     70,
+//     20,
+//   };
 
-const double deliver_positions_default[step_dir_controller::constants::CHANNEL_COUNT] =
-  {
-    -17.5,
-    75,
-    20,
-  };
+// const double deliver_positions_default[step_dir_controller::constants::CHANNEL_COUNT] =
+//   {
+//     -17.5,
+//     75,
+//     20,
+//   };
 
-const bool inverted[optical_switch_interface::constants::OUTPUT_COUNT] =
-  {
-    true,
-    false,
-    false,
-    false,
-  };
+// const bool inverted[optical_switch_interface::constants::OUTPUT_COUNT] =
+//   {
+//     true,
+//     false,
+//     false,
+//     false,
+//   };
 
 // Parameters
 
