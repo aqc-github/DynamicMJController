@@ -1,0 +1,7 @@
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["MouseJoystick"],
+    "verbosity":"GENERAL"
+  }
+}

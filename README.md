@@ -34,14 +34,21 @@ License:
 
 [encoder_interface_simple](https://github.com/janelia-modular-devices/encoder_interface_simple.git)
 
-## API
+## API NAMES
 
 ```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["MouseJoystick"],
+    "verbosity":"NAMES"
+  }
+}
 ```
 
-## API Verbose
+## API GENERAL
 
-[API Verbose](./api.json)
+[API GENERAL](./api.json)
 
 ## More Detailed Modular Device Information
 
