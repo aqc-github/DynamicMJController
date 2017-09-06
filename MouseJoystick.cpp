@@ -20,15 +20,17 @@ void MouseJoystick::setup()
   StageController::setup();
 
   // Event Controller Setup
-  // event_controller_.setup();
+  event_controller_.setup();
 
   // Clients Setup
-  // encoder_interface_simple_ptr_ = &(createClientAtAddress(constants::encoder_interface_simple_address));
+  optical_switch_interface_ptr_ = &(createClientAtAddress(constants::optical_switch_interface_address));
+  h_bridge_controller_ptr_ = &(createClientAtAddress(constants::h_bridge_controller_address));
+  audio_controller_ptr_ = &(createClientAtAddress(constants::audio_controller_address));
 
   // Pin Setup
 
   // Assay Status Setup
-  // assay_status_.state_ptr = &constants::state_assay_not_started_string;
+  assay_status_.state_ptr = &constants::state_assay_not_started_string;
 
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
@@ -46,7 +48,6 @@ void MouseJoystick::setup()
 
   // Properties
   modular_server::Property & steps_per_position_units_property = modular_server_.property(step_dir_controller::constants::steps_per_position_units_property_name);
-  steps_per_position_units_property.setRange(constants::steps_per_position_units_element_min,constants::steps_per_position_units_element_max);
   steps_per_position_units_property.setDefaultValue(constants::steps_per_position_units_default);
 
   modular_server::Property & velocity_max_property = modular_server_.property(step_dir_controller::constants::velocity_max_property_name);
@@ -60,9 +61,6 @@ void MouseJoystick::setup()
 
   modular_server::Property & home_velocity_property = modular_server_.property(step_dir_controller::constants::home_velocity_property_name);
   home_velocity_property.setDefaultValue(constants::home_velocity_default);
-
-  modular_server::Property & invert_driver_direction_property = modular_server_.property(stepper_controller::constants::invert_driver_direction_property_name);
-  invert_driver_direction_property.setDefaultValue(constants::invert_driver_direction_default);
 
   modular_server::Property & run_current_property = modular_server_.property(stepper_controller::constants::run_current_property_name);
   run_current_property.setDefaultValue(constants::run_current_default);
@@ -78,78 +76,101 @@ void MouseJoystick::setup()
   stage_channel_count_property.setRange(constants::stage_channel_count_min,constants::stage_channel_count_max);
   stage_channel_count_property.setArrayLengthRange(constants::stage_channel_count_min,constants::stage_channel_count_max);
 
-  modular_server::Property & stage_positions_min_property = modular_server_.property(stage_controller::constants::stage_positions_min_property_name);
-  stage_positions_min_property.setDefaultValue(constants::stage_positions_min_default);
+  modular_server::Property & stage_position_min_property = modular_server_.property(stage_controller::constants::stage_position_min_property_name);
+  stage_position_min_property.setDefaultValue(constants::stage_position_min_default);
 
-  modular_server::Property & stage_positions_max_property = modular_server_.property(stage_controller::constants::stage_positions_max_property_name);
-  stage_positions_max_property.setDefaultValue(constants::stage_positions_max_default);
+  modular_server::Property & stage_position_max_property = modular_server_.property(stage_controller::constants::stage_position_max_property_name);
+  stage_position_max_property.setDefaultValue(constants::stage_position_max_default);
 
-  // modular_server_.createProperty(constants::base_positions_property_name,constants::base_positions_default);
+  modular_server_.createProperty(constants::base_position_property_name,constants::base_position_default);
 
-  // modular_server_.createProperty(constants::deliver_positions_property_name,constants::deliver_positions_default);
+  modular_server_.createProperty(constants::deliver_position_property_name,constants::deliver_position_default);
 
-  // modular_server_.createProperty(constants::dispense_position_property_name,constants::dispense_position_default);
+  modular_server_.createProperty(constants::dispense_channel_position_property_name,constants::dispense_channel_position_default);
 
-  // modular_server::Property & buzz_period_property = modular_server_.createProperty(constants::buzz_period_property_name,constants::buzz_period_default);
-  // buzz_period_property.setUnits(audio_controller::constants::ms_units);
-  // buzz_period_property.setRange(constants::buzz_period_min,constants::buzz_period_max);
+  modular_server_.createProperty(constants::clean_position_property_name,constants::clean_position_default);
 
-  // modular_server::Property & buzz_on_duration_property = modular_server_.createProperty(constants::buzz_on_duration_property_name,constants::buzz_on_duration_default);
-  // buzz_on_duration_property.setUnits(audio_controller::constants::ms_units);
-  // buzz_on_duration_property.setRange(constants::buzz_on_duration_min,constants::buzz_on_duration_max);
+  modular_server::Property & clean_duration_property = modular_server_.createProperty(constants::clean_duration_property_name,constants::clean_duration_default);
+  clean_duration_property.setUnits(constants::seconds_units);
+  clean_duration_property.setRange(constants::clean_duration_min,constants::clean_duration_max);
 
-  // modular_server::Property & buzz_count_property = modular_server_.createProperty(constants::buzz_count_property_name,constants::buzz_count_default);
-  // buzz_count_property.setRange(constants::buzz_count_min,constants::buzz_count_max);
+  modular_server::Property & buzz_period_property = modular_server_.createProperty(constants::buzz_period_property_name,constants::buzz_period_default);
+  buzz_period_property.setUnits(constants::ms_units);
+  buzz_period_property.setRange(constants::buzz_period_min,constants::buzz_period_max);
 
-  // modular_server::Property & tone_frequency_property = modular_server_.createProperty(constants::tone_frequency_property_name,constants::tone_frequency_default);
-  // tone_frequency_property.setUnits(audio_controller::constants::hz_units);
-  // tone_frequency_property.setRange(constants::tone_frequency_min,constants::tone_frequency_max);
+  modular_server::Property & buzz_on_duration_property = modular_server_.createProperty(constants::buzz_on_duration_property_name,constants::buzz_on_duration_default);
+  buzz_on_duration_property.setUnits(constants::ms_units);
+  buzz_on_duration_property.setRange(constants::buzz_on_duration_min,constants::buzz_on_duration_max);
 
-  // modular_server::Property & tone_duration_property = modular_server_.createProperty(constants::tone_duration_property_name,constants::tone_duration_default);
-  // tone_duration_property.setUnits(constants::seconds_units);
-  // tone_duration_property.setRange(constants::tone_duration_min,constants::tone_duration_max);
+  modular_server::Property & buzz_count_property = modular_server_.createProperty(constants::buzz_count_property_name,constants::buzz_count_default);
+  buzz_count_property.setRange(constants::buzz_count_min,constants::buzz_count_max);
 
-  // modular_server::Property & tone_volume_property = modular_server_.createProperty(constants::tone_volume_property_name,constants::tone_volume_default);
-  // tone_volume_property.setRange(audio_controller::constants::volume_min,audio_controller::constants::volume_max);
+  modular_server::Property & tone_frequency_property = modular_server_.createProperty(constants::tone_frequency_property_name,constants::tone_frequency_default);
+  tone_frequency_property.setUnits(audio_controller::constants::hz_units);
+  tone_frequency_property.setRange(constants::tone_frequency_min,constants::tone_frequency_max);
 
-  // modular_server::Property & tone_delay_min_property = modular_server_.createProperty(constants::tone_delay_min_property_name,constants::tone_delay_min_default);
-  // tone_delay_min_property.setUnits(constants::seconds_units);
-  // tone_delay_min_property.setRange(constants::tone_delay_min,constants::tone_delay_max);
+  modular_server::Property & tone_duration_property = modular_server_.createProperty(constants::tone_duration_property_name,constants::tone_duration_default);
+  tone_duration_property.setUnits(constants::seconds_units);
+  tone_duration_property.setRange(constants::tone_duration_min,constants::tone_duration_max);
 
-  // modular_server::Property & tone_delay_max_property = modular_server_.createProperty(constants::tone_delay_max_property_name,constants::tone_delay_max_default);
-  // tone_delay_max_property.setUnits(constants::seconds_units);
-  // tone_delay_max_property.setRange(constants::tone_delay_min,constants::tone_delay_max);
+  modular_server::Property & tone_volume_property = modular_server_.createProperty(constants::tone_volume_property_name,constants::tone_volume_default);
+  tone_volume_property.setRange(audio_controller::constants::volume_min,audio_controller::constants::volume_max);
 
-  // modular_server::Property & return_delay_property = modular_server_.createProperty(constants::return_delay_property_name,constants::return_delay_default);
-  // return_delay_property.setUnits(constants::minutes_units);
-  // return_delay_property.setRange(constants::return_delay_min,constants::return_delay_max);
+  modular_server::Property & tone_delay_min_property = modular_server_.createProperty(constants::tone_delay_min_property_name,constants::tone_delay_min_default);
+  tone_delay_min_property.setUnits(constants::seconds_units);
+  tone_delay_min_property.setRange(constants::tone_delay_min,constants::tone_delay_max);
+
+  modular_server::Property & tone_delay_max_property = modular_server_.createProperty(constants::tone_delay_max_property_name,constants::tone_delay_max_default);
+  tone_delay_max_property.setUnits(constants::seconds_units);
+  tone_delay_max_property.setRange(constants::tone_delay_min,constants::tone_delay_max);
+
+  modular_server::Property & return_delay_min_property = modular_server_.createProperty(constants::return_delay_min_property_name,constants::return_delay_min_default);
+  return_delay_min_property.setUnits(constants::minutes_units);
+  return_delay_min_property.setRange(constants::return_delay_min,constants::return_delay_max);
+
+  modular_server::Property & return_delay_max_property = modular_server_.createProperty(constants::return_delay_max_property_name,constants::return_delay_max_default);
+  return_delay_max_property.setUnits(constants::minutes_units);
+  return_delay_max_property.setRange(constants::return_delay_min,constants::return_delay_max);
 
   // Parameters
-  // modular_server::Parameter & stage_positions_parameter = modular_server_.parameter(stage_controller::constants::stage_positions_parameter_name);
-  // stage_positions_parameter.setUnits(constants::mm_units);
+  modular_server::Parameter & stage_position_parameter = modular_server_.parameter(stage_controller::constants::stage_position_parameter_name);
+  stage_position_parameter.setUnits(constants::mm_units);
 
   // Functions
-  // modular_server::Function & set_client_property_values_function = modular_server_.createFunction(constants::set_client_property_values_function_name);
-  // set_client_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::setClientPropertyValuesHandler));
+  modular_server::Function & set_client_property_values_function = modular_server_.createFunction(constants::set_client_property_values_function_name);
+  set_client_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::setClientPropertyValuesHandler));
+  set_client_property_values_function.setResultTypeObject();
 
-  // modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
-  // get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::getAssayStatusHandler));
-  // get_assay_status_function.setResultTypeObject();
+  modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
+  get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::getAssayStatusHandler));
+  get_assay_status_function.setResultTypeObject();
+
+  modular_server::Function & move_stage_to_base_position_function = modular_server_.createFunction(constants::move_stage_to_base_position_function_name);
+  move_stage_to_base_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::moveStageToBasePositionHandler));
+
+  modular_server::Function & move_stage_to_deliver_position_function = modular_server_.createFunction(constants::move_stage_to_deliver_position_function_name);
+  move_stage_to_deliver_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::moveStageToDeliverPositionHandler));
+
+  modular_server::Function & move_stage_to_dispense_position_function = modular_server_.createFunction(constants::move_stage_to_dispense_position_function_name);
+  move_stage_to_dispense_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::moveStageToDispensePositionHandler));
+
+  modular_server::Function & move_stage_to_clean_position_function = modular_server_.createFunction(constants::move_stage_to_clean_position_function_name);
+  move_stage_to_clean_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::moveStageToCleanPositionHandler));
 
   // Callbacks
-//   modular_server::Callback & deliver_callback = modular_server_.createCallback(constants::deliver_callback_name);
-//   deliver_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystick::deliverHandler));
-//   deliver_callback.attachTo(modular_device_base::constants::bnc_b_interrupt_name,modular_server::interrupt::mode_falling);
-// #if defined(__MK64FX512__)
-//   deliver_callback.attachTo(modular_device_base::constants::btn_b_interrupt_name,modular_server::interrupt::mode_falling);
-// #endif
+  modular_server::Callback & deliver_callback = modular_server_.createCallback(constants::deliver_callback_name);
+  deliver_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystick::deliverHandler));
+  deliver_callback.attachTo(modular_device_base::constants::bnc_b_interrupt_name,modular_server::interrupt::mode_falling);
+#if defined(__MK64FX512__)
+  deliver_callback.attachTo(modular_device_base::constants::btn_b_interrupt_name,modular_server::interrupt::mode_falling);
+#endif
 
-//   modular_server::Callback & abort_callback = modular_server_.createCallback(constants::abort_callback_name);
-//   abort_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystick::abortHandler));
-//   abort_callback.attachTo(modular_device_base::constants::bnc_a_interrupt_name,modular_server::interrupt::mode_falling);
-// #if !defined(__AVR_ATmega2560__)
-//   abort_callback.attachTo(modular_device_base::constants::btn_a_interrupt_name,modular_server::interrupt::mode_falling);
-// #endif
+  modular_server::Callback & abort_callback = modular_server_.createCallback(constants::abort_callback_name);
+  abort_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystick::abortHandler));
+  abort_callback.attachTo(modular_device_base::constants::bnc_a_interrupt_name,modular_server::interrupt::mode_falling);
+#if !defined(__AVR_ATmega2560__)
+  abort_callback.attachTo(modular_device_base::constants::btn_a_interrupt_name,modular_server::interrupt::mode_falling);
+#endif
 
 }
 
@@ -158,333 +179,395 @@ void MouseJoystick::update()
   // Parent Update
   StageController::update();
 
-  // const ConstantString * state_ptr = assay_status_.state_ptr;
+  const ConstantString * state_ptr = assay_status_.state_ptr;
 
-  // if (state_ptr == &constants::state_assay_started_string)
-  // {
-  //   if (stageHomed())
-  //   {
-  //     assay_status_.state_ptr = &constants::state_move_to_base_start_string;
-  //   }
-  //   else
-  //   {
-  //     assay_status_.state_ptr = &constants::state_homing_string;
-  //     homeStage();
-  //   }
-  // }
-  // else if (state_ptr == &constants::state_homing_string)
-  // {
-  //   if (stageHomed())
-  //   {
-  //     assay_status_.state_ptr = &constants::state_move_to_base_start_string;
-  //   }
-  // }
-  // else if (state_ptr == &constants::state_move_to_base_start_string)
-  // {
-  //   assay_status_.state_ptr = &constants::state_moving_to_base_start_string;
-  //   moveStageSoftlyToBase();
-  // }
-  // else if (state_ptr == &constants::state_moving_to_base_start_string)
-  // {
-  //   if (stageAtTargetPositions())
-  //   {
-  //     assay_status_.state_ptr = &constants::state_move_to_deliver_string;
-  //   }
-  // }
-  // else if (state_ptr == &constants::state_move_to_deliver_string)
-  // {
-  //   assay_status_.state_ptr = &constants::state_moving_to_deliver_string;
-  //   moveStageSoftlyToDeliver();
-  // }
-  // else if (state_ptr == &constants::state_moving_to_deliver_string)
-  // {
-  //   if (stageAtTargetPositions())
-  //   {
-  //     assay_status_.state_ptr = &constants::state_buzz_string;
-  //   }
-  // }
-  // else if (state_ptr == &constants::state_buzz_string)
-  // {
-  //   assay_status_.state_ptr = &constants::state_buzzing_string;
-  //   buzz();
-  // }
-  // else if (state_ptr == &constants::state_buzzing_string)
-  // {
-  // }
-  // else if (state_ptr == &constants::state_wait_to_play_tone_string)
-  // {
-  //   assay_status_.state_ptr = &constants::state_waiting_to_play_tone_string;
-  //   waitToPlayTone();
-  // }
-  // else if (state_ptr == &constants::state_waiting_to_play_tone_string)
-  // {
-  // }
-  // else if (state_ptr == &constants::state_play_tone_string)
-  // {
-  //   assay_status_.state_ptr = &constants::state_playing_tone_string;
-  //   playTone();
-  // }
-  // else if (state_ptr == &constants::state_playing_tone_string)
-  // {
-  // }
-  // else if (state_ptr == &constants::state_move_to_dispense_string)
-  // {
-  //   assay_status_.state_ptr = &constants::state_moving_to_dispense_string;
-  //   moveStageSoftlyToDispense();
-  // }
-  // else if (state_ptr == &constants::state_moving_to_dispense_string)
-  // {
-  //   if (stageAtTargetPositions())
-  //   {
-  //     assay_status_.state_ptr = &constants::state_wait_to_return_string;
-  //   }
-  // }
-  // else if (state_ptr == &constants::state_wait_to_return_string)
-  // {
-  //   assay_status_.state_ptr = &constants::state_waiting_to_return_string;
-  //   waitToReturn();
-  // }
-  // else if (state_ptr == &constants::state_waiting_to_return_string)
-  // {
-  // }
-  // else if (state_ptr == &constants::state_move_to_base_stop_string)
-  // {
-  //   assay_status_.state_ptr = &constants::state_moving_to_base_stop_string;
-  //   moveStageSoftlyToBase();
-  // }
-  // else if (state_ptr == &constants::state_moving_to_base_stop_string)
-  // {
-  //   if (stageAtTargetPositions())
-  //   {
-  //     assay_status_.state_ptr = &constants::state_assay_finished_string;
-  //   }
-  // }
+  if (state_ptr == &constants::state_assay_started_string)
+  {
+    if (stageHomed())
+    {
+      assay_status_.state_ptr = &constants::state_move_to_base_start_string;
+    }
+    else
+    {
+      assay_status_.state_ptr = &constants::state_homing_string;
+      homeStage();
+    }
+  }
+  else if (state_ptr == &constants::state_homing_string)
+  {
+    if (stageHomed())
+    {
+      assay_status_.state_ptr = &constants::state_move_to_base_start_string;
+    }
+  }
+  else if (state_ptr == &constants::state_move_to_base_start_string)
+  {
+    assay_status_.state_ptr = &constants::state_moving_to_base_start_string;
+    moveStageToBasePosition();
+  }
+  else if (state_ptr == &constants::state_moving_to_base_start_string)
+  {
+    if (stageAtTargetPosition())
+    {
+      assay_status_.state_ptr = &constants::state_move_to_deliver_string;
+    }
+  }
+  else if (state_ptr == &constants::state_move_to_deliver_string)
+  {
+    assay_status_.state_ptr = &constants::state_moving_to_deliver_string;
+    moveStageToDeliverPosition();
+  }
+  else if (state_ptr == &constants::state_moving_to_deliver_string)
+  {
+    if (stageAtTargetPosition())
+    {
+      assay_status_.state_ptr = &constants::state_buzz_string;
+    }
+  }
+  else if (state_ptr == &constants::state_buzz_string)
+  {
+    assay_status_.state_ptr = &constants::state_buzzing_string;
+    buzz();
+  }
+  else if (state_ptr == &constants::state_buzzing_string)
+  {
+  }
+  else if (state_ptr == &constants::state_wait_to_play_tone_string)
+  {
+    assay_status_.state_ptr = &constants::state_waiting_to_play_tone_string;
+    waitToPlayTone();
+  }
+  else if (state_ptr == &constants::state_waiting_to_play_tone_string)
+  {
+  }
+  else if (state_ptr == &constants::state_play_tone_string)
+  {
+    assay_status_.state_ptr = &constants::state_playing_tone_string;
+    playTone();
+  }
+  else if (state_ptr == &constants::state_playing_tone_string)
+  {
+  }
+  else if (state_ptr == &constants::state_move_to_dispense_string)
+  {
+    assay_status_.state_ptr = &constants::state_moving_to_dispense_string;
+    moveStageToDispensePosition();
+  }
+  else if (state_ptr == &constants::state_moving_to_dispense_string)
+  {
+    if (stageAtTargetPosition())
+    {
+      assay_status_.state_ptr = &constants::state_wait_to_return_string;
+    }
+  }
+  else if (state_ptr == &constants::state_wait_to_return_string)
+  {
+    assay_status_.state_ptr = &constants::state_waiting_to_return_string;
+    waitToReturn();
+  }
+  else if (state_ptr == &constants::state_waiting_to_return_string)
+  {
+  }
+  else if (state_ptr == &constants::state_move_to_clean_string)
+  {
+    assay_status_.state_ptr = &constants::state_moving_to_clean_string;
+    moveStageToCleanPosition();
+  }
+  else if (state_ptr == &constants::state_moving_to_clean_string)
+  {
+    if (stageAtTargetPosition())
+    {
+      assay_status_.state_ptr = &constants::state_wait_at_clean_string;
+    }
+  }
+  else if (state_ptr == &constants::state_wait_at_clean_string)
+  {
+    assay_status_.state_ptr = &constants::state_waiting_at_clean_string;
+    waitAtClean();
+  }
+  else if (state_ptr == &constants::state_waiting_at_clean_string)
+  {
+  }
+  else if (state_ptr == &constants::state_move_to_base_stop_string)
+  {
+    assay_status_.state_ptr = &constants::state_moving_to_base_stop_string;
+    moveStageToBasePosition();
+  }
+  else if (state_ptr == &constants::state_moving_to_base_stop_string)
+  {
+    if (stageAtTargetPosition())
+    {
+      assay_status_.state_ptr = &constants::state_assay_finished_string;
+    }
+  }
 }
 
-// constants::AssayStatus MouseJoystick::getAssayStatus()
-// {
-//   return assay_status_;
-// }
+constants::AssayStatus MouseJoystick::getAssayStatus()
+{
+  return assay_status_;
+}
 
-// StageController::PositionsArray MouseJoystick::getBasePositions()
-// {
-//   double base_positions[step_dir_controller::constants::CHANNEL_COUNT];
-//   modular_server_.property(constants::base_positions_property_name).getValue(base_positions);
+StageController::PositionArray MouseJoystick::getBasePosition()
+{
+  long base_position[step_dir_controller::constants::CHANNEL_COUNT];
+  modular_server_.property(constants::base_position_property_name).getValue(base_position);
 
-//   StageController::PositionsArray base_positions_array(base_positions);
-//   return base_positions_array;
-// }
+  StageController::PositionArray base_position_array(base_position);
+  return base_position_array;
+}
 
-// StageController::PositionsArray MouseJoystick::getDeliverPositions()
-// {
-//   double deliver_positions[step_dir_controller::constants::CHANNEL_COUNT];
-//   modular_server_.property(constants::deliver_positions_property_name).getValue(deliver_positions);
+StageController::PositionArray MouseJoystick::getDeliverPosition()
+{
+  long deliver_position[step_dir_controller::constants::CHANNEL_COUNT];
+  modular_server_.property(constants::deliver_position_property_name).getValue(deliver_position);
 
-//   StageController::PositionsArray deliver_positions_array(deliver_positions);
-//   return deliver_positions_array;
-// }
+  StageController::PositionArray deliver_position_array(deliver_position);
+  return deliver_position_array;
+}
 
-// StageController::PositionsArray MouseJoystick::getDispensePositions()
-// {
-//   double deliver_positions[step_dir_controller::constants::CHANNEL_COUNT];
-//   modular_server_.property(constants::deliver_positions_property_name).getValue(deliver_positions);
+StageController::PositionArray MouseJoystick::getDispensePosition()
+{
+  long deliver_position[step_dir_controller::constants::CHANNEL_COUNT];
+  modular_server_.property(constants::deliver_position_property_name).getValue(deliver_position);
 
-//   StageController::PositionsArray dispense_positions_array(deliver_positions);
+  StageController::PositionArray dispense_position_array(deliver_position);
 
-//   double dispense_position;
-//   modular_server_.property(constants::dispense_position_property_name).getValue(dispense_position);
-//   dispense_positions_array[constants::DISPENSE_CHANNEL] = dispense_position;
+  long dispense_channel_position;
+  modular_server_.property(constants::dispense_channel_position_property_name).getValue(dispense_channel_position);
+  dispense_position_array[constants::DISPENSE_CHANNEL] = dispense_channel_position;
 
-//   return dispense_positions_array;
-// }
+  return dispense_position_array;
+}
 
-// long MouseJoystick::getBuzzPeriod()
-// {
-//   long buzz_period;
-//   modular_server_.property(constants::buzz_period_property_name).getValue(buzz_period);
+StageController::PositionArray MouseJoystick::getCleanPosition()
+{
+  long clean_position[step_dir_controller::constants::CHANNEL_COUNT];
+  modular_server_.property(constants::clean_position_property_name).getValue(clean_position);
 
-//   return buzz_period;
-// }
+  StageController::PositionArray clean_position_array(clean_position);
+  return clean_position_array;
+}
 
-// long MouseJoystick::getBuzzOnDuration()
-// {
-//   long buzz_on_duration;
-//   modular_server_.property(constants::buzz_on_duration_property_name).getValue(buzz_on_duration);
+long MouseJoystick::getBuzzPeriod()
+{
+  long buzz_period;
+  modular_server_.property(constants::buzz_period_property_name).getValue(buzz_period);
 
-//   return buzz_on_duration;
-// }
+  return buzz_period;
+}
 
-// long MouseJoystick::getBuzzCount()
-// {
-//   long buzz_count;
-//   modular_server_.property(constants::buzz_count_property_name).getValue(buzz_count);
+long MouseJoystick::getBuzzOnDuration()
+{
+  long buzz_on_duration;
+  modular_server_.property(constants::buzz_on_duration_property_name).getValue(buzz_on_duration);
 
-//   return buzz_count;
-// }
+  return buzz_on_duration;
+}
 
-// long MouseJoystick::getToneDelay()
-// {
-//   long tone_delay_min;
-//   modular_server_.property(constants::tone_delay_min_property_name).getValue(tone_delay_min);
+long MouseJoystick::getBuzzCount()
+{
+  long buzz_count;
+  modular_server_.property(constants::buzz_count_property_name).getValue(buzz_count);
 
-//   long tone_delay_max;
-//   modular_server_.property(constants::tone_delay_max_property_name).getValue(tone_delay_max);
+  return buzz_count;
+}
 
-//   long tone_delay = random(tone_delay_min,tone_delay_max);
-//   tone_delay = tone_delay*constants::milliseconds_per_second;
-//   return tone_delay;
-// }
+long MouseJoystick::getToneDelay()
+{
+  long tone_delay_min;
+  modular_server_.property(constants::tone_delay_min_property_name).getValue(tone_delay_min);
 
-// long MouseJoystick::getToneFrequency()
-// {
-//   long tone_frequency;
-//   modular_server_.property(constants::tone_frequency_property_name).getValue(tone_frequency);
+  long tone_delay_max;
+  modular_server_.property(constants::tone_delay_max_property_name).getValue(tone_delay_max);
 
-//   return tone_frequency;
-// }
+  long tone_delay = random(tone_delay_min,tone_delay_max);
+  tone_delay = tone_delay*constants::milliseconds_per_second;
+  return tone_delay;
+}
 
-// long MouseJoystick::getToneDuration()
-// {
-//   long tone_duration;
-//   modular_server_.property(constants::tone_duration_property_name).getValue(tone_duration);
+long MouseJoystick::getToneFrequency()
+{
+  long tone_frequency;
+  modular_server_.property(constants::tone_frequency_property_name).getValue(tone_frequency);
 
-//   return tone_duration*constants::milliseconds_per_second;
-// }
+  return tone_frequency;
+}
 
-// long MouseJoystick::getToneVolume()
-// {
-//   long tone_volume;
-//   modular_server_.property(constants::tone_volume_property_name).getValue(tone_volume);
+long MouseJoystick::getToneDuration()
+{
+  long tone_duration;
+  modular_server_.property(constants::tone_duration_property_name).getValue(tone_duration);
 
-//   return tone_volume;
-// }
+  return tone_duration*constants::milliseconds_per_second;
+}
 
-// double MouseJoystick::getReturnDelay()
-// {
-//   double return_delay;
-//   modular_server_.property(constants::return_delay_property_name).getValue(return_delay);
+long MouseJoystick::getToneVolume()
+{
+  long tone_volume;
+  modular_server_.property(constants::tone_volume_property_name).getValue(tone_volume);
 
-//   return return_delay*constants::milliseconds_per_minute;
-// }
+  return tone_volume;
+}
 
-// void MouseJoystick::moveStageSoftlyToBase()
-// {
-//   StageController::PositionsArray base_positions = getBasePositions();
-//   moveStageSoftlyTo(base_positions);
-// }
+double MouseJoystick::getReturnDelay()
+{
+  double return_delay_min;
+  modular_server_.property(constants::return_delay_min_property_name).getValue(return_delay_min);
 
-// void MouseJoystick::moveStageSoftlyToDeliver()
-// {
-//   StageController::PositionsArray deliver_positions = getDeliverPositions();
-//   moveStageSoftlyTo(deliver_positions);
-// }
+  double return_delay_max;
+  modular_server_.property(constants::return_delay_max_property_name).getValue(return_delay_max);
 
-// void MouseJoystick::moveStageSoftlyToDispense()
-// {
-//   StageController::PositionsArray dispense_positions = getDispensePositions();
-//   moveStageSoftlyTo(dispense_positions);
-// }
+  long return_delay_min_ms = return_delay_min*constants::milliseconds_per_minute;
+  long return_delay_max_ms = return_delay_max*constants::milliseconds_per_minute;
+  long return_delay = random(return_delay_min_ms,return_delay_max_ms);
+  return return_delay;
+}
 
-// void MouseJoystick::buzz()
-// {
-//   long buzz_period = getBuzzPeriod();
-//   long buzz_on_duration = getBuzzOnDuration();
-//   long buzz_count = getBuzzCount();
+long MouseJoystick::getCleanDuration()
+{
+  long clean_duration;
+  modular_server_.property(constants::clean_duration_property_name).getValue(clean_duration);
 
-//   Array<size_t,constants::BUZZ_CHANNEL_COUNT> buzz_channels_array(constants::buzz_channels);
+  return clean_duration*constants::milliseconds_per_second;
+}
 
-//   h_bridge_controller_ptr_->call(h_bridge_controller::constants::add_pwm_function_name,
-//                                  buzz_channels_array,
-//                                  h_bridge_controller::constants::polarity_positive,
-//                                  0,
-//                                  buzz_period,
-//                                  buzz_on_duration,
-//                                  buzz_count);
-//   EventId event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystick::waitToPlayToneHandler),
-//                                                           buzz_period*buzz_count);
-//   event_controller_.enable(event_id);
-// }
+void MouseJoystick::moveStageToBasePosition()
+{
+  StageController::PositionArray base_position = getBasePosition();
+  moveStageSoftlyTo(base_position);
+}
 
-// void MouseJoystick::setWaitToPlayToneState()
-// {
-//   assay_status_.state_ptr = &constants::state_wait_to_play_tone_string;
-// }
+void MouseJoystick::moveStageToDeliverPosition()
+{
+  StageController::PositionArray deliver_position = getDeliverPosition();
+  moveStageSoftlyTo(deliver_position);
+}
 
-// void MouseJoystick::waitToPlayTone()
-// {
-//   long tone_delay = getToneDelay();
-//   EventId event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystick::playToneHandler),
-//                                                           tone_delay);
-//   event_controller_.enable(event_id);
-// }
+void MouseJoystick::moveStageToDispensePosition()
+{
+  StageController::PositionArray dispense_position = getDispensePosition();
+  moveStageSoftlyTo(dispense_position);
+}
 
-// void MouseJoystick::setPlayToneState()
-// {
-//   assay_status_.state_ptr = &constants::state_play_tone_string;
-// }
+void MouseJoystick::moveStageToCleanPosition()
+{
+  StageController::PositionArray clean_position = getCleanPosition();
+  moveStageSoftlyTo(clean_position);
+}
 
-// void MouseJoystick::playTone()
-// {
-//   long tone_frequency = getToneFrequency();
-//   long tone_duration = getToneDuration();
-//   long tone_volume = getToneVolume();
+void MouseJoystick::buzz()
+{
+  long buzz_period = getBuzzPeriod();
+  long buzz_on_duration = getBuzzOnDuration();
+  long buzz_count = getBuzzCount();
 
-//   audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_at_function_name,
-//                               tone_frequency,
-//                               audio_controller::constants::speaker_all,
-//                               tone_volume,
-//                               0,
-//                               tone_duration,
-//                               tone_duration,
-//                               1);
-//   EventId event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystick::moveToDispenseHandler),
-//                                                           tone_duration);
-//   event_controller_.enable(event_id);
-// }
+  Array<size_t,constants::BUZZ_CHANNEL_COUNT> buzz_channels_array(constants::buzz_channels);
 
-// void MouseJoystick::setMoveToDispenseState()
-// {
-//   assay_status_.state_ptr = &constants::state_move_to_dispense_string;
-// }
+  h_bridge_controller_ptr_->call(h_bridge_controller::constants::add_pwm_function_name,
+                                 buzz_channels_array,
+                                 h_bridge_controller::constants::polarity_positive,
+                                 0,
+                                 buzz_period,
+                                 buzz_on_duration,
+                                 buzz_count);
+  EventId event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystick::waitToPlayToneHandler),
+                                                          buzz_period*buzz_count);
+  event_controller_.enable(event_id);
+}
 
-// void MouseJoystick::waitToReturn()
-// {
-//   double return_delay = getReturnDelay();
-//   EventId event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystick::moveToBaseHandler),
-//                                                           return_delay);
-//   event_controller_.enable(event_id);
-// }
+void MouseJoystick::setWaitToPlayToneState()
+{
+  assay_status_.state_ptr = &constants::state_wait_to_play_tone_string;
+}
 
-// void MouseJoystick::setMoveToBaseStopState()
-// {
-//   assay_status_.state_ptr = &constants::state_move_to_base_stop_string;
-// }
+void MouseJoystick::waitToPlayTone()
+{
+  long tone_delay = getToneDelay();
+  EventId event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystick::playToneHandler),
+                                                          tone_delay);
+  event_controller_.enable(event_id);
+}
 
-// void MouseJoystick::deliver()
-// {
-//   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
-//       (assay_status_.state_ptr == &constants::state_assay_finished_string))
-//   {
-//     assay_status_.state_ptr = &constants::state_assay_started_string;
-//   }
-// }
+void MouseJoystick::setPlayToneState()
+{
+  assay_status_.state_ptr = &constants::state_play_tone_string;
+}
 
-// void MouseJoystick::abort()
-// {
-//   stopAll();
-//   event_controller_.removeAllEvents();
-//   h_bridge_controller_ptr_->call(h_bridge_controller::constants::stop_all_pwm_function_name);
-//   audio_controller_ptr_->call(audio_controller::constants::stop_all_pwm_function_name);
+void MouseJoystick::playTone()
+{
+  long tone_frequency = getToneFrequency();
+  long tone_duration = getToneDuration();
+  long tone_volume = getToneVolume();
 
-//   if (stageHomed())
-//   {
-//     setMoveToBaseStopState();
-//   }
-//   else
-//   {
-//     assay_status_.state_ptr = &constants::state_assay_not_started_string;
-//   }
-// }
+  audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_at_function_name,
+                              tone_frequency,
+                              audio_controller::constants::speaker_all,
+                              tone_volume,
+                              0,
+                              tone_duration,
+                              tone_duration,
+                              1);
+  EventId event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystick::moveToDispenseHandler),
+                                                          tone_duration);
+  event_controller_.enable(event_id);
+}
+
+void MouseJoystick::setMoveToDispenseState()
+{
+  assay_status_.state_ptr = &constants::state_move_to_dispense_string;
+}
+
+void MouseJoystick::waitToReturn()
+{
+  double return_delay = getReturnDelay();
+  EventId event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystick::moveToCleanHandler),
+                                                          return_delay);
+  event_controller_.enable(event_id);
+}
+
+void MouseJoystick::setMoveToCleanState()
+{
+  assay_status_.state_ptr = &constants::state_move_to_clean_string;
+}
+
+void MouseJoystick::waitAtClean()
+{
+  long clean_duration = getCleanDuration();
+  EventId event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystick::moveToBaseStopHandler),
+                                                          clean_duration);
+  event_controller_.enable(event_id);
+}
+
+void MouseJoystick::setMoveToBaseStopState()
+{
+  assay_status_.state_ptr = &constants::state_move_to_base_stop_string;
+}
+
+void MouseJoystick::deliver()
+{
+  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
+      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+  {
+    assay_status_.state_ptr = &constants::state_assay_started_string;
+  }
+}
+
+void MouseJoystick::abort()
+{
+  stopAll();
+  event_controller_.removeAllEvents();
+  h_bridge_controller_ptr_->call(h_bridge_controller::constants::stop_all_pwm_function_name);
+  audio_controller_ptr_->call(audio_controller::constants::stop_all_pwm_function_name);
+
+  if (stageHomed())
+  {
+    setMoveToCleanState();
+  }
+  else
+  {
+    assay_status_.state_ptr = &constants::state_assay_not_started_string;
+  }
+}
 
 // Handlers must be non-blocking (avoid 'delay')
 //
@@ -505,57 +588,128 @@ void MouseJoystick::update()
 
 void MouseJoystick::setClientPropertyValuesHandler()
 {
-  // h_bridge_controller_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name);
+  modular_server_.response().writeResultKey();
 
-  // optical_switch_interface_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name);
-  // Array<bool,optical_switch_interface::constants::OUTPUT_COUNT> inverted(constants::inverted);
-  // optical_switch_interface_ptr_->call(optical_switch_interface::constants::inverted_property_name,
-  //                                     modular_server::property::set_value_function_name,
-  //                                     inverted);
+  modular_server_.response().beginObject();
 
-  // audio_controller_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name);
+  Array<ConstantString *, 1> all_array;
+  all_array.push_back(&modular_server::constants::all_constant_string);
+  bool call_was_successful;
+
+  modular_server_.response().writeKey(h_bridge_controller::constants::device_name);
+  modular_server_.response().beginArray();
+  h_bridge_controller_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name,
+                                 all_array);
+  call_was_successful = h_bridge_controller_ptr_->callWasSuccessful();
+  modular_server_.response().write(call_was_successful);
+  modular_server_.response().endArray();
+
+  modular_server_.response().writeKey(optical_switch_interface::constants::device_name);
+  modular_server_.response().beginArray();
+  optical_switch_interface_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name,
+                                      all_array);
+  call_was_successful = optical_switch_interface_ptr_->callWasSuccessful();
+  modular_server_.response().write(call_was_successful);
+  Array<bool,optical_switch_interface::constants::OUTPUT_COUNT> inverted(constants::inverted);
+  optical_switch_interface_ptr_->call(optical_switch_interface::constants::inverted_property_name,
+                                      modular_server::property::set_value_function_name,
+                                      inverted);
+  call_was_successful = optical_switch_interface_ptr_->callWasSuccessful();
+  modular_server_.response().write(call_was_successful);
+  modular_server_.response().endArray();
+
+  modular_server_.response().writeKey(audio_controller::constants::device_name);
+  modular_server_.response().beginArray();
+  audio_controller_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name,
+                              all_array);
+  call_was_successful = audio_controller_ptr_->callWasSuccessful();
+  modular_server_.response().write(call_was_successful);
+  modular_server_.response().endArray();
+
+  modular_server_.response().endObject();
 }
 
-// void MouseJoystick::getAssayStatusHandler()
-// {
-//   constants::AssayStatus assay_status = getAssayStatus();
+void MouseJoystick::getAssayStatusHandler()
+{
+  constants::AssayStatus assay_status = getAssayStatus();
 
-//   modular_server_.response().writeResultKey();
+  modular_server_.response().writeResultKey();
 
-//   modular_server_.response().beginObject();
+  modular_server_.response().beginObject();
 
-//   modular_server_.response().write(constants::state_string,assay_status.state_ptr);
+  modular_server_.response().write(constants::state_string,assay_status.state_ptr);
 
-//   modular_server_.response().endObject();
+  modular_server_.response().endObject();
 
-// }
+}
 
-// void MouseJoystick::playToneHandler(int arg)
-// {
-//   setPlayToneState();
-// }
+void MouseJoystick::moveStageToBasePositionHandler()
+{
+  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
+      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+  {
+    moveStageToBasePosition();
+  }
+}
 
-// void MouseJoystick::moveToDispenseHandler(int arg)
-// {
-//   setMoveToDispenseState();
-// }
+void MouseJoystick::moveStageToDeliverPositionHandler()
+{
+  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
+      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+  {
+    moveStageToDeliverPosition();
+  }
+}
 
-// void MouseJoystick::waitToPlayToneHandler(int arg)
-// {
-//   setWaitToPlayToneState();
-// }
+void MouseJoystick::moveStageToDispensePositionHandler()
+{
+  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
+      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+  {
+    moveStageToDispensePosition();
+  }
+}
 
-// void MouseJoystick::moveToBaseHandler(int arg)
-// {
-//   setMoveToBaseStopState();
-// }
+void MouseJoystick::moveStageToCleanPositionHandler()
+{
+  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
+      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+  {
+    moveStageToCleanPosition();
+  }
+}
 
-// void MouseJoystick::deliverHandler(modular_server::Interrupt * interrupt_ptr)
-// {
-//   deliver();
-// }
+void MouseJoystick::playToneHandler(int arg)
+{
+  setPlayToneState();
+}
 
-// void MouseJoystick::abortHandler(modular_server::Interrupt * interrupt_ptr)
-// {
-//   abort();
-// }
+void MouseJoystick::moveToDispenseHandler(int arg)
+{
+  setMoveToDispenseState();
+}
+
+void MouseJoystick::waitToPlayToneHandler(int arg)
+{
+  setWaitToPlayToneState();
+}
+
+void MouseJoystick::moveToCleanHandler(int arg)
+{
+  setMoveToCleanState();
+}
+
+void MouseJoystick::moveToBaseStopHandler(int arg)
+{
+  setMoveToBaseStopState();
+}
+
+void MouseJoystick::deliverHandler(modular_server::Interrupt * interrupt_ptr)
+{
+  deliver();
+}
+
+void MouseJoystick::abortHandler(modular_server::Interrupt * interrupt_ptr)
+{
+  abort();
+}

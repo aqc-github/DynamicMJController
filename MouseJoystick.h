@@ -28,7 +28,9 @@
 #include "EventController.h"
 
 #include "ModularClient.h"
-#include "EncoderInterfaceSimple.h"
+#include "HBridgeController.h"
+#include "OpticalSwitchInterface.h"
+#include "AudioController.h"
 
 #include "ModularServer.h"
 #include "ModularDeviceBase.h"
@@ -46,33 +48,38 @@ public:
   virtual void setup();
   virtual void update();
 
-  // mouse_joystick::constants::AssayStatus getAssayStatus();
-  // StageController::PositionsArray getBasePositions();
-  // StageController::PositionsArray getDeliverPositions();
-  // StageController::PositionsArray getDispensePositions();
-  // long getBuzzPeriod();
-  // long getBuzzOnDuration();
-  // long getBuzzCount();
-  // long getToneDelay();
-  // long getToneFrequency();
-  // long getToneDuration();
-  // long getToneVolume();
-  // double getReturnDelay();
+  mouse_joystick::constants::AssayStatus getAssayStatus();
+  StageController::PositionArray getBasePosition();
+  StageController::PositionArray getDeliverPosition();
+  StageController::PositionArray getDispensePosition();
+  StageController::PositionArray getCleanPosition();
+  long getBuzzPeriod();
+  long getBuzzOnDuration();
+  long getBuzzCount();
+  long getToneDelay();
+  long getToneFrequency();
+  long getToneDuration();
+  long getToneVolume();
+  double getReturnDelay();
+  long getCleanDuration();
 
-  // void moveStageSoftlyToBase();
-  // void moveStageSoftlyToDeliver();
-  // void moveStageSoftlyToDispense();
-  // void buzz();
-  // void setWaitToPlayToneState();
-  // void waitToPlayTone();
-  // void setPlayToneState();
-  // void playTone();
-  // void setMoveToDispenseState();
-  // void waitToReturn();
-  // void setMoveToBaseStopState();
+  void moveStageToBasePosition();
+  void moveStageToDeliverPosition();
+  void moveStageToDispensePosition();
+  void moveStageToCleanPosition();
+  void buzz();
+  void setWaitToPlayToneState();
+  void waitToPlayTone();
+  void setPlayToneState();
+  void playTone();
+  void setMoveToDispenseState();
+  void waitToReturn();
+  void setMoveToCleanState();
+  void waitAtClean();
+  void setMoveToBaseStopState();
 
-  // void deliver();
-  // void abort();
+  void deliver();
+  void abort();
 
 private:
   modular_server::Property properties_[mouse_joystick::constants::PROPERTY_COUNT_MAX];
@@ -80,20 +87,27 @@ private:
   modular_server::Function functions_[mouse_joystick::constants::FUNCTION_COUNT_MAX];
   modular_server::Callback callbacks_[mouse_joystick::constants::CALLBACK_COUNT_MAX];
 
-  // mouse_joystick::constants::AssayStatus assay_status_;
-  // EventController<mouse_joystick::constants::EVENT_COUNT_MAX> event_controller_;
+  mouse_joystick::constants::AssayStatus assay_status_;
+  EventController<mouse_joystick::constants::EVENT_COUNT_MAX> event_controller_;
 
-  // ModularClient * encoder_interface_simple_ptr_;
+  ModularClient * h_bridge_controller_ptr_;
+  ModularClient * optical_switch_interface_ptr_;
+  ModularClient * audio_controller_ptr_;
 
   // Handlers
   void setClientPropertyValuesHandler();
-  // void getAssayStatusHandler();
-  // void playToneHandler(int arg);
-  // void moveToDispenseHandler(int arg);
-  // void waitToPlayToneHandler(int arg);
-  // void moveToBaseHandler(int arg);
-  // void deliverHandler(modular_server::Interrupt * interrupt_ptr);
-  // void abortHandler(modular_server::Interrupt * interrupt_ptr);
+  void getAssayStatusHandler();
+  void moveStageToBasePositionHandler();
+  void moveStageToDeliverPositionHandler();
+  void moveStageToDispensePositionHandler();
+  void moveStageToCleanPositionHandler();
+  void playToneHandler(int arg);
+  void moveToDispenseHandler(int arg);
+  void waitToPlayToneHandler(int arg);
+  void moveToCleanHandler(int arg);
+  void moveToBaseStopHandler(int arg);
+  void deliverHandler(modular_server::Interrupt * interrupt_ptr);
+  void abortHandler(modular_server::Interrupt * interrupt_ptr);
 
 };
 

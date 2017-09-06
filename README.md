@@ -37,13 +37,7 @@ License:
 ## API NAMES
 
 ```json
-{
-  "id":"getApi",
-  "result":{
-    "firmware":["MouseJoystick"],
-    "verbosity":"NAMES"
-  }
-}
+
 ```
 
 ## API GENERAL
