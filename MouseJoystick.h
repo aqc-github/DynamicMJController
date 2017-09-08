@@ -28,9 +28,8 @@
 #include "EventController.h"
 
 #include "ModularClient.h"
-#include "HBridgeController.h"
-#include "OpticalSwitchInterface.h"
-#include "AudioController.h"
+#include "EncoderInterfaceSimple.h"
+#include "PowerSwitchController.h"
 
 #include "ModularServer.h"
 #include "ModularDeviceBase.h"
@@ -50,35 +49,14 @@ public:
 
   mouse_joystick::constants::AssayStatus getAssayStatus();
   StageController::PositionArray getBasePosition();
-  StageController::PositionArray getDeliverPosition();
-  StageController::PositionArray getDispensePosition();
-  StageController::PositionArray getCleanPosition();
-  long getBuzzPeriod();
-  long getBuzzOnDuration();
-  long getBuzzCount();
-  long getToneDelay();
-  long getToneFrequency();
-  long getToneDuration();
-  long getToneVolume();
-  double getReturnDelay();
-  long getCleanDuration();
+  StageController::PositionArray getReachPosition();
+  StageController::PositionArray getRetractPosition();
 
   void moveStageToBasePosition();
-  void moveStageToDeliverPosition();
-  void moveStageToDispensePosition();
-  void moveStageToCleanPosition();
-  void buzz();
-  void setWaitToPlayToneState();
-  void waitToPlayTone();
-  void setPlayToneState();
-  void playTone();
-  void setMoveToDispenseState();
-  void waitToReturn();
-  void setMoveToCleanState();
-  void waitAtClean();
-  void setMoveToBaseStopState();
+  void moveStageToReachPosition();
+  void moveStageToRetractPosition();
 
-  void deliver();
+  void startTrial();
   void abort();
 
 private:
@@ -90,23 +68,16 @@ private:
   mouse_joystick::constants::AssayStatus assay_status_;
   EventController<mouse_joystick::constants::EVENT_COUNT_MAX> event_controller_;
 
-  ModularClient * h_bridge_controller_ptr_;
-  ModularClient * optical_switch_interface_ptr_;
-  ModularClient * audio_controller_ptr_;
+  ModularClient * encoder_interface_simple_ptr_;
+  ModularClient * power_switch_controller_ptr_;
 
   // Handlers
   void setClientPropertyValuesHandler();
   void getAssayStatusHandler();
   void moveStageToBasePositionHandler();
-  void moveStageToDeliverPositionHandler();
-  void moveStageToDispensePositionHandler();
-  void moveStageToCleanPositionHandler();
-  void playToneHandler(int arg);
-  void moveToDispenseHandler(int arg);
-  void waitToPlayToneHandler(int arg);
-  void moveToCleanHandler(int arg);
-  void moveToBaseStopHandler(int arg);
-  void deliverHandler(modular_server::Interrupt * interrupt_ptr);
+  void moveStageToReachPositionHandler();
+  void moveStageToRetractPositionHandler();
+  void startTrialHandler(modular_server::Interrupt * interrupt_ptr);
   void abortHandler(modular_server::Interrupt * interrupt_ptr);
 
 };

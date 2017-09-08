@@ -19,107 +19,88 @@ namespace constants
 // Units
 
 // Properties
-const long steps_per_position_units_default[step_dir_controller::constants::CHANNEL_COUNT] =
+const long steps_per_position_units_default[CHANNEL_COUNT] =
   {
-   824, // microsteps/pellet/4 = (12.88steps/pellet)*(256microsteps/step)/4
-   8063, // microsteps/mm = (200steps/rev)*(256microsteps/step)/((0.250in/rev)*(25.4mm/in))
-   8063, // microsteps/mm = (200steps/rev)*(256microsteps/step)/((0.250in/rev)*(25.4mm/in))
+   32,
+   32,
   };
 
-const long velocity_max_default[step_dir_controller::constants::CHANNEL_COUNT] =
+const long velocity_max_default[CHANNEL_COUNT] =
   {
-   80,
-   40,
-   40,
+   150,
+   150,
   };
 
-const long velocity_min_default[step_dir_controller::constants::CHANNEL_COUNT] =
+ const long velocity_min_default[CHANNEL_COUNT] =
   {
-   4,
-   2,
-   2,
-  };
-
-const long acceleration_max_default[step_dir_controller::constants::CHANNEL_COUNT] =
-  {
-   200,
-   100,
-   100,
-  };
-
-const long home_velocity_default[step_dir_controller::constants::CHANNEL_COUNT] =
-  {
-   20,
-   -20,
-   -20,
-  };
-
-const long run_current_default[stepper_controller::constants::DRIVER_COUNT] =
-  {
-   run_current_element_default,
-   run_current_element_default,
-   run_current_element_default,
-  };
-
-const long hold_current_default[stepper_controller::constants::DRIVER_COUNT] =
-  {
-   hold_current_element_default,
-   hold_current_element_default,
-   hold_current_element_default,
-  };
-
-const long hold_delay_default[stepper_controller::constants::DRIVER_COUNT] =
-  {
-   hold_delay_element_default,
-   hold_delay_element_default,
-   hold_delay_element_default,
-  };
-
-const long stage_channel_count_min = step_dir_controller::constants::CHANNEL_COUNT;
-const long stage_channel_count_max = step_dir_controller::constants::CHANNEL_COUNT;
-const long stage_channel_count_default = step_dir_controller::constants::CHANNEL_COUNT;
-
-const long stage_position_min_default[step_dir_controller::constants::CHANNEL_COUNT] =
-  {
-   -76,
-   0,
-   0,
-  };
-
-const long stage_position_max_default[step_dir_controller::constants::CHANNEL_COUNT] =
-  {
-   0,
-   80,
-   80,
-  };
-
-const long base_position_default[step_dir_controller::constants::CHANNEL_COUNT] =
-  {
-   -74,
-   70,
-   20,
-  };
-
-const long deliver_position_default[step_dir_controller::constants::CHANNEL_COUNT] =
-  {
-   -74,
-   75,
-   20,
-  };
-
-const long clean_position_default[step_dir_controller::constants::CHANNEL_COUNT] =
-  {
-   -48,
-   60,
+   10,
    10,
   };
 
-const bool inverted[optical_switch_interface::constants::OUTPUT_COUNT] =
+const long acceleration_max_default[CHANNEL_COUNT] =
   {
+   150,
+   150,
+  };
+
+const long home_velocity_default[CHANNEL_COUNT] =
+  {
+   -50,
+   -50,
+  };
+
+const bool invert_driver_direction_default[CHANNEL_COUNT] =
+  {
+   false,
    true,
-   false,
-   false,
-   false,
+  };
+
+const long run_current_default[CHANNEL_COUNT] =
+  {
+   20,
+   50,
+  };
+
+const long hold_current_default[CHANNEL_COUNT] =
+  {
+   10,
+   25,
+  };
+
+const long hold_delay_default[CHANNEL_COUNT] =
+  {
+   hold_delay_element_default,
+   hold_delay_element_default,
+  };
+
+const long stage_position_min_default[CHANNEL_COUNT] =
+  {
+   0,
+   0,
+  };
+
+const long stage_position_max_default[CHANNEL_COUNT] =
+  {
+   100,
+   150,
+  };
+
+const long base_position_default[CHANNEL_COUNT] =
+  {
+   5,
+   150,
+  };
+
+const long reach_position_default[CHANNEL_COUNT] =
+  {
+   50,
+   5,
+  };
+
+const long retract_position_default[CHANNEL_COUNT] =
+  {
+   0,
+   0,
   };
 
 // Parameters
