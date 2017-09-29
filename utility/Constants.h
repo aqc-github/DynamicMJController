@@ -21,9 +21,9 @@ namespace mouse_joystick
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=3};
+enum{PROPERTY_COUNT_MAX=2};
 enum{PARAMETER_COUNT_MAX=1};
-enum{FUNCTION_COUNT_MAX=5};
+enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=2};
 
 enum{EVENT_COUNT_MAX=32};
@@ -50,8 +50,8 @@ extern ConstantString state_move_to_reach_string;
 extern ConstantString state_moving_to_reach_string;
 extern ConstantString state_wait_for_pull_string;
 extern ConstantString state_waiting_for_pull_string;
-extern ConstantString state_move_to_retract_string;
-extern ConstantString state_moving_to_retract_string;
+extern ConstantString state_retract_string;
+extern ConstantString state_retracting_string;
 extern ConstantString state_move_to_base_stop_string;
 extern ConstantString state_moving_to_base_stop_string;
 extern ConstantString state_assay_finished_string;
@@ -118,9 +118,8 @@ extern const long retract_position_default[CHANNEL_COUNT];
 // Functions
 extern ConstantString set_client_property_values_function_name;
 extern ConstantString get_assay_status_function_name;
-extern ConstantString move_stage_to_base_position_function_name;
-extern ConstantString move_stage_to_reach_position_function_name;
-extern ConstantString move_stage_to_retract_position_function_name;
+extern ConstantString move_joystick_to_base_position_function_name;
+extern ConstantString move_joystick_to_reach_position_function_name;
 
 // Callbacks
 extern ConstantString start_trial_callback_name;

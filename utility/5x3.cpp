@@ -97,12 +97,6 @@ const long reach_position_default[CHANNEL_COUNT] =
    5,
   };
 
-const long retract_position_default[CHANNEL_COUNT] =
-  {
-   0,
-   0,
-  };
-
 // Parameters
 
 // Functions

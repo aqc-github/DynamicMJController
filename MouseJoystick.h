@@ -50,11 +50,9 @@ public:
   mouse_joystick::constants::AssayStatus getAssayStatus();
   StageController::PositionArray getBasePosition();
   StageController::PositionArray getReachPosition();
-  StageController::PositionArray getRetractPosition();
 
-  void moveStageToBasePosition();
-  void moveStageToReachPosition();
-  void moveStageToRetractPosition();
+  void moveJoystickToBasePosition();
+  void moveJoystickToReachPosition();
 
   void startTrial();
   void abort();
@@ -74,9 +72,8 @@ private:
   // Handlers
   void setClientPropertyValuesHandler();
   void getAssayStatusHandler();
-  void moveStageToBasePositionHandler();
-  void moveStageToReachPositionHandler();
-  void moveStageToRetractPositionHandler();
+  void moveJoystickToBasePositionHandler();
+  void moveJoystickToReachPositionHandler();
   void startTrialHandler(modular_server::Interrupt * interrupt_ptr);
   void abortHandler(modular_server::Interrupt * interrupt_ptr);
 

@@ -87,8 +87,6 @@ void MouseJoystick::setup()
 
   modular_server_.createProperty(constants::reach_position_property_name,constants::reach_position_default);
 
-  modular_server_.createProperty(constants::retract_position_property_name,constants::retract_position_default);
-
   // Parameters
 
   // Functions
@@ -100,14 +98,11 @@ void MouseJoystick::setup()
   get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::getAssayStatusHandler));
   get_assay_status_function.setResultTypeObject();
 
-  modular_server::Function & move_stage_to_base_position_function = modular_server_.createFunction(constants::move_stage_to_base_position_function_name);
-  move_stage_to_base_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::moveStageToBasePositionHandler));
+  modular_server::Function & move_joystick_to_base_position_function = modular_server_.createFunction(constants::move_joystick_to_base_position_function_name);
+  move_joystick_to_base_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::moveJoystickToBasePositionHandler));
 
-  modular_server::Function & move_stage_to_reach_position_function = modular_server_.createFunction(constants::move_stage_to_reach_position_function_name);
-  move_stage_to_reach_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::moveStageToReachPositionHandler));
-
-  modular_server::Function & move_stage_to_retract_position_function = modular_server_.createFunction(constants::move_stage_to_retract_position_function_name);
-  move_stage_to_retract_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::moveStageToRetractPositionHandler));
+  modular_server::Function & move_joystick_to_reach_position_function = modular_server_.createFunction(constants::move_joystick_to_reach_position_function_name);
+  move_joystick_to_reach_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::moveJoystickToReachPositionHandler));
 
   // Callbacks
   modular_server::Callback & start_trial_callback = modular_server_.createCallback(constants::start_trial_callback_name);
@@ -155,7 +150,7 @@ void MouseJoystick::update()
   else if (state_ptr == &constants::state_move_to_base_start_string)
   {
     assay_status_.state_ptr = &constants::state_moving_to_base_start_string;
-    moveStageToBasePosition();
+    moveJoystickToBasePosition();
   }
   else if (state_ptr == &constants::state_moving_to_base_start_string)
   {
@@ -167,7 +162,7 @@ void MouseJoystick::update()
   else if (state_ptr == &constants::state_move_to_reach_string)
   {
     assay_status_.state_ptr = &constants::state_moving_to_reach_string;
-    moveStageToReachPosition();
+    moveJoystickToReachPosition();
   }
   else if (state_ptr == &constants::state_moving_to_reach_string)
   {
@@ -183,12 +178,12 @@ void MouseJoystick::update()
   else if (state_ptr == &constants::state_waiting_for_pull_string)
   {
   }
-  else if (state_ptr == &constants::state_move_to_retract_string)
+  else if (state_ptr == &constants::state_retract_string)
   {
-    assay_status_.state_ptr = &constants::state_moving_to_retract_string;
+    assay_status_.state_ptr = &constants::state_retracting_string;
     homeStage();
   }
-  else if (state_ptr == &constants::state_moving_to_retract_string)
+  else if (state_ptr == &constants::state_retracting_string)
   {
     if (stageHomed())
     {
@@ -198,7 +193,7 @@ void MouseJoystick::update()
   else if (state_ptr == &constants::state_move_to_base_stop_string)
   {
     assay_status_.state_ptr = &constants::state_moving_to_base_stop_string;
-    moveStageToBasePosition();
+    moveJoystickToBasePosition();
   }
   else if (state_ptr == &constants::state_moving_to_base_stop_string)
   {
@@ -232,31 +227,16 @@ StageController::PositionArray MouseJoystick::getReachPosition()
   return reach_position_array;
 }
 
-StageController::PositionArray MouseJoystick::getRetractPosition()
-{
-  long retract_position[constants::CHANNEL_COUNT];
-  modular_server_.property(constants::retract_position_property_name).getValue(retract_position);
-
-  StageController::PositionArray retract_position_array(retract_position);
-  return retract_position_array;
-}
-
-void MouseJoystick::moveStageToBasePosition()
+void MouseJoystick::moveJoystickToBasePosition()
 {
   StageController::PositionArray base_position = getBasePosition();
   moveStageTo(base_position);
 }
 
-void MouseJoystick::moveStageToReachPosition()
+void MouseJoystick::moveJoystickToReachPosition()
 {
   StageController::PositionArray reach_position = getReachPosition();
   moveStageTo(reach_position);
-}
-
-void MouseJoystick::moveStageToRetractPosition()
-{
-  StageController::PositionArray retract_position = getRetractPosition();
-  moveStageTo(retract_position);
 }
 
 void MouseJoystick::startTrial()
@@ -273,7 +253,7 @@ void MouseJoystick::abort()
   stopAll();
   event_controller_.removeAllEvents();
 
-  assay_status_.state_ptr = &constants::state_move_to_retract_string;
+  assay_status_.state_ptr = &constants::state_retract_string;
 }
 
 // Handlers must be non-blocking (avoid 'delay')
@@ -334,30 +314,21 @@ void MouseJoystick::getAssayStatusHandler()
 
 }
 
-void MouseJoystick::moveStageToBasePositionHandler()
+void MouseJoystick::moveJoystickToBasePositionHandler()
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
       (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
-    moveStageToBasePosition();
+    moveJoystickToBasePosition();
   }
 }
 
-void MouseJoystick::moveStageToReachPositionHandler()
+void MouseJoystick::moveJoystickToReachPositionHandler()
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
       (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
-    moveStageToReachPosition();
-  }
-}
-
-void MouseJoystick::moveStageToRetractPositionHandler()
-{
-  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
-      (assay_status_.state_ptr == &constants::state_assay_finished_string))
-  {
-    moveStageToRetractPosition();
+    moveJoystickToReachPosition();
   }
 }
 

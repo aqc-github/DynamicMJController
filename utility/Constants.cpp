@@ -34,8 +34,8 @@ CONSTANT_STRING(state_move_to_reach_string,"MOVE_TO_REACH");
 CONSTANT_STRING(state_moving_to_reach_string,"MOVING_TO_REACH");
 CONSTANT_STRING(state_wait_for_pull_string,"WAIT_FOR_PULL");
 CONSTANT_STRING(state_waiting_for_pull_string,"WAITING_FOR_PULL");
-CONSTANT_STRING(state_move_to_retract_string,"MOVE_TO_RETRACT");
-CONSTANT_STRING(state_moving_to_retract_string,"MOVING_TO_RETRACT");
+CONSTANT_STRING(state_retract_string,"RETRACT");
+CONSTANT_STRING(state_retracting_string,"RETRACTING");
 CONSTANT_STRING(state_move_to_base_stop_string,"MOVE_TO_BASE_STOP");
 CONSTANT_STRING(state_moving_to_base_stop_string,"MOVING_TO_BASE_STOP");
 CONSTANT_STRING(state_assay_finished_string,"ASSAY_FINISHED");
@@ -74,16 +74,13 @@ CONSTANT_STRING(base_position_property_name,"basePosition");
 
 CONSTANT_STRING(reach_position_property_name,"reachPosition");
 
-CONSTANT_STRING(retract_position_property_name,"retractPosition");
-
 // Parameters
 
 // Functions
 CONSTANT_STRING(set_client_property_values_function_name,"setClientPropertyValues");
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
-CONSTANT_STRING(move_stage_to_base_position_function_name,"moveStageToBasePosition");
-CONSTANT_STRING(move_stage_to_reach_position_function_name,"moveStageToReachPosition");
-CONSTANT_STRING(move_stage_to_retract_position_function_name,"moveStageToRetractPosition");
+CONSTANT_STRING(move_joystick_to_base_position_function_name,"moveJoystickToBasePosition");
+CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToReachPosition");
 
 // Callbacks
 CONSTANT_STRING(start_trial_callback_name,"startTrial");
