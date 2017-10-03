@@ -7,13 +7,13 @@
 // ----------------------------------------------------------------------------
 #ifndef MOUSE_JOYSTICK_CONSTANTS_H
 #define MOUSE_JOYSTICK_CONSTANTS_H
-#include "ConstantVariable.h"
-#include "StepDirController.h"
-#include "StepperController.h"
-#include "StageController.h"
+#include <ConstantVariable.h>
+#include <StepDirController.h>
+#include <StepperController.h>
+#include <StageController.h>
 
-#include "EncoderInterfaceSimple.h"
-#include "PowerSwitchController.h"
+#include <EncoderInterfaceSimple.h>
+#include <PowerSwitchController.h>
 
 
 namespace mouse_joystick

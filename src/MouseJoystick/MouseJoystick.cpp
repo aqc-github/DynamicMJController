@@ -5,7 +5,7 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "MouseJoystick.h"
+#include "../MouseJoystick.h"
 
 
 using namespace mouse_joystick;
