@@ -87,6 +87,9 @@ void MouseJoystickController::setup()
 
   modular_server_.createProperty(constants::reach_position_property_name,constants::reach_position_default);
 
+  modular_server::Property & pull_threshold_property = modular_server_.createProperty(constants::pull_threshold_property_name,constants::pull_threshold_default);
+  pull_threshold_property.setRange(constants::pull_threshold_min,constants::pull_threshold_max);
+
   // Parameters
 
   // Functions
@@ -173,10 +176,15 @@ void MouseJoystickController::update()
   }
   else if (state_ptr == &constants::state_wait_for_pull_string)
   {
+    setupPull();
     assay_status_.state_ptr = &constants::state_waiting_for_pull_string;
   }
   else if (state_ptr == &constants::state_waiting_for_pull_string)
   {
+    if (pulled())
+    {
+      assay_status_.state_ptr = &constants::state_retract_string;
+    }
   }
   else if (state_ptr == &constants::state_retract_string)
   {
@@ -254,6 +262,30 @@ void MouseJoystickController::abort()
   event_controller_.removeAllEvents();
 
   assay_status_.state_ptr = &constants::state_retract_string;
+}
+
+void MouseJoystickController::setupPull()
+{
+  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::set_position_function_name,
+                                      constants::encoder_index,
+                                      constants::encoder_initial_value);
+}
+
+bool MouseJoystickController::pulled()
+{
+  bool was_pulled = false;
+  StaticJsonBuffer<constants::ENCODER_POSITIONS_JSON_BUFFER_SIZE> json_buffer;
+  JsonArray & position_array = encoder_interface_simple_ptr_->callGetResult(json_buffer,encoder_interface_simple::constants::get_positions_function_name);
+  long position = position_array[constants::encoder_index];
+
+  long pull_threshold;
+  modular_server_.property(constants::pull_threshold_property_name).getValue(pull_threshold);
+
+  if (position <= pull_threshold)
+  {
+    was_pulled = true;
+  }
+  return was_pulled;
 }
 
 // Handlers must be non-blocking (avoid 'delay')

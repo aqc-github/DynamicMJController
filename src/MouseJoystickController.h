@@ -69,6 +69,9 @@ private:
   ModularClient * encoder_interface_simple_ptr_;
   ModularClient * power_switch_controller_ptr_;
 
+  void setupPull();
+  bool pulled();
+
   // Handlers
   void setClientPropertyValuesHandler();
   void getAssayStatusHandler();

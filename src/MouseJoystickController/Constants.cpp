@@ -49,6 +49,8 @@ const size_t encoder_interface_simple_address[1] =
   {
    3,
   };
+const size_t encoder_index = 0;
+const size_t encoder_initial_value = 0;
 
 const size_t power_switch_controller_address[2] =
   {
@@ -73,6 +75,11 @@ const long hold_delay_element_default = 50;
 CONSTANT_STRING(base_position_property_name,"basePosition");
 
 CONSTANT_STRING(reach_position_property_name,"reachPosition");
+
+CONSTANT_STRING(pull_threshold_property_name,"pullThreshold");
+const long pull_threshold_min = -1000;
+const long pull_threshold_max = 0;
+const long pull_threshold_default = -75;
 
 // Parameters
 

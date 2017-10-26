@@ -21,7 +21,7 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=2};
+enum{PROPERTY_COUNT_MAX=3};
 enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=2};
@@ -62,6 +62,9 @@ extern const long milliseconds_per_minute;
 
 // Clients
 extern const size_t encoder_interface_simple_address[1];
+extern const size_t encoder_index;
+extern const size_t encoder_initial_value;
+enum{ENCODER_POSITIONS_JSON_BUFFER_SIZE=256};
 
 extern const size_t power_switch_controller_address[2];
 
@@ -110,8 +113,10 @@ extern const long base_position_default[CHANNEL_COUNT];
 extern ConstantString reach_position_property_name;
 extern const long reach_position_default[CHANNEL_COUNT];
 
-extern ConstantString retract_position_property_name;
-extern const long retract_position_default[CHANNEL_COUNT];
+extern ConstantString pull_threshold_property_name;
+extern const long pull_threshold_min;
+extern const long pull_threshold_max;
+extern const long pull_threshold_default;
 
 // Parameters
 
