@@ -1,4 +1,4 @@
-# MouseJoystick
+# MouseJoystickController
 
 Authors:
 

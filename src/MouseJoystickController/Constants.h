@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef MOUSE_JOYSTICK_CONSTANTS_H
-#define MOUSE_JOYSTICK_CONSTANTS_H
+#ifndef MOUSE_JOYSTICK_CONTROLLER_CONSTANTS_H
+#define MOUSE_JOYSTICK_CONTROLLER_CONSTANTS_H
 #include <ConstantVariable.h>
 #include <StepDirController.h>
 #include <StepperController.h>
@@ -16,7 +16,7 @@
 #include <PowerSwitchController.h>
 
 
-namespace mouse_joystick
+namespace mouse_joystick_controller
 {
 namespace constants
 {

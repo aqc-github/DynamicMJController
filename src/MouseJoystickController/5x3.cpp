@@ -10,7 +10,7 @@
 
 #if defined(__MK64FX512__)
 
-namespace mouse_joystick
+namespace mouse_joystick_controller
 {
 namespace constants
 {

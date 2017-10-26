@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// MouseJoystick.h
+// MouseJoystickController.h
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef MOUSE_JOYSTICK_H
-#define MOUSE_JOYSTICK_H
+#ifndef MOUSE_JOYSTICK_CONTROLLER_H
+#define MOUSE_JOYSTICK_CONTROLLER_H
 #include <Flash.h>
 #include <EEPROM.h>
 #include <Streaming.h>
@@ -37,17 +37,17 @@
 #include <StepperController.h>
 #include <StageController.h>
 
-#include "MouseJoystick/Constants.h"
+#include "MouseJoystickController/Constants.h"
 
 
-class MouseJoystick : public StageController
+class MouseJoystickController : public StageController
 {
 public:
-  MouseJoystick();
+  MouseJoystickController();
   virtual void setup();
   virtual void update();
 
-  mouse_joystick::constants::AssayStatus getAssayStatus();
+  mouse_joystick_controller::constants::AssayStatus getAssayStatus();
   StageController::PositionArray getBasePosition();
   StageController::PositionArray getReachPosition();
 
@@ -58,13 +58,13 @@ public:
   void abort();
 
 private:
-  modular_server::Property properties_[mouse_joystick::constants::PROPERTY_COUNT_MAX];
-  modular_server::Parameter parameters_[mouse_joystick::constants::PARAMETER_COUNT_MAX];
-  modular_server::Function functions_[mouse_joystick::constants::FUNCTION_COUNT_MAX];
-  modular_server::Callback callbacks_[mouse_joystick::constants::CALLBACK_COUNT_MAX];
+  modular_server::Property properties_[mouse_joystick_controller::constants::PROPERTY_COUNT_MAX];
+  modular_server::Parameter parameters_[mouse_joystick_controller::constants::PARAMETER_COUNT_MAX];
+  modular_server::Function functions_[mouse_joystick_controller::constants::FUNCTION_COUNT_MAX];
+  modular_server::Callback callbacks_[mouse_joystick_controller::constants::CALLBACK_COUNT_MAX];
 
-  mouse_joystick::constants::AssayStatus assay_status_;
-  EventController<mouse_joystick::constants::EVENT_COUNT_MAX> event_controller_;
+  mouse_joystick_controller::constants::AssayStatus assay_status_;
+  EventController<mouse_joystick_controller::constants::EVENT_COUNT_MAX> event_controller_;
 
   ModularClient * encoder_interface_simple_ptr_;
   ModularClient * power_switch_controller_ptr_;

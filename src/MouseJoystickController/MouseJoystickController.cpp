@@ -1,20 +1,20 @@
 // ----------------------------------------------------------------------------
-// MouseJoystick.cpp
+// MouseJoystickController.cpp
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "../MouseJoystick.h"
+#include "../MouseJoystickController.h"
 
 
-using namespace mouse_joystick;
+using namespace mouse_joystick_controller;
 
-MouseJoystick::MouseJoystick()
+MouseJoystickController::MouseJoystickController()
 {
 }
 
-void MouseJoystick::setup()
+void MouseJoystickController::setup()
 {
   // Parent Setup
   StageController::setup();
@@ -91,29 +91,29 @@ void MouseJoystick::setup()
 
   // Functions
   modular_server::Function & set_client_property_values_function = modular_server_.createFunction(constants::set_client_property_values_function_name);
-  set_client_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::setClientPropertyValuesHandler));
+  set_client_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::setClientPropertyValuesHandler));
   set_client_property_values_function.setResultTypeObject();
 
   modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
-  get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::getAssayStatusHandler));
+  get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getAssayStatusHandler));
   get_assay_status_function.setResultTypeObject();
 
   modular_server::Function & move_joystick_to_base_position_function = modular_server_.createFunction(constants::move_joystick_to_base_position_function_name);
-  move_joystick_to_base_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::moveJoystickToBasePositionHandler));
+  move_joystick_to_base_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::moveJoystickToBasePositionHandler));
 
   modular_server::Function & move_joystick_to_reach_position_function = modular_server_.createFunction(constants::move_joystick_to_reach_position_function_name);
-  move_joystick_to_reach_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystick::moveJoystickToReachPositionHandler));
+  move_joystick_to_reach_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::moveJoystickToReachPositionHandler));
 
   // Callbacks
   modular_server::Callback & start_trial_callback = modular_server_.createCallback(constants::start_trial_callback_name);
-  start_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystick::startTrialHandler));
+  start_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::startTrialHandler));
   start_trial_callback.attachTo(modular_device_base::constants::bnc_b_interrupt_name,modular_server::interrupt::mode_falling);
 #if defined(__MK64FX512__)
   start_trial_callback.attachTo(modular_device_base::constants::btn_b_interrupt_name,modular_server::interrupt::mode_falling);
 #endif
 
   modular_server::Callback & abort_callback = modular_server_.createCallback(constants::abort_callback_name);
-  abort_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystick::abortHandler));
+  abort_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::abortHandler));
   abort_callback.attachTo(modular_device_base::constants::bnc_a_interrupt_name,modular_server::interrupt::mode_falling);
 #if !defined(__AVR_ATmega2560__)
   abort_callback.attachTo(modular_device_base::constants::btn_a_interrupt_name,modular_server::interrupt::mode_falling);
@@ -121,7 +121,7 @@ void MouseJoystick::setup()
 
 }
 
-void MouseJoystick::update()
+void MouseJoystickController::update()
 {
   // Parent Update
   StageController::update();
@@ -204,12 +204,12 @@ void MouseJoystick::update()
   }
 }
 
-constants::AssayStatus MouseJoystick::getAssayStatus()
+constants::AssayStatus MouseJoystickController::getAssayStatus()
 {
   return assay_status_;
 }
 
-StageController::PositionArray MouseJoystick::getBasePosition()
+StageController::PositionArray MouseJoystickController::getBasePosition()
 {
   long base_position[constants::CHANNEL_COUNT];
   modular_server_.property(constants::base_position_property_name).getValue(base_position);
@@ -218,7 +218,7 @@ StageController::PositionArray MouseJoystick::getBasePosition()
   return base_position_array;
 }
 
-StageController::PositionArray MouseJoystick::getReachPosition()
+StageController::PositionArray MouseJoystickController::getReachPosition()
 {
   long reach_position[constants::CHANNEL_COUNT];
   modular_server_.property(constants::reach_position_property_name).getValue(reach_position);
@@ -227,19 +227,19 @@ StageController::PositionArray MouseJoystick::getReachPosition()
   return reach_position_array;
 }
 
-void MouseJoystick::moveJoystickToBasePosition()
+void MouseJoystickController::moveJoystickToBasePosition()
 {
   StageController::PositionArray base_position = getBasePosition();
   moveStageTo(base_position);
 }
 
-void MouseJoystick::moveJoystickToReachPosition()
+void MouseJoystickController::moveJoystickToReachPosition()
 {
   StageController::PositionArray reach_position = getReachPosition();
   moveStageTo(reach_position);
 }
 
-void MouseJoystick::startTrial()
+void MouseJoystickController::startTrial()
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
       (assay_status_.state_ptr == &constants::state_assay_finished_string))
@@ -248,7 +248,7 @@ void MouseJoystick::startTrial()
   }
 }
 
-void MouseJoystick::abort()
+void MouseJoystickController::abort()
 {
   stopAll();
   event_controller_.removeAllEvents();
@@ -273,7 +273,7 @@ void MouseJoystick::abort()
 // modular_server_.property(property_name).getElementValue(element_index,value) value type must match the property array element default type
 // modular_server_.property(property_name).setElementValue(element_index,value) value type must match the property array element default type
 
-void MouseJoystick::setClientPropertyValuesHandler()
+void MouseJoystickController::setClientPropertyValuesHandler()
 {
   modular_server_.response().writeResultKey();
 
@@ -300,7 +300,7 @@ void MouseJoystick::setClientPropertyValuesHandler()
   modular_server_.response().endObject();
 }
 
-void MouseJoystick::getAssayStatusHandler()
+void MouseJoystickController::getAssayStatusHandler()
 {
   constants::AssayStatus assay_status = getAssayStatus();
 
@@ -314,7 +314,7 @@ void MouseJoystick::getAssayStatusHandler()
 
 }
 
-void MouseJoystick::moveJoystickToBasePositionHandler()
+void MouseJoystickController::moveJoystickToBasePositionHandler()
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
       (assay_status_.state_ptr == &constants::state_assay_finished_string))
@@ -323,7 +323,7 @@ void MouseJoystick::moveJoystickToBasePositionHandler()
   }
 }
 
-void MouseJoystick::moveJoystickToReachPositionHandler()
+void MouseJoystickController::moveJoystickToReachPositionHandler()
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
       (assay_status_.state_ptr == &constants::state_assay_finished_string))
@@ -332,12 +332,12 @@ void MouseJoystick::moveJoystickToReachPositionHandler()
   }
 }
 
-void MouseJoystick::startTrialHandler(modular_server::Interrupt * interrupt_ptr)
+void MouseJoystickController::startTrialHandler(modular_server::Interrupt * interrupt_ptr)
 {
   startTrial();
 }
 
-void MouseJoystick::abortHandler(modular_server::Interrupt * interrupt_ptr)
+void MouseJoystickController::abortHandler(modular_server::Interrupt * interrupt_ptr)
 {
   abort();
 }

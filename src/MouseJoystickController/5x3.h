@@ -1,22 +1,21 @@
 // ----------------------------------------------------------------------------
-// 3x2.h
+// 5x3.h
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef MOUSE_JOYSTICK_3X2_CONSTANTS_H
-#define MOUSE_JOYSTICK_3X2_CONSTANTS_H
+#ifndef MOUSE_JOYSTICK_CONTROLLER_5X3_CONSTANTS_H
+#define MOUSE_JOYSTICK_CONTROLLER_5X3_CONSTANTS_H
 #include "Constants.h"
 
 
-#if defined(__MK20DX256__)
+#if defined(__MK64FX512__)
 
-namespace mouse_joystick
+namespace mouse_joystick_controller
 {
 namespace constants
 {
-
 // Interrupts
 
 // Units

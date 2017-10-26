@@ -27,10 +27,10 @@
 #include <StepDirController.h>
 #include <StepperController.h>
 #include <StageController.h>
-#include <MouseJoystick.h>
+#include <MouseJoystickController.h>
 
 
-MouseJoystick dev;
+MouseJoystickController dev;
 
 void setup()
 {
