@@ -44,13 +44,18 @@ const long seconds_per_minute = 60;
 const long milliseconds_per_second = 1000;
 const long milliseconds_per_minute = milliseconds_per_second*seconds_per_minute;
 
+// Pull
+const size_t pull_encoder_index = 0;
+const size_t pull_encoder_initial_value = 0;
+const size_t pull_channel = 0;
+const long pull_pwm_offset_min = 0;
+const long pull_pwm_offset_max = 80;
+
 // Clients
 const size_t encoder_interface_simple_address[1] =
   {
    3,
   };
-const size_t encoder_index = 0;
-const size_t encoder_initial_value = 0;
 
 const size_t power_switch_controller_address[2] =
   {
@@ -66,6 +71,7 @@ CONSTANT_STRING(ms_units,"ms");
 CONSTANT_STRING(seconds_units,"s");
 CONSTANT_STRING(minutes_units,"min");
 CONSTANT_STRING(hz_units,"Hz");
+CONSTANT_STRING(percent_units,"%");
 
 // Properties
 extern const long channel_count = CHANNEL_COUNT;
@@ -80,6 +86,11 @@ CONSTANT_STRING(pull_threshold_property_name,"pullThreshold");
 const long pull_threshold_min = -1000;
 const long pull_threshold_max = 0;
 const long pull_threshold_default = -75;
+
+CONSTANT_STRING(pull_torque_property_name,"pullTorque");
+const long pull_torque_min = 0;
+const long pull_torque_max = 100;
+const long pull_torque_default = 25;
 
 // Parameters
 

@@ -21,7 +21,7 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=3};
+enum{PROPERTY_COUNT_MAX=4};
 enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=2};
@@ -60,11 +60,16 @@ extern const long seconds_per_minute;
 extern const long milliseconds_per_second;
 extern const long milliseconds_per_minute;
 
+// Pull
+extern const size_t pull_encoder_index;
+extern const size_t pull_encoder_initial_value;
+enum{ENCODER_POSITIONS_JSON_BUFFER_SIZE=256};
+extern const size_t pull_channel;
+extern const long pull_pwm_offset_min;
+extern const long pull_pwm_offset_max;
+
 // Clients
 extern const size_t encoder_interface_simple_address[1];
-extern const size_t encoder_index;
-extern const size_t encoder_initial_value;
-enum{ENCODER_POSITIONS_JSON_BUFFER_SIZE=256};
 
 extern const size_t power_switch_controller_address[2];
 
@@ -75,6 +80,7 @@ extern ConstantString mm_units;
 extern ConstantString ms_units;
 extern ConstantString seconds_units;
 extern ConstantString minutes_units;
+extern ConstantString percent_units;
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
@@ -117,6 +123,11 @@ extern ConstantString pull_threshold_property_name;
 extern const long pull_threshold_min;
 extern const long pull_threshold_max;
 extern const long pull_threshold_default;
+
+extern ConstantString pull_torque_property_name;
+extern const long pull_torque_min;
+extern const long pull_torque_max;
+extern const long pull_torque_default;
 
 // Parameters
 

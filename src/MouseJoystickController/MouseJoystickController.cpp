@@ -90,6 +90,9 @@ void MouseJoystickController::setup()
   modular_server::Property & pull_threshold_property = modular_server_.createProperty(constants::pull_threshold_property_name,constants::pull_threshold_default);
   pull_threshold_property.setRange(constants::pull_threshold_min,constants::pull_threshold_max);
 
+  modular_server::Property & pull_torque_property = modular_server_.createProperty(constants::pull_torque_property_name,constants::pull_torque_default);
+  pull_torque_property.setRange(constants::pull_torque_min,constants::pull_torque_max);
+
   // Parameters
 
   // Functions
@@ -267,8 +270,20 @@ void MouseJoystickController::abort()
 void MouseJoystickController::setupPull()
 {
   encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::set_position_function_name,
-                                      constants::encoder_index,
-                                      constants::encoder_initial_value);
+                                      constants::pull_encoder_index,
+                                      constants::pull_encoder_initial_value);
+
+  long pull_torque;
+  modular_server_.property(constants::pull_torque_property_name).getValue(pull_torque);
+
+  long pwm_offset = map(pull_torque,
+                        constants::pull_torque_min,
+                        constants::pull_torque_max,
+                        constants::pull_pwm_offset_min,
+                        constants::pull_pwm_offset_max);
+
+  disableAutomaticCurrentScaling(constants::pull_channel);
+  setPwmOffset(constants::pull_channel,pwm_offset);
 }
 
 bool MouseJoystickController::pulled()
@@ -276,7 +291,7 @@ bool MouseJoystickController::pulled()
   bool was_pulled = false;
   StaticJsonBuffer<constants::ENCODER_POSITIONS_JSON_BUFFER_SIZE> json_buffer;
   JsonArray & position_array = encoder_interface_simple_ptr_->callGetResult(json_buffer,encoder_interface_simple::constants::get_positions_function_name);
-  long position = position_array[constants::encoder_index];
+  long position = position_array[constants::pull_encoder_index];
 
   long pull_threshold;
   modular_server_.property(constants::pull_threshold_property_name).getValue(pull_threshold);
