@@ -59,7 +59,7 @@ public:
   void abort();
 
   void setupPull();
-  bool pulled();
+  void checkForPull();
 
   void reward();
 
@@ -71,6 +71,7 @@ private:
 
   mouse_joystick_controller::constants::AssayStatus assay_status_;
   EventController<mouse_joystick_controller::constants::EVENT_COUNT_MAX> event_controller_;
+  EventId trial_timeout_event_id_;
 
   ModularClient * encoder_interface_simple_ptr_;
   ModularClient * power_switch_controller_ptr_;
@@ -83,6 +84,7 @@ private:
   void moveJoystickToReachPositionHandler();
   void startTrialHandler(modular_server::Interrupt * interrupt_ptr);
   void abortHandler(modular_server::Interrupt * interrupt_ptr);
+  void trialTimeoutHandler(int arg);
 
 };
 

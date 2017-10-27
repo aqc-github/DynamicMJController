@@ -22,7 +22,7 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=8};
+enum{PROPERTY_COUNT_MAX=11};
 enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=2};
@@ -69,6 +69,10 @@ enum{ENCODER_POSITIONS_JSON_BUFFER_SIZE=256};
 extern const size_t pull_channel;
 extern const long pull_pwm_offset_min;
 extern const long pull_pwm_offset_max;
+
+// Ready
+extern const long ready_tone_delay;
+extern const long ready_tone_count;
 
 // Reward
 extern const long reward_tone_delay;
@@ -140,6 +144,14 @@ extern const long pull_torque_min;
 extern const long pull_torque_max;
 extern const long pull_torque_default;
 
+extern ConstantString ready_tone_frequency_property_name;
+extern const long ready_tone_frequency_default;
+
+extern ConstantString ready_tone_duration_property_name;
+extern const long ready_tone_duration_min;
+extern const long ready_tone_duration_max;
+extern const long ready_tone_duration_default;
+
 extern ConstantString reward_tone_frequency_property_name;
 extern const long reward_tone_frequency_default;
 
@@ -157,6 +169,11 @@ extern ConstantString reward_solenoid_duration_property_name;
 extern const long reward_solenoid_duration_min;
 extern const long reward_solenoid_duration_max;
 extern const long reward_solenoid_duration_default;
+
+extern ConstantString trial_timeout_duration_property_name;
+extern const long trial_timeout_duration_min;
+extern const long trial_timeout_duration_max;
+extern const long trial_timeout_duration_default;
 
 // Parameters
 

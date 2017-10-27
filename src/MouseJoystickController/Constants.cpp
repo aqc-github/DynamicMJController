@@ -52,6 +52,10 @@ const size_t pull_channel = 0;
 const long pull_pwm_offset_min = 0;
 const long pull_pwm_offset_max = 80;
 
+// Ready
+const long ready_tone_delay = 0;
+const long ready_tone_count = 1;
+
 // Reward
 const long reward_tone_delay = 0;
 const long reward_tone_count = 1;
@@ -110,6 +114,14 @@ const long pull_torque_min = 0;
 const long pull_torque_max = 100;
 const long pull_torque_default = 25;
 
+CONSTANT_STRING(ready_tone_frequency_property_name,"readyToneFrequency");
+const long ready_tone_frequency_default = 8000;
+
+CONSTANT_STRING(ready_tone_duration_property_name,"readyToneDuration");
+const long ready_tone_duration_min = 100;
+const long ready_tone_duration_max = 2000;
+const long ready_tone_duration_default = 200;
+
 CONSTANT_STRING(reward_tone_frequency_property_name,"rewardToneFrequency");
 const long reward_tone_frequency_default = 4000;
 
@@ -127,6 +139,11 @@ CONSTANT_STRING(reward_solenoid_duration_property_name,"rewardSolenoidDuration")
 const long reward_solenoid_duration_min = 5;
 const long reward_solenoid_duration_max = 1000;
 const long reward_solenoid_duration_default = 80;
+
+CONSTANT_STRING(trial_timeout_duration_property_name,"trialTimeoutDuration");
+const long trial_timeout_duration_min = 1;
+const long trial_timeout_duration_max = 3600;
+const long trial_timeout_duration_default = 30;
 
 // Parameters
 

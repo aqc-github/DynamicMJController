@@ -95,6 +95,14 @@ void MouseJoystickController::setup()
   pull_torque_property.setRange(constants::pull_torque_min,constants::pull_torque_max);
   pull_torque_property.setUnits(constants::percent_units);
 
+  modular_server::Property & ready_tone_frequency_property = modular_server_.createProperty(constants::ready_tone_frequency_property_name,constants::ready_tone_frequency_default);
+  ready_tone_frequency_property.setRange(audio_controller::constants::frequency_min,audio_controller::constants::frequency_max);
+  ready_tone_frequency_property.setUnits(audio_controller::constants::hz_units);
+
+  modular_server::Property & ready_tone_duration_property = modular_server_.createProperty(constants::ready_tone_duration_property_name,constants::ready_tone_duration_default);
+  ready_tone_duration_property.setRange(constants::ready_tone_duration_min,constants::ready_tone_duration_max);
+  ready_tone_duration_property.setUnits(audio_controller::constants::ms_units);
+
   modular_server::Property & reward_tone_frequency_property = modular_server_.createProperty(constants::reward_tone_frequency_property_name,constants::reward_tone_frequency_default);
   reward_tone_frequency_property.setRange(audio_controller::constants::frequency_min,audio_controller::constants::frequency_max);
   reward_tone_frequency_property.setUnits(audio_controller::constants::hz_units);
@@ -110,6 +118,10 @@ void MouseJoystickController::setup()
   modular_server::Property & reward_solenoid_duration_property = modular_server_.createProperty(constants::reward_solenoid_duration_property_name,constants::reward_solenoid_duration_default);
   reward_solenoid_duration_property.setRange(constants::reward_solenoid_duration_min,constants::reward_solenoid_duration_max);
   reward_solenoid_duration_property.setUnits(power_switch_controller::constants::ms_units);
+
+  modular_server::Property & trial_timeout_duration_property = modular_server_.createProperty(constants::trial_timeout_duration_property_name,constants::trial_timeout_duration_default);
+  trial_timeout_duration_property.setRange(constants::trial_timeout_duration_min,constants::trial_timeout_duration_max);
+  trial_timeout_duration_property.setUnits(constants::seconds_units);
 
   // Parameters
 
@@ -198,19 +210,14 @@ void MouseJoystickController::update()
   else if (state_ptr == &constants::state_wait_for_pull_string)
   {
     setupPull();
-    assay_status_.state_ptr = &constants::state_waiting_for_pull_string;
   }
   else if (state_ptr == &constants::state_waiting_for_pull_string)
   {
-    if (pulled())
-    {
-      assay_status_.state_ptr = &constants::state_reward_string;
-    }
+    checkForPull();
   }
   else if (state_ptr == &constants::state_reward_string)
   {
     reward();
-    assay_status_.state_ptr = &constants::state_retract_string;
   }
   else if (state_ptr == &constants::state_retract_string)
   {
@@ -307,11 +314,33 @@ void MouseJoystickController::setupPull()
 
   disableAutomaticCurrentScaling(constants::pull_channel);
   setPwmOffset(constants::pull_channel,pwm_offset);
+
+  long ready_tone_frequency;
+  modular_server_.property(constants::ready_tone_frequency_property_name).getValue(ready_tone_frequency);
+
+  long ready_tone_duration;
+  modular_server_.property(constants::ready_tone_duration_property_name).getValue(ready_tone_duration);
+
+  long trial_timeout_duration;
+  modular_server_.property(constants::trial_timeout_duration_property_name).getValue(trial_timeout_duration);
+
+  trial_timeout_event_id_ = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystickController::trialTimeoutHandler),
+                                                                 trial_timeout_duration*constants::milliseconds_per_second);
+  event_controller_.enable(trial_timeout_event_id_);
+
+  audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_function_name,
+                              ready_tone_frequency,
+                              audio_controller::constants::speaker_all,
+                              constants::ready_tone_delay,
+                              ready_tone_duration*2,
+                              ready_tone_duration,
+                              constants::ready_tone_count);
+
+  assay_status_.state_ptr = &constants::state_waiting_for_pull_string;
 }
 
-bool MouseJoystickController::pulled()
+void MouseJoystickController::checkForPull()
 {
-  bool was_pulled = false;
   StaticJsonBuffer<constants::ENCODER_POSITIONS_JSON_BUFFER_SIZE> json_buffer;
   JsonArray & position_array = encoder_interface_simple_ptr_->callGetResult(json_buffer,encoder_interface_simple::constants::get_positions_function_name);
   long position = position_array[constants::pull_encoder_index];
@@ -321,9 +350,9 @@ bool MouseJoystickController::pulled()
 
   if (position <= pull_threshold)
   {
-    was_pulled = true;
+    event_controller_.remove(trial_timeout_event_id_);
+    assay_status_.state_ptr = &constants::state_reward_string;
   }
-  return was_pulled;
 }
 
 void MouseJoystickController::reward()
@@ -355,6 +384,8 @@ void MouseJoystickController::reward()
                                      reward_solenoid_duration*2,
                                      reward_solenoid_duration,
                                      constants::reward_solenoid_count);
+
+  assay_status_.state_ptr = &constants::state_retract_string;
 }
 
 // Handlers must be non-blocking (avoid 'delay')
@@ -449,4 +480,9 @@ void MouseJoystickController::startTrialHandler(modular_server::Interrupt * inte
 void MouseJoystickController::abortHandler(modular_server::Interrupt * interrupt_ptr)
 {
   abort();
+}
+
+void MouseJoystickController::trialTimeoutHandler(int arg)
+{
+  assay_status_.state_ptr = &constants::state_retract_string;
 }
