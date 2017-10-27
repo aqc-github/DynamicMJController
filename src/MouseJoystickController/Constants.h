@@ -14,6 +14,7 @@
 
 #include <EncoderInterfaceSimple.h>
 #include <PowerSwitchController.h>
+#include <AudioController.h>
 
 
 namespace mouse_joystick_controller
@@ -21,7 +22,7 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=4};
+enum{PROPERTY_COUNT_MAX=8};
 enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=2};
@@ -50,6 +51,7 @@ extern ConstantString state_move_to_reach_string;
 extern ConstantString state_moving_to_reach_string;
 extern ConstantString state_wait_for_pull_string;
 extern ConstantString state_waiting_for_pull_string;
+extern ConstantString state_reward_string;
 extern ConstantString state_retract_string;
 extern ConstantString state_retracting_string;
 extern ConstantString state_move_to_base_stop_string;
@@ -68,10 +70,19 @@ extern const size_t pull_channel;
 extern const long pull_pwm_offset_min;
 extern const long pull_pwm_offset_max;
 
+// Reward
+extern const long reward_tone_delay;
+extern const long reward_tone_count;
+enum{REWARD_SOLENOID_CHANNEL_COUNT=1};
+extern const long reward_solenoid_channels[REWARD_SOLENOID_CHANNEL_COUNT];
+extern const long reward_solenoid_count;
+
 // Clients
 extern const size_t encoder_interface_simple_address[1];
 
 extern const size_t power_switch_controller_address[2];
+
+extern const size_t audio_controller_address[4];
 
 // Interrupts
 
@@ -128,6 +139,24 @@ extern ConstantString pull_torque_property_name;
 extern const long pull_torque_min;
 extern const long pull_torque_max;
 extern const long pull_torque_default;
+
+extern ConstantString reward_tone_frequency_property_name;
+extern const long reward_tone_frequency_default;
+
+extern ConstantString reward_tone_duration_property_name;
+extern const long reward_tone_duration_min;
+extern const long reward_tone_duration_max;
+extern const long reward_tone_duration_default;
+
+extern ConstantString reward_solenoid_delay_property_name;
+extern const long reward_solenoid_delay_min;
+extern const long reward_solenoid_delay_max;
+extern const long reward_solenoid_delay_default;
+
+extern ConstantString reward_solenoid_duration_property_name;
+extern const long reward_solenoid_duration_min;
+extern const long reward_solenoid_duration_max;
+extern const long reward_solenoid_duration_default;
 
 // Parameters
 

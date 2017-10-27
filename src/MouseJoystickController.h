@@ -30,6 +30,7 @@
 #include <ModularClient.h>
 #include <EncoderInterfaceSimple.h>
 #include <PowerSwitchController.h>
+#include <AudioController.h>
 
 #include <ModularServer.h>
 #include <ModularDeviceBase.h>
@@ -57,6 +58,11 @@ public:
   void startTrial();
   void abort();
 
+  void setupPull();
+  bool pulled();
+
+  void reward();
+
 private:
   modular_server::Property properties_[mouse_joystick_controller::constants::PROPERTY_COUNT_MAX];
   modular_server::Parameter parameters_[mouse_joystick_controller::constants::PARAMETER_COUNT_MAX];
@@ -68,9 +74,7 @@ private:
 
   ModularClient * encoder_interface_simple_ptr_;
   ModularClient * power_switch_controller_ptr_;
-
-  void setupPull();
-  bool pulled();
+  ModularClient * audio_controller_ptr_;
 
   // Handlers
   void setClientPropertyValuesHandler();

@@ -34,6 +34,7 @@ CONSTANT_STRING(state_move_to_reach_string,"MOVE_TO_REACH");
 CONSTANT_STRING(state_moving_to_reach_string,"MOVING_TO_REACH");
 CONSTANT_STRING(state_wait_for_pull_string,"WAIT_FOR_PULL");
 CONSTANT_STRING(state_waiting_for_pull_string,"WAITING_FOR_PULL");
+CONSTANT_STRING(state_reward_string,"REWARD");
 CONSTANT_STRING(state_retract_string,"RETRACT");
 CONSTANT_STRING(state_retracting_string,"RETRACTING");
 CONSTANT_STRING(state_move_to_base_stop_string,"MOVE_TO_BASE_STOP");
@@ -51,6 +52,15 @@ const size_t pull_channel = 0;
 const long pull_pwm_offset_min = 0;
 const long pull_pwm_offset_max = 80;
 
+// Reward
+const long reward_tone_delay = 0;
+const long reward_tone_count = 1;
+const long reward_solenoid_channels[REWARD_SOLENOID_CHANNEL_COUNT] =
+  {
+   0,
+  };
+const long reward_solenoid_count = 1;
+
 // Clients
 const size_t encoder_interface_simple_address[1] =
   {
@@ -59,6 +69,14 @@ const size_t encoder_interface_simple_address[1] =
 
 const size_t power_switch_controller_address[2] =
   {
+   3,
+   3,
+  };
+
+const size_t audio_controller_address[4] =
+  {
+   3,
+   3,
    3,
    3,
   };
@@ -91,6 +109,24 @@ CONSTANT_STRING(pull_torque_property_name,"pullTorque");
 const long pull_torque_min = 0;
 const long pull_torque_max = 100;
 const long pull_torque_default = 25;
+
+CONSTANT_STRING(reward_tone_frequency_property_name,"rewardToneFrequency");
+const long reward_tone_frequency_default = 4000;
+
+CONSTANT_STRING(reward_tone_duration_property_name,"rewardToneDuration");
+const long reward_tone_duration_min = 100;
+const long reward_tone_duration_max = 2000;
+const long reward_tone_duration_default = 500;
+
+CONSTANT_STRING(reward_solenoid_delay_property_name,"rewardSolenoidDelay");
+const long reward_solenoid_delay_min = 100;
+const long reward_solenoid_delay_max = 5000;
+const long reward_solenoid_delay_default = 1000;
+
+CONSTANT_STRING(reward_solenoid_duration_property_name,"rewardSolenoidDuration");
+const long reward_solenoid_duration_min = 5;
+const long reward_solenoid_duration_max = 1000;
+const long reward_solenoid_duration_default = 80;
 
 // Parameters
 

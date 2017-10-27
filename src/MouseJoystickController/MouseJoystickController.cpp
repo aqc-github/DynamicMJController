@@ -25,6 +25,7 @@ void MouseJoystickController::setup()
   // Clients Setup
   encoder_interface_simple_ptr_ = &(createClientAtAddress(constants::encoder_interface_simple_address));
   power_switch_controller_ptr_ = &(createClientAtAddress(constants::power_switch_controller_address));
+  audio_controller_ptr_ = &(createClientAtAddress(constants::audio_controller_address));
 
   // Pin Setup
 
@@ -92,6 +93,23 @@ void MouseJoystickController::setup()
 
   modular_server::Property & pull_torque_property = modular_server_.createProperty(constants::pull_torque_property_name,constants::pull_torque_default);
   pull_torque_property.setRange(constants::pull_torque_min,constants::pull_torque_max);
+  pull_torque_property.setUnits(constants::percent_units);
+
+  modular_server::Property & reward_tone_frequency_property = modular_server_.createProperty(constants::reward_tone_frequency_property_name,constants::reward_tone_frequency_default);
+  reward_tone_frequency_property.setRange(audio_controller::constants::frequency_min,audio_controller::constants::frequency_max);
+  reward_tone_frequency_property.setUnits(audio_controller::constants::hz_units);
+
+  modular_server::Property & reward_tone_duration_property = modular_server_.createProperty(constants::reward_tone_duration_property_name,constants::reward_tone_duration_default);
+  reward_tone_duration_property.setRange(constants::reward_tone_duration_min,constants::reward_tone_duration_max);
+  reward_tone_duration_property.setUnits(audio_controller::constants::ms_units);
+
+  modular_server::Property & reward_solenoid_delay_property = modular_server_.createProperty(constants::reward_solenoid_delay_property_name,constants::reward_solenoid_delay_default);
+  reward_solenoid_delay_property.setRange(constants::reward_solenoid_delay_min,constants::reward_solenoid_delay_max);
+  reward_solenoid_delay_property.setUnits(power_switch_controller::constants::ms_units);
+
+  modular_server::Property & reward_solenoid_duration_property = modular_server_.createProperty(constants::reward_solenoid_duration_property_name,constants::reward_solenoid_duration_default);
+  reward_solenoid_duration_property.setRange(constants::reward_solenoid_duration_min,constants::reward_solenoid_duration_max);
+  reward_solenoid_duration_property.setUnits(power_switch_controller::constants::ms_units);
 
   // Parameters
 
@@ -186,8 +204,13 @@ void MouseJoystickController::update()
   {
     if (pulled())
     {
-      assay_status_.state_ptr = &constants::state_retract_string;
+      assay_status_.state_ptr = &constants::state_reward_string;
     }
+  }
+  else if (state_ptr == &constants::state_reward_string)
+  {
+    reward();
+    assay_status_.state_ptr = &constants::state_retract_string;
   }
   else if (state_ptr == &constants::state_retract_string)
   {
@@ -303,6 +326,37 @@ bool MouseJoystickController::pulled()
   return was_pulled;
 }
 
+void MouseJoystickController::reward()
+{
+  long reward_tone_frequency;
+  modular_server_.property(constants::reward_tone_frequency_property_name).getValue(reward_tone_frequency);
+
+  long reward_tone_duration;
+  modular_server_.property(constants::reward_tone_duration_property_name).getValue(reward_tone_duration);
+
+  audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_function_name,
+                              reward_tone_frequency,
+                              audio_controller::constants::speaker_all,
+                              constants::reward_tone_delay,
+                              reward_tone_duration*2,
+                              reward_tone_duration,
+                              constants::reward_tone_count);
+
+  long reward_solenoid_delay;
+  modular_server_.property(constants::reward_solenoid_delay_property_name).getValue(reward_solenoid_delay);
+
+  long reward_solenoid_duration;
+  modular_server_.property(constants::reward_solenoid_duration_property_name).getValue(reward_solenoid_duration);
+
+  Array<long,constants::REWARD_SOLENOID_CHANNEL_COUNT> solenoid_channels(constants::reward_solenoid_channels);
+  power_switch_controller_ptr_->call(power_switch_controller::constants::add_pwm_function_name,
+                                     solenoid_channels,
+                                     reward_solenoid_delay,
+                                     reward_solenoid_duration*2,
+                                     reward_solenoid_duration,
+                                     constants::reward_solenoid_count);
+}
+
 // Handlers must be non-blocking (avoid 'delay')
 //
 // modular_server_.parameter(parameter_name).getValue(value) value type must be either:
@@ -341,6 +395,14 @@ void MouseJoystickController::setClientPropertyValuesHandler()
   power_switch_controller_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name,
                                      modular_server::constants::all_array);
   call_was_successful = power_switch_controller_ptr_->callWasSuccessful();
+  modular_server_.response().write(call_was_successful);
+  modular_server_.response().endArray();
+
+  modular_server_.response().writeKey(audio_controller::constants::device_name);
+  modular_server_.response().beginArray();
+  audio_controller_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name,
+                              modular_server::constants::all_array);
+  call_was_successful = audio_controller_ptr_->callWasSuccessful();
   modular_server_.response().write(call_was_successful);
   modular_server_.response().endArray();
 

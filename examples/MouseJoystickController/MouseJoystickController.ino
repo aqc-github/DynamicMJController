@@ -21,6 +21,7 @@
 #include <ModularClient.h>
 #include <EncoderInterfaceSimple.h>
 #include <PowerSwitchController.h>
+#include <AudioController.h>
 
 #include <ModularServer.h>
 #include <ModularDeviceBase.h>
