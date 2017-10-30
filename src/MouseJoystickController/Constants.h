@@ -47,6 +47,8 @@ extern ConstantString state_assay_started_string;
 extern ConstantString state_homing_string;
 extern ConstantString state_move_to_base_start_string;
 extern ConstantString state_moving_to_base_start_string;
+extern ConstantString state_wait_to_start_trial_string;
+extern ConstantString state_waiting_to_start_trial_string;
 extern ConstantString state_move_to_reach_string;
 extern ConstantString state_moving_to_reach_string;
 extern ConstantString state_wait_for_pull_string;
@@ -54,6 +56,7 @@ extern ConstantString state_waiting_for_pull_string;
 extern ConstantString state_reward_string;
 extern ConstantString state_retract_string;
 extern ConstantString state_retracting_string;
+extern ConstantString state_finish_trial_string;
 extern ConstantString state_move_to_base_stop_string;
 extern ConstantString state_moving_to_base_stop_string;
 extern ConstantString state_assay_finished_string;
@@ -62,6 +65,10 @@ extern const long seconds_per_minute;
 extern const long milliseconds_per_second;
 extern const long milliseconds_per_minute;
 
+// Ready
+extern const long ready_tone_delay;
+extern const long ready_tone_count;
+
 // Pull
 extern const size_t pull_encoder_index;
 extern const size_t pull_encoder_initial_value;
@@ -69,10 +76,11 @@ enum{ENCODER_POSITIONS_JSON_BUFFER_SIZE=256};
 extern const size_t pull_channel;
 extern const long pull_pwm_offset_min;
 extern const long pull_pwm_offset_max;
-
-// Ready
-extern const long ready_tone_delay;
-extern const long ready_tone_count;
+enum{PULL_TORQUE_COUNT_MAX=4};
+extern const long pull_torque_min;
+extern const long pull_torque_max;
+extern const long pull_torque_array_length_min;
+extern const long pull_torque_array_length_max;
 
 // Reward
 extern const long reward_tone_delay;
@@ -139,10 +147,8 @@ extern const long pull_threshold_min;
 extern const long pull_threshold_max;
 extern const long pull_threshold_default;
 
-extern ConstantString pull_torque_property_name;
-extern const long pull_torque_min;
-extern const long pull_torque_max;
-extern const long pull_torque_default;
+extern ConstantString pull_torque_means_property_name;
+extern const long pull_torque_means_default[PULL_TORQUE_COUNT_MAX];
 
 extern ConstantString ready_tone_frequency_property_name;
 extern const long ready_tone_frequency_default;
@@ -184,8 +190,8 @@ extern ConstantString move_joystick_to_base_position_function_name;
 extern ConstantString move_joystick_to_reach_position_function_name;
 
 // Callbacks
-extern ConstantString start_trial_callback_name;
-extern ConstantString abort_callback_name;
+extern ConstantString start_assay_callback_name;
+extern ConstantString abort_trial_callback_name;
 
 // Errors
 }

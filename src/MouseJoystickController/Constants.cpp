@@ -30,6 +30,8 @@ CONSTANT_STRING(state_assay_started_string,"ASSAY_STARTED");
 CONSTANT_STRING(state_homing_string,"HOMING");
 CONSTANT_STRING(state_move_to_base_start_string,"MOVE_TO_BASE_START");
 CONSTANT_STRING(state_moving_to_base_start_string,"MOVING_TO_BASE_START");
+CONSTANT_STRING(state_wait_to_start_trial_string,"WAIT_TO_START_TRIAL");
+CONSTANT_STRING(state_waiting_to_start_trial_string,"WAITING_TO_START_TRIAL");
 CONSTANT_STRING(state_move_to_reach_string,"MOVE_TO_REACH");
 CONSTANT_STRING(state_moving_to_reach_string,"MOVING_TO_REACH");
 CONSTANT_STRING(state_wait_for_pull_string,"WAIT_FOR_PULL");
@@ -37,6 +39,7 @@ CONSTANT_STRING(state_waiting_for_pull_string,"WAITING_FOR_PULL");
 CONSTANT_STRING(state_reward_string,"REWARD");
 CONSTANT_STRING(state_retract_string,"RETRACT");
 CONSTANT_STRING(state_retracting_string,"RETRACTING");
+CONSTANT_STRING(state_finish_trial_string,"FINISH_TRIAL");
 CONSTANT_STRING(state_move_to_base_stop_string,"MOVE_TO_BASE_STOP");
 CONSTANT_STRING(state_moving_to_base_stop_string,"MOVING_TO_BASE_STOP");
 CONSTANT_STRING(state_assay_finished_string,"ASSAY_FINISHED");
@@ -45,16 +48,20 @@ const long seconds_per_minute = 60;
 const long milliseconds_per_second = 1000;
 const long milliseconds_per_minute = milliseconds_per_second*seconds_per_minute;
 
+// Ready
+const long ready_tone_delay = 0;
+const long ready_tone_count = 1;
+
 // Pull
 const size_t pull_encoder_index = 0;
 const size_t pull_encoder_initial_value = 0;
 const size_t pull_channel = 0;
 const long pull_pwm_offset_min = 0;
 const long pull_pwm_offset_max = 80;
-
-// Ready
-const long ready_tone_delay = 0;
-const long ready_tone_count = 1;
+const long pull_torque_min = 0;
+const long pull_torque_max = 100;
+const long pull_torque_array_length_min = 1;
+const long pull_torque_array_length_max = PULL_TORQUE_COUNT_MAX;
 
 // Reward
 const long reward_tone_delay = 0;
@@ -109,10 +116,14 @@ const long pull_threshold_min = -1000;
 const long pull_threshold_max = 0;
 const long pull_threshold_default = -75;
 
-CONSTANT_STRING(pull_torque_property_name,"pullTorque");
-const long pull_torque_min = 0;
-const long pull_torque_max = 100;
-const long pull_torque_default = 25;
+CONSTANT_STRING(pull_torque_means_property_name,"pullTorqueMeans");
+const long pull_torque_means_default[PULL_TORQUE_COUNT_MAX] =
+  {
+   20,
+   40,
+   60,
+   80,
+  };
 
 CONSTANT_STRING(ready_tone_frequency_property_name,"readyToneFrequency");
 const long ready_tone_frequency_default = 8000;
@@ -154,8 +165,8 @@ CONSTANT_STRING(move_joystick_to_base_position_function_name,"moveJoystickToBase
 CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToReachPosition");
 
 // Callbacks
-CONSTANT_STRING(start_trial_callback_name,"startTrial");
-CONSTANT_STRING(abort_callback_name,"abort");
+CONSTANT_STRING(start_assay_callback_name,"startAssay");
+CONSTANT_STRING(abort_trial_callback_name,"abortTrial");
 
 // Errors
 }

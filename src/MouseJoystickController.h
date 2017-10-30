@@ -55,13 +55,17 @@ public:
   void moveJoystickToBasePosition();
   void moveJoystickToReachPosition();
 
-  void startTrial();
-  void abort();
+  void startAssay();
+  void abortTrial();
+
+  void setupTrial();
+  void checkForStartTrial();
 
   void setupPull();
   void checkForPull();
 
   void reward();
+  void finishTrial();
 
 private:
   modular_server::Property properties_[mouse_joystick_controller::constants::PROPERTY_COUNT_MAX];
@@ -77,13 +81,15 @@ private:
   ModularClient * power_switch_controller_ptr_;
   ModularClient * audio_controller_ptr_;
 
+  size_t pull_torque_index_;
+
   // Handlers
   void setClientPropertyValuesHandler();
   void getAssayStatusHandler();
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();
-  void startTrialHandler(modular_server::Interrupt * interrupt_ptr);
-  void abortHandler(modular_server::Interrupt * interrupt_ptr);
+  void startAssayHandler(modular_server::Interrupt * interrupt_ptr);
+  void abortTrialHandler(modular_server::Interrupt * interrupt_ptr);
   void trialTimeoutHandler(int arg);
 
 };
