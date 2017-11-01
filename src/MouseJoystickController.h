@@ -57,6 +57,7 @@ public:
 
   void startAssay();
   void abortTrial();
+  void abortAssay();
 
   void setupTrial();
   void checkForStartTrial();
@@ -81,7 +82,13 @@ private:
   ModularClient * power_switch_controller_ptr_;
   ModularClient * audio_controller_ptr_;
 
+  bool trial_aborted_;
+  bool assay_aborted_;
+  size_t trial_;
   size_t pull_torque_index_;
+  size_t reach_position_1_index_;
+  size_t block_;
+  size_t set_;
 
   // Handlers
   void setClientPropertyValuesHandler();
@@ -90,6 +97,7 @@ private:
   void moveJoystickToReachPositionHandler();
   void startAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void abortTrialHandler(modular_server::Interrupt * interrupt_ptr);
+  void abortAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void trialTimeoutHandler(int arg);
 
 };

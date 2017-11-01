@@ -44,12 +44,16 @@ CONSTANT_STRING(state_move_to_base_stop_string,"MOVE_TO_BASE_STOP");
 CONSTANT_STRING(state_moving_to_base_stop_string,"MOVING_TO_BASE_STOP");
 CONSTANT_STRING(state_assay_finished_string,"ASSAY_FINISHED");
 
+CONSTANT_STRING(trial_string,"trial");
+CONSTANT_STRING(block_string,"block");
+CONSTANT_STRING(set_string,"set");
+
 const long seconds_per_minute = 60;
 const long milliseconds_per_second = 1000;
 const long milliseconds_per_minute = milliseconds_per_second*seconds_per_minute;
 
 // Ready
-const long ready_tone_delay = 0;
+const long ready_tone_delay = 40;
 const long ready_tone_count = 1;
 
 // Pull
@@ -64,7 +68,7 @@ const long pull_torque_array_length_min = 1;
 const long pull_torque_array_length_max = PULL_TORQUE_COUNT_MAX;
 
 // Reward
-const long reward_tone_delay = 0;
+const long reward_tone_delay = 40;
 const long reward_tone_count = 1;
 const long reward_solenoid_channels[REWARD_SOLENOID_CHANNEL_COUNT] =
   {
@@ -109,7 +113,15 @@ const long hold_delay_element_default = 50;
 
 CONSTANT_STRING(base_position_property_name,"basePosition");
 
-CONSTANT_STRING(reach_position_property_name,"reachPosition");
+CONSTANT_STRING(reach_position_0_property_name,"reachPosition0");
+const long reach_position_0_default = 50;
+
+CONSTANT_STRING(reach_position_1_means_property_name,"reachPosition1Means");
+const long reach_position_1_means_default[REACH_POSITION_1_COUNT_MAX] =
+  {
+   5,
+   50,
+  };
 
 CONSTANT_STRING(pull_threshold_property_name,"pullThreshold");
 const long pull_threshold_min = -1000;
@@ -156,6 +168,19 @@ const long trial_timeout_duration_min = 1;
 const long trial_timeout_duration_max = 3600;
 const long trial_timeout_duration_default = 30;
 
+CONSTANT_STRING(repeat_aborted_trial_property_name,"repeatAbortedTrial");
+const bool repeat_aborted_trial_default = false;
+
+CONSTANT_STRING(trial_count_property_name,"trialCount");
+const long trial_count_min = 1;
+const long trial_count_max = 100;
+const long trial_count_default = 2;
+
+CONSTANT_STRING(set_count_property_name,"setCount");
+const long set_count_min = 1;
+const long set_count_max = 100;
+const long set_count_default = 2;
+
 // Parameters
 
 // Functions
@@ -167,6 +192,7 @@ CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToRea
 // Callbacks
 CONSTANT_STRING(start_assay_callback_name,"startAssay");
 CONSTANT_STRING(abort_trial_callback_name,"abortTrial");
+CONSTANT_STRING(abort_assay_callback_name,"abortAssay");
 
 // Errors
 }

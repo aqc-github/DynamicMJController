@@ -27,8 +27,8 @@ const long steps_per_position_units_default[CHANNEL_COUNT] =
 
 const long velocity_max_default[CHANNEL_COUNT] =
   {
-   150,
-   150,
+   400,
+   400,
   };
 
  const long velocity_min_default[CHANNEL_COUNT] =
@@ -39,14 +39,14 @@ const long velocity_max_default[CHANNEL_COUNT] =
 
 const long acceleration_max_default[CHANNEL_COUNT] =
   {
-   150,
-   150,
+   400,
+   400,
   };
 
 const long home_velocity_default[CHANNEL_COUNT] =
   {
-   -50,
-   -50,
+   -75,
+   -75,
   };
 
 const bool invert_driver_direction_default[CHANNEL_COUNT] =
@@ -91,11 +91,11 @@ const long base_position_default[CHANNEL_COUNT] =
    150,
   };
 
-const long reach_position_default[CHANNEL_COUNT] =
-  {
-   50,
-   5,
-  };
+// const long reach_position_default[CHANNEL_COUNT] =
+//   {
+//    50,
+//    5,
+//   };
 
 // Parameters
 

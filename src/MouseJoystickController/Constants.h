@@ -22,10 +22,10 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=11};
+enum{PROPERTY_COUNT_MAX=15};
 enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=4};
-enum{CALLBACK_COUNT_MAX=2};
+enum{CALLBACK_COUNT_MAX=3};
 
 enum{EVENT_COUNT_MAX=32};
 
@@ -60,6 +60,10 @@ extern ConstantString state_finish_trial_string;
 extern ConstantString state_move_to_base_stop_string;
 extern ConstantString state_moving_to_base_stop_string;
 extern ConstantString state_assay_finished_string;
+
+extern ConstantString trial_string;
+extern ConstantString block_string;
+extern ConstantString set_string;
 
 extern const long seconds_per_minute;
 extern const long milliseconds_per_second;
@@ -139,8 +143,12 @@ extern const long stage_position_max_default[CHANNEL_COUNT];
 extern ConstantString base_position_property_name;
 extern const long base_position_default[CHANNEL_COUNT];
 
-extern ConstantString reach_position_property_name;
-extern const long reach_position_default[CHANNEL_COUNT];
+extern ConstantString reach_position_0_property_name;
+extern const long reach_position_0_default;
+
+extern ConstantString reach_position_1_means_property_name;
+enum{REACH_POSITION_1_COUNT_MAX=2};
+extern const long reach_position_1_means_default[REACH_POSITION_1_COUNT_MAX];
 
 extern ConstantString pull_threshold_property_name;
 extern const long pull_threshold_min;
@@ -181,6 +189,19 @@ extern const long trial_timeout_duration_min;
 extern const long trial_timeout_duration_max;
 extern const long trial_timeout_duration_default;
 
+extern ConstantString repeat_aborted_trial_property_name;
+extern const bool repeat_aborted_trial_default;
+
+extern ConstantString trial_count_property_name;
+extern const long trial_count_min;
+extern const long trial_count_max;
+extern const long trial_count_default;
+
+extern ConstantString set_count_property_name;
+extern const long set_count_min;
+extern const long set_count_max;
+extern const long set_count_default;
+
 // Parameters
 
 // Functions
@@ -192,6 +213,7 @@ extern ConstantString move_joystick_to_reach_position_function_name;
 // Callbacks
 extern ConstantString start_assay_callback_name;
 extern ConstantString abort_trial_callback_name;
+extern ConstantString abort_assay_callback_name;
 
 // Errors
 }
