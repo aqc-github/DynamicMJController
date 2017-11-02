@@ -55,6 +55,7 @@ public:
   void moveJoystickToBasePosition();
   void moveJoystickToReachPosition();
 
+  void startTrial();
   void startAssay();
   void abortTrial();
   void abortAssay();
@@ -63,7 +64,7 @@ public:
   void checkForStartTrial();
 
   void setupPull();
-  void checkForPull();
+  void checkForPullOrPush();
 
   void reward();
   void finishTrial();
@@ -95,6 +96,7 @@ private:
   void getAssayStatusHandler();
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();
+  void startTrialHandler(modular_server::Interrupt * interrupt_ptr);
   void startAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void abortTrialHandler(modular_server::Interrupt * interrupt_ptr);
   void abortAssayHandler(modular_server::Interrupt * interrupt_ptr);

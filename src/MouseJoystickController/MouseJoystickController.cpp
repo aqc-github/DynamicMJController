@@ -93,6 +93,9 @@ void MouseJoystickController::setup()
   modular_server::Property & pull_threshold_property = modular_server_.createProperty(constants::pull_threshold_property_name,constants::pull_threshold_default);
   pull_threshold_property.setRange(constants::pull_threshold_min,constants::pull_threshold_max);
 
+  modular_server::Property & push_threshold_property = modular_server_.createProperty(constants::push_threshold_property_name,constants::push_threshold_default);
+  push_threshold_property.setRange(constants::push_threshold_min,constants::push_threshold_max);
+
   modular_server::Property & pull_torque_means_property = modular_server_.createProperty(constants::pull_torque_means_property_name,constants::pull_torque_means_default);
   pull_torque_means_property.setRange(constants::pull_torque_min,constants::pull_torque_max);
   pull_torque_means_property.setUnits(constants::percent_units);
@@ -153,12 +156,15 @@ void MouseJoystickController::setup()
   move_joystick_to_reach_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::moveJoystickToReachPositionHandler));
 
   // Callbacks
+  modular_server::Callback & start_trial_callback = modular_server_.createCallback(constants::start_trial_callback_name);
+  start_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::startTrialHandler));
+  start_trial_callback.attachTo(modular_device_base::constants::bnc_b_interrupt_name,modular_server::interrupt::mode_falling);
+#if defined(__MK64FX512__)
+  start_trial_callback.attachTo(modular_device_base::constants::btn_b_interrupt_name,modular_server::interrupt::mode_falling);
+#endif
+
   modular_server::Callback & start_assay_callback = modular_server_.createCallback(constants::start_assay_callback_name);
   start_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::startAssayHandler));
-  start_assay_callback.attachTo(modular_device_base::constants::bnc_b_interrupt_name,modular_server::interrupt::mode_falling);
-#if defined(__MK64FX512__)
-  start_assay_callback.attachTo(modular_device_base::constants::btn_b_interrupt_name,modular_server::interrupt::mode_falling);
-#endif
 
   modular_server::Callback & abort_trial_callback = modular_server_.createCallback(constants::abort_trial_callback_name);
   abort_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::abortTrialHandler));
@@ -169,7 +175,6 @@ void MouseJoystickController::setup()
 
   modular_server::Callback & abort_assay_callback = modular_server_.createCallback(constants::abort_assay_callback_name);
   abort_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::abortAssayHandler));
-  abort_assay_callback.attachTo(modular_device_base::constants::bnc_a_interrupt_name,modular_server::interrupt::mode_falling);
 
 }
 
@@ -237,7 +242,7 @@ void MouseJoystickController::update()
   }
   else if (state_ptr == &constants::state_waiting_for_pull_string)
   {
-    checkForPull();
+    checkForPullOrPush();
   }
   else if (state_ptr == &constants::state_reward_string)
   {
@@ -316,6 +321,18 @@ void MouseJoystickController::moveJoystickToReachPosition()
   moveStageTo(reach_position);
 }
 
+void MouseJoystickController::startTrial()
+{
+  if (assay_status_.state_ptr == &constants::state_waiting_to_start_trial_string)
+  {
+    assay_status_.state_ptr = &constants::state_move_to_reach_string;
+  }
+  else
+  {
+    startAssay();
+  }
+}
+
 void MouseJoystickController::startAssay()
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
@@ -356,7 +373,11 @@ void MouseJoystickController::setupTrial()
 
 void MouseJoystickController::checkForStartTrial()
 {
-  assay_status_.state_ptr = &constants::state_move_to_reach_string;
+  // todo: sense paws
+  if (false)
+  {
+    assay_status_.state_ptr = &constants::state_move_to_reach_string;
+  }
 }
 
 void MouseJoystickController::setupPull()
@@ -402,7 +423,7 @@ void MouseJoystickController::setupPull()
   assay_status_.state_ptr = &constants::state_waiting_for_pull_string;
 }
 
-void MouseJoystickController::checkForPull()
+void MouseJoystickController::checkForPullOrPush()
 {
   StaticJsonBuffer<constants::ENCODER_POSITIONS_JSON_BUFFER_SIZE> json_buffer;
   JsonArray & position_array = encoder_interface_simple_ptr_->callGetResult(json_buffer,encoder_interface_simple::constants::get_positions_function_name);
@@ -411,10 +432,18 @@ void MouseJoystickController::checkForPull()
   long pull_threshold;
   modular_server_.property(constants::pull_threshold_property_name).getValue(pull_threshold);
 
+  long push_threshold;
+  modular_server_.property(constants::push_threshold_property_name).getValue(push_threshold);
+
   if (position <= pull_threshold)
   {
     event_controller_.remove(trial_timeout_event_id_);
     assay_status_.state_ptr = &constants::state_reward_string;
+  }
+  else if (position >= push_threshold)
+  {
+    event_controller_.remove(trial_timeout_event_id_);
+    abortTrial();
   }
 }
 
@@ -587,6 +616,11 @@ void MouseJoystickController::moveJoystickToReachPositionHandler()
   {
     moveJoystickToReachPosition();
   }
+}
+
+void MouseJoystickController::startTrialHandler(modular_server::Interrupt * interrupt_ptr)
+{
+  startTrial();
 }
 
 void MouseJoystickController::startAssayHandler(modular_server::Interrupt * interrupt_ptr)

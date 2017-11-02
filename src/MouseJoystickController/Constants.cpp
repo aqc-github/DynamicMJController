@@ -128,6 +128,11 @@ const long pull_threshold_min = -1000;
 const long pull_threshold_max = 0;
 const long pull_threshold_default = -75;
 
+CONSTANT_STRING(push_threshold_property_name,"pushThreshold");
+const long push_threshold_min = 0;
+const long push_threshold_max = 1000;
+const long push_threshold_default = 75;
+
 CONSTANT_STRING(pull_torque_means_property_name,"pullTorqueMeans");
 const long pull_torque_means_default[PULL_TORQUE_COUNT_MAX] =
   {
@@ -190,6 +195,7 @@ CONSTANT_STRING(move_joystick_to_base_position_function_name,"moveJoystickToBase
 CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToReachPosition");
 
 // Callbacks
+CONSTANT_STRING(start_trial_callback_name,"startTrial");
 CONSTANT_STRING(start_assay_callback_name,"startAssay");
 CONSTANT_STRING(abort_trial_callback_name,"abortTrial");
 CONSTANT_STRING(abort_assay_callback_name,"abortAssay");

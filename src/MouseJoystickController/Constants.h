@@ -22,10 +22,10 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=15};
+enum{PROPERTY_COUNT_MAX=16};
 enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=4};
-enum{CALLBACK_COUNT_MAX=3};
+enum{CALLBACK_COUNT_MAX=4};
 
 enum{EVENT_COUNT_MAX=32};
 
@@ -155,6 +155,11 @@ extern const long pull_threshold_min;
 extern const long pull_threshold_max;
 extern const long pull_threshold_default;
 
+extern ConstantString push_threshold_property_name;
+extern const long push_threshold_min;
+extern const long push_threshold_max;
+extern const long push_threshold_default;
+
 extern ConstantString pull_torque_means_property_name;
 extern const long pull_torque_means_default[PULL_TORQUE_COUNT_MAX];
 
@@ -211,6 +216,7 @@ extern ConstantString move_joystick_to_base_position_function_name;
 extern ConstantString move_joystick_to_reach_position_function_name;
 
 // Callbacks
+extern ConstantString start_trial_callback_name;
 extern ConstantString start_assay_callback_name;
 extern ConstantString abort_trial_callback_name;
 extern ConstantString abort_assay_callback_name;
