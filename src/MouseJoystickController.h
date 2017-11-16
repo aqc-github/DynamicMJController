@@ -51,6 +51,7 @@ public:
   mouse_joystick_controller::constants::AssayStatus getAssayStatus();
   StageController::PositionArray getBasePosition();
   StageController::PositionArray getReachPosition();
+  long getPullTorque();
 
   void moveJoystickToBasePosition();
   void moveJoystickToReachPosition();
@@ -85,11 +86,11 @@ private:
 
   bool trial_aborted_;
   bool assay_aborted_;
-  size_t trial_;
-  size_t pull_torque_index_;
   size_t reach_position_1_index_;
-  size_t block_;
-  size_t set_;
+  size_t pull_torque_index_;
+
+  void updateReachPosition();
+  void updatePullTorque();
 
   // Handlers
   void setClientPropertyValuesHandler();

@@ -31,6 +31,14 @@ void MouseJoystickController::setup()
 
   // Assay Status Setup
   assay_status_.state_ptr = &constants::state_assay_not_started_string;
+  for (size_t channel=0; channel < constants::CHANNEL_COUNT; ++channel)
+  {
+    assay_status_.reach_position.push_back(0);
+  }
+  assay_status_.pull_torque = 0;
+  assay_status_.trial = 0;
+  assay_status_.block = 0;
+  assay_status_.set = 0;
 
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
@@ -294,19 +302,12 @@ StageController::PositionArray MouseJoystickController::getBasePosition()
 
 StageController::PositionArray MouseJoystickController::getReachPosition()
 {
-  long reach_position_0;
-  modular_server_.property(constants::reach_position_0_property_name).getValue(reach_position_0);
+  return assay_status_.reach_position;
+}
 
-  long reach_position_1;
-  modular_server_.property(constants::reach_position_1_means_property_name).getElementValue(reach_position_1_index_,
-                                                                                            reach_position_1);
-
-  long reach_position[constants::CHANNEL_COUNT];
-  reach_position[0] = reach_position_0;
-  reach_position[1] = reach_position_1;
-
-  StageController::PositionArray reach_position_array(reach_position);
-  return reach_position_array;
+long MouseJoystickController::getPullTorque()
+{
+  return assay_status_.pull_torque;
 }
 
 void MouseJoystickController::moveJoystickToBasePosition()
@@ -340,11 +341,10 @@ void MouseJoystickController::startAssay()
   {
     trial_aborted_ = false;
     assay_aborted_ = false;
-    trial_ = 0;
-    pull_torque_index_ = 0;
     reach_position_1_index_ = 0;
-    block_ = 0;
-    set_ = 0;
+    updateReachPosition();
+    pull_torque_index_ = 0;
+    updatePullTorque();
 
     assay_status_.state_ptr = &constants::state_assay_started_string;
   }
@@ -386,11 +386,9 @@ void MouseJoystickController::setupPull()
                                       constants::pull_encoder_index,
                                       constants::pull_encoder_initial_value);
 
-  long pull_torque_mean;
-  modular_server_.property(constants::pull_torque_means_property_name).getElementValue(pull_torque_index_,
-                                                                                       pull_torque_mean);
+  long pull_torque = getPullTorque();
 
-  long pwm_offset = map(pull_torque_mean,
+  long pwm_offset = map(pull_torque,
                         constants::pull_torque_min,
                         constants::pull_torque_max,
                         constants::pull_pwm_offset_min,
@@ -502,16 +500,16 @@ void MouseJoystickController::finishTrial()
 
   long trial_count;
   modular_server_.property(constants::trial_count_property_name).getValue(trial_count);
-  if (++trial_ >= (size_t)trial_count)
+  if (++assay_status_.trial >= (size_t)trial_count)
   {
-    trial_ = 0;
+    assay_status_.trial = 0;
 
-    ++block_;
+    ++assay_status_.block;
     const size_t pull_torque_array_length = modular_server_.property(constants::pull_torque_means_property_name).getArrayLength();
     if (++pull_torque_index_ >= pull_torque_array_length)
     {
       pull_torque_index_ = 0;
-      block_ = 0;
+      assay_status_.block = 0;
 
       const size_t reach_position_1_array_length = modular_server_.property(constants::reach_position_1_means_property_name).getArrayLength();
       if (++reach_position_1_index_ >= reach_position_1_array_length)
@@ -520,15 +518,38 @@ void MouseJoystickController::finishTrial()
 
         long set_count;
         modular_server_.property(constants::set_count_property_name).getValue(set_count);
-        if (++set_ >= (size_t)set_count)
+        if (++assay_status_.set >= (size_t)set_count)
         {
-          set_ = 0;
+          assay_status_.set = 0;
 
           assay_status_.state_ptr = &constants::state_move_to_base_stop_string;
         }
       }
     }
   }
+  updateReachPosition();
+  updatePullTorque();
+}
+
+void MouseJoystickController::updateReachPosition()
+{
+  long reach_position_0;
+  modular_server_.property(constants::reach_position_0_property_name).getValue(reach_position_0);
+
+  long reach_position_1;
+  modular_server_.property(constants::reach_position_1_means_property_name).getElementValue(reach_position_1_index_,
+                                                                                            reach_position_1);
+
+  assay_status_.reach_position[0] = reach_position_0;
+  assay_status_.reach_position[1] = reach_position_1;
+}
+
+void MouseJoystickController::updatePullTorque()
+{
+  long pull_torque_mean;
+  modular_server_.property(constants::pull_torque_means_property_name).getElementValue(pull_torque_index_,
+                                                                                       pull_torque_mean);
+  assay_status_.pull_torque = pull_torque_mean;
 }
 
 // Handlers must be non-blocking (avoid 'delay')
@@ -585,16 +606,16 @@ void MouseJoystickController::setClientPropertyValuesHandler()
 
 void MouseJoystickController::getAssayStatusHandler()
 {
-  constants::AssayStatus assay_status = getAssayStatus();
-
   modular_server_.response().writeResultKey();
 
   modular_server_.response().beginObject();
 
-  modular_server_.response().write(constants::state_string,assay_status.state_ptr);
-  modular_server_.response().write(constants::trial_string,trial_);
-  modular_server_.response().write(constants::block_string,block_);
-  modular_server_.response().write(constants::set_string,set_);
+  modular_server_.response().write(constants::state_string,assay_status_.state_ptr);
+  modular_server_.response().write(constants::reach_position_string,assay_status_.reach_position);
+  modular_server_.response().write(constants::pull_torque_string,assay_status_.pull_torque);
+  modular_server_.response().write(constants::trial_string,assay_status_.trial);
+  modular_server_.response().write(constants::block_string,assay_status_.block);
+  modular_server_.response().write(constants::set_string,assay_status_.set);
 
   modular_server_.response().endObject();
 

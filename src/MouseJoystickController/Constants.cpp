@@ -44,6 +44,8 @@ CONSTANT_STRING(state_move_to_base_stop_string,"MOVE_TO_BASE_STOP");
 CONSTANT_STRING(state_moving_to_base_stop_string,"MOVING_TO_BASE_STOP");
 CONSTANT_STRING(state_assay_finished_string,"ASSAY_FINISHED");
 
+CONSTANT_STRING(reach_position_string,"reach_position");
+CONSTANT_STRING(pull_torque_string,"pull_torque");
 CONSTANT_STRING(trial_string,"trial");
 CONSTANT_STRING(block_string,"block");
 CONSTANT_STRING(set_string,"set");
