@@ -195,6 +195,7 @@ void MouseJoystickController::update()
 
   if (state_ptr == &constants::state_assay_started_string)
   {
+    setupAssay();
     if (stageHomed())
     {
       assay_status_.state_ptr = &constants::state_move_to_base_start_string;
@@ -322,6 +323,14 @@ void MouseJoystickController::moveJoystickToReachPosition()
   moveStageTo(reach_position);
 }
 
+void MouseJoystickController::setupAssay()
+{
+  if (assay_status_.state_ptr == &constants::state_assay_started_string)
+  {
+    encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_all_outputs_function_name);
+  }
+}
+
 void MouseJoystickController::startTrial()
 {
   if (assay_status_.state_ptr == &constants::state_waiting_to_start_trial_string)
@@ -355,6 +364,8 @@ void MouseJoystickController::abortTrial()
   stopAll();
   event_controller_.removeAllEvents();
 
+  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_all_outputs_function_name);
+
   trial_aborted_ = true;
   assay_status_.state_ptr = &constants::state_retract_string;
 }
@@ -382,6 +393,7 @@ void MouseJoystickController::checkForStartTrial()
 
 void MouseJoystickController::setupPull()
 {
+  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::enable_all_outputs_function_name);
   encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::set_position_function_name,
                                       constants::pull_encoder_index,
                                       constants::pull_encoder_initial_value);
@@ -460,6 +472,8 @@ void MouseJoystickController::reward()
                               reward_tone_duration,
                               reward_tone_duration,
                               constants::reward_tone_count);
+
+  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_all_outputs_function_name);
 
   long reward_solenoid_delay;
   modular_server_.property(constants::reward_solenoid_delay_property_name).getValue(reward_solenoid_delay);

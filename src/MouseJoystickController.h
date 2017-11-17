@@ -56,6 +56,7 @@ public:
   void moveJoystickToBasePosition();
   void moveJoystickToReachPosition();
 
+  void setupAssay();
   void startTrial();
   void startAssay();
   void abortTrial();
