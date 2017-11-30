@@ -61,6 +61,7 @@ public:
   void startAssay();
   void abortTrial();
   void abortAssay();
+  void restartAssay();
 
   void setupTrial();
   void checkForStartTrial();
@@ -102,6 +103,7 @@ private:
   void startAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void abortTrialHandler(modular_server::Interrupt * interrupt_ptr);
   void abortAssayHandler(modular_server::Interrupt * interrupt_ptr);
+  void restartAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void trialTimeoutHandler(int arg);
 
 };

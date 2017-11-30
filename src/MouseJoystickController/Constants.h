@@ -25,7 +25,7 @@ namespace constants
 enum{PROPERTY_COUNT_MAX=16};
 enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=4};
-enum{CALLBACK_COUNT_MAX=4};
+enum{CALLBACK_COUNT_MAX=5};
 
 enum{EVENT_COUNT_MAX=32};
 
@@ -227,6 +227,7 @@ extern ConstantString start_trial_callback_name;
 extern ConstantString start_assay_callback_name;
 extern ConstantString abort_trial_callback_name;
 extern ConstantString abort_assay_callback_name;
+extern ConstantString restart_assay_callback_name;
 
 // Errors
 }

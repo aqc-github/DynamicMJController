@@ -167,9 +167,6 @@ void MouseJoystickController::setup()
   modular_server::Callback & start_trial_callback = modular_server_.createCallback(constants::start_trial_callback_name);
   start_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::startTrialHandler));
   start_trial_callback.attachTo(modular_device_base::constants::bnc_b_interrupt_name,modular_server::interrupt::mode_falling);
-#if defined(__MK64FX512__)
-  start_trial_callback.attachTo(modular_device_base::constants::btn_b_interrupt_name,modular_server::interrupt::mode_falling);
-#endif
 
   modular_server::Callback & start_assay_callback = modular_server_.createCallback(constants::start_assay_callback_name);
   start_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::startAssayHandler));
@@ -184,6 +181,12 @@ void MouseJoystickController::setup()
   modular_server::Callback & abort_assay_callback = modular_server_.createCallback(constants::abort_assay_callback_name);
   abort_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::abortAssayHandler));
 
+  modular_server::Callback & restart_assay_callback = modular_server_.createCallback(constants::restart_assay_callback_name);
+  restart_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::restartAssayHandler));
+#if defined(__MK64FX512__)
+  restart_assay_callback.attachTo(modular_device_base::constants::btn_b_interrupt_name,modular_server::interrupt::mode_falling);
+#endif
+
 }
 
 void MouseJoystickController::update()
@@ -196,15 +199,8 @@ void MouseJoystickController::update()
   if (state_ptr == &constants::state_assay_started_string)
   {
     setupAssay();
-    if (stageHomed())
-    {
-      assay_status_.state_ptr = &constants::state_move_to_base_start_string;
-    }
-    else
-    {
-      assay_status_.state_ptr = &constants::state_homing_string;
-      homeStage();
-    }
+    assay_status_.state_ptr = &constants::state_homing_string;
+    homeStage();
   }
   else if (state_ptr == &constants::state_homing_string)
   {
@@ -376,6 +372,13 @@ void MouseJoystickController::abortAssay()
   abortTrial();
 }
 
+void MouseJoystickController::restartAssay()
+{
+  abortAssay();
+  assay_status_.state_ptr = &constants::state_assay_not_started_string;
+  startAssay();
+}
+
 void MouseJoystickController::setupTrial()
 {
   trial_aborted_ = false;
@@ -385,7 +388,7 @@ void MouseJoystickController::setupTrial()
 void MouseJoystickController::checkForStartTrial()
 {
   // todo: sense paws
-  if (false)
+  if (true)
   {
     assay_status_.state_ptr = &constants::state_move_to_reach_string;
   }
@@ -671,6 +674,11 @@ void MouseJoystickController::abortTrialHandler(modular_server::Interrupt * inte
 void MouseJoystickController::abortAssayHandler(modular_server::Interrupt * interrupt_ptr)
 {
   abortAssay();
+}
+
+void MouseJoystickController::restartAssayHandler(modular_server::Interrupt * interrupt_ptr)
+{
+  restartAssay();
 }
 
 void MouseJoystickController::trialTimeoutHandler(int arg)

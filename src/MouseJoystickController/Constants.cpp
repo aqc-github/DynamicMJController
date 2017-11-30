@@ -20,8 +20,8 @@ const modular_server::FirmwareInfo firmware_info =
   {
    .name_ptr=&firmware_name,
    .version_major=1,
-   .version_minor=0,
-   .version_patch=1,
+   .version_minor=1,
+   .version_patch=0,
   };
 
 CONSTANT_STRING(state_string,"state");
@@ -176,7 +176,7 @@ const long trial_timeout_duration_max = 3600;
 const long trial_timeout_duration_default = 30;
 
 CONSTANT_STRING(repeat_aborted_trial_property_name,"repeatAbortedTrial");
-const bool repeat_aborted_trial_default = false;
+const bool repeat_aborted_trial_default = true;
 
 CONSTANT_STRING(trial_count_property_name,"trialCount");
 const long trial_count_min = 1;
@@ -201,6 +201,7 @@ CONSTANT_STRING(start_trial_callback_name,"startTrial");
 CONSTANT_STRING(start_assay_callback_name,"startAssay");
 CONSTANT_STRING(abort_trial_callback_name,"abortTrial");
 CONSTANT_STRING(abort_assay_callback_name,"abortAssay");
+CONSTANT_STRING(restart_assay_callback_name,"restartAssay");
 
 // Errors
 }

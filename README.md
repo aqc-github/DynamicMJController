@@ -46,21 +46,24 @@ License:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["MouseJoystickController"],
-    "verbosity":"NAMES",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "MouseJoystickController"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
       "setClientPropertyValues",
       "getAssayStatus",
       "moveJoystickToBasePosition",
       "moveJoystickToReachPosition"
     ],
-    "properties":[
+    "properties": [
       "basePosition",
       "reachPosition0",
       "reachPosition1Means",
       "pullThreshold",
+      "pushThreshold",
       "pullTorqueMeans",
       "readyToneFrequency",
       "readyToneDuration",
@@ -73,10 +76,12 @@ License:
       "trialCount",
       "setCount"
     ],
-    "callbacks":[
+    "callbacks": [
+      "startTrial",
       "startAssay",
       "abortTrial",
-      "abortAssay"
+      "abortAssay",
+      "restartAssay"
     ]
   }
 }
