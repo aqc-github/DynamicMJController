@@ -293,10 +293,9 @@ constants::AssayStatus MouseJoystickController::getAssayStatus()
 
 StageController::PositionArray MouseJoystickController::getBasePosition()
 {
-  long base_position[constants::CHANNEL_COUNT];
-  modular_server_.property(constants::base_position_property_name).getValue(base_position);
+  StageController::PositionArray base_position_array;
+  modular_server_.property(constants::base_position_property_name).getValue(base_position_array);
 
-  StageController::PositionArray base_position_array(base_position);
   return base_position_array;
 }
 
