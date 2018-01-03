@@ -202,12 +202,20 @@ void MouseJoystickController::update()
   if (state_ptr == &constants::state_assay_started_string)
   {
     setupAssay();
-    assay_status_.state_ptr = &constants::state_homing_string;
-    homeStage();
+    assay_status_.state_ptr = &constants::state_homing_0_string;
+    home(0);
   }
-  else if (state_ptr == &constants::state_homing_string)
+  else if (state_ptr == &constants::state_homing_0_string)
   {
-    if (stageHomed())
+    if (homed(0))
+    {
+      assay_status_.state_ptr = &constants::state_homing_1_string;
+      home(1);
+    }
+  }
+  else if (state_ptr == &constants::state_homing_1_string)
+  {
+    if (homed(1))
     {
       assay_status_.state_ptr = &constants::state_move_to_base_start_string;
     }
@@ -258,12 +266,20 @@ void MouseJoystickController::update()
   }
   else if (state_ptr == &constants::state_retract_string)
   {
-    assay_status_.state_ptr = &constants::state_retracting_string;
-    homeStage();
+    assay_status_.state_ptr = &constants::state_retracting_0_string;
+    home(0);
   }
-  else if (state_ptr == &constants::state_retracting_string)
+  else if (state_ptr == &constants::state_retracting_0_string)
   {
-    if (stageHomed())
+    if (homed(0))
+    {
+      assay_status_.state_ptr = &constants::state_retracting_1_string;
+      home(1);
+    }
+  }
+  else if (state_ptr == &constants::state_retracting_1_string)
+  {
+    if (homed(1))
     {
       assay_status_.state_ptr = &constants::state_finish_trial_string;
     }

@@ -91,12 +91,6 @@ const long base_position_default[CHANNEL_COUNT] =
    150,
   };
 
-// const long reach_position_default[CHANNEL_COUNT] =
-//   {
-//    50,
-//    5,
-//   };
-
 // Parameters
 
 // Functions
