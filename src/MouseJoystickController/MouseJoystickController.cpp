@@ -169,7 +169,6 @@ void MouseJoystickController::setup()
   // Callbacks
   modular_server::Callback & start_trial_callback = modular_server_.createCallback(constants::start_trial_callback_name);
   start_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::startTrialHandler));
-  start_trial_callback.attachTo(modular_device_base::constants::bnc_b_interrupt_name,modular_server::interrupt::mode_falling);
 
   modular_server::Callback & start_assay_callback = modular_server_.createCallback(constants::start_assay_callback_name);
   start_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::startAssayHandler));
@@ -186,6 +185,7 @@ void MouseJoystickController::setup()
 
   modular_server::Callback & restart_assay_callback = modular_server_.createCallback(constants::restart_assay_callback_name);
   restart_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::restartAssayHandler));
+  restart_assay_callback.attachTo(modular_device_base::constants::bnc_b_interrupt_name,modular_server::interrupt::mode_falling);
 #if defined(__MK64FX512__)
   restart_assay_callback.attachTo(modular_device_base::constants::btn_b_interrupt_name,modular_server::interrupt::mode_falling);
 #endif
@@ -364,6 +364,9 @@ void MouseJoystickController::startAssay()
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
       (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
+    assay_status_.trial = 0;
+    assay_status_.block = 0;
+    assay_status_.set = 0;
     trial_aborted_ = false;
     assay_aborted_ = false;
     reach_position_1_index_ = 0;
