@@ -156,7 +156,7 @@ extern ConstantString reach_position_0_property_name;
 extern const long reach_position_0_default;
 
 extern ConstantString reach_position_1_means_property_name;
-enum{REACH_POSITION_1_COUNT_MAX=2};
+enum{REACH_POSITION_1_COUNT_MAX=3};
 extern const long reach_position_1_means_default[REACH_POSITION_1_COUNT_MAX];
 
 extern ConstantString pull_threshold_property_name;

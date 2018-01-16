@@ -82,13 +82,13 @@ const long stage_position_min_default[CHANNEL_COUNT] =
 const long stage_position_max_default[CHANNEL_COUNT] =
   {
    100,
-   150,
+   300,
   };
 
 const long base_position_default[CHANNEL_COUNT] =
   {
    5,
-   150,
+   300,
   };
 
 // Parameters

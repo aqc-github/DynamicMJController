@@ -203,6 +203,7 @@ void MouseJoystickController::update()
   {
     setupAssay();
     assay_status_.state_ptr = &constants::state_homing_0_string;
+    reinitialize();
     home(0);
   }
   else if (state_ptr == &constants::state_homing_0_string)
@@ -267,6 +268,7 @@ void MouseJoystickController::update()
   else if (state_ptr == &constants::state_retract_string)
   {
     assay_status_.state_ptr = &constants::state_retracting_0_string;
+    reinitialize();
     home(0);
   }
   else if (state_ptr == &constants::state_retracting_0_string)

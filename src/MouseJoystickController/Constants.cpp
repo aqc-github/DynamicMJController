@@ -123,8 +123,9 @@ const long reach_position_0_default = 50;
 CONSTANT_STRING(reach_position_1_means_property_name,"reachPosition1Means");
 const long reach_position_1_means_default[REACH_POSITION_1_COUNT_MAX] =
   {
-   5,
-   50,
+   110,
+   150,
+   190,
   };
 
 CONSTANT_STRING(pull_threshold_property_name,"pullThreshold");
