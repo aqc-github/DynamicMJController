@@ -20,8 +20,8 @@ const modular_server::FirmwareInfo firmware_info =
   {
    .name_ptr=&firmware_name,
    .version_major=1,
-   .version_minor=1,
-   .version_patch=2,
+   .version_minor=2,
+   .version_patch=0,
   };
 
 CONSTANT_STRING(state_string,"state");
@@ -51,6 +51,7 @@ CONSTANT_STRING(pull_torque_string,"pull_torque");
 CONSTANT_STRING(trial_string,"trial");
 CONSTANT_STRING(block_string,"block");
 CONSTANT_STRING(set_string,"set");
+CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
 
 const long seconds_per_minute = 60;
 const long milliseconds_per_second = 1000;
@@ -111,9 +112,35 @@ CONSTANT_STRING(hz_units,"Hz");
 CONSTANT_STRING(percent_units,"%");
 
 // Properties
-extern const long channel_count = CHANNEL_COUNT;
+const long steps_per_position_units_element_default = 32;
+
+const long velocity_max_element_default = 400;
+
+const long velocity_min_element_default = 10;
+
+const long acceleration_max_element_default = 400;
+
+const long home_velocity_element_default = -75;
+
+const long invert_driver_direction_element_0_default = false;
+const long invert_driver_direction_element_1_default = true;
+
+const long run_current_element_0_default = 20;
+const long run_current_element_1_default = 50;
+
+const long hold_current_element_0_default = 10;
+const long hold_current_element_1_default = 25;
 
 const long hold_delay_element_default = 50;
+
+const long stage_position_min_element_0_default = 0;
+const long stage_position_min_element_1_default = 0;
+
+const long stage_position_max_element_0_default = 100;
+const long stage_position_max_element_1_default = 300;
+
+const long base_position_element_0_default = 5;
+const long base_position_element_1_default = 300;
 
 CONSTANT_STRING(base_position_property_name,"basePosition");
 
@@ -131,12 +158,12 @@ const long reach_position_1_means_default[REACH_POSITION_1_COUNT_MAX] =
 CONSTANT_STRING(pull_threshold_property_name,"pullThreshold");
 const long pull_threshold_min = -1000;
 const long pull_threshold_max = 0;
-const long pull_threshold_default = -75;
+const long pull_threshold_default = -50;
 
 CONSTANT_STRING(push_threshold_property_name,"pushThreshold");
 const long push_threshold_min = 0;
 const long push_threshold_max = 1000;
-const long push_threshold_default = 75;
+const long push_threshold_default = 50;
 
 CONSTANT_STRING(pull_torque_means_property_name,"pullTorqueMeans");
 const long pull_torque_means_default[PULL_TORQUE_COUNT_MAX] =

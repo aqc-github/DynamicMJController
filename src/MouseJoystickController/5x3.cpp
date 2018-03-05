@@ -19,52 +19,54 @@ namespace constants
 // Units
 
 // Properties
+const long channel_count = CHANNEL_COUNT;
+
 const long steps_per_position_units_default[CHANNEL_COUNT] =
   {
-   32,
-   32,
+   steps_per_position_units_element_default,
+   steps_per_position_units_element_default,
   };
 
 const long velocity_max_default[CHANNEL_COUNT] =
   {
-   400,
-   400,
+   velocity_max_element_default,
+   velocity_max_element_default,
   };
 
  const long velocity_min_default[CHANNEL_COUNT] =
   {
-   10,
-   10,
+   velocity_min_element_default,
+   velocity_min_element_default,
   };
 
 const long acceleration_max_default[CHANNEL_COUNT] =
   {
-   400,
-   400,
+   acceleration_max_element_default,
+   acceleration_max_element_default,
   };
 
 const long home_velocity_default[CHANNEL_COUNT] =
   {
-   -75,
-   -75,
+   home_velocity_element_default,
+   home_velocity_element_default,
   };
 
 const bool invert_driver_direction_default[CHANNEL_COUNT] =
   {
-   false,
-   true,
+   invert_driver_direction_element_0_default,
+   invert_driver_direction_element_1_default,
   };
 
 const long run_current_default[CHANNEL_COUNT] =
   {
-   20,
-   50,
+   run_current_element_0_default,
+   run_current_element_1_default,
   };
 
 const long hold_current_default[CHANNEL_COUNT] =
   {
-   10,
-   25,
+   hold_current_element_0_default,
+   hold_current_element_1_default,
   };
 
 const long hold_delay_default[CHANNEL_COUNT] =
@@ -75,20 +77,20 @@ const long hold_delay_default[CHANNEL_COUNT] =
 
 const long stage_position_min_default[CHANNEL_COUNT] =
   {
-   0,
-   0,
+   stage_position_min_element_0_default,
+   stage_position_min_element_1_default,
   };
 
 const long stage_position_max_default[CHANNEL_COUNT] =
   {
-   100,
-   300,
+   stage_position_max_element_0_default,
+   stage_position_max_element_1_default,
   };
 
 const long base_position_default[CHANNEL_COUNT] =
   {
-   5,
-   300,
+   base_position_element_0_default,
+   base_position_element_1_default,
   };
 
 // Parameters

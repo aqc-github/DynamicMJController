@@ -29,8 +29,6 @@ enum{CALLBACK_COUNT_MAX=5};
 
 enum{EVENT_COUNT_MAX=32};
 
-enum{CHANNEL_COUNT=2};
-
 extern ConstantString device_name;
 
 extern ConstantString firmware_name;
@@ -44,6 +42,7 @@ struct AssayStatus
   size_t trial;
   size_t block;
   size_t set;
+  size_t successful_trial_count;
 };
 
 extern ConstantString state_string;
@@ -73,6 +72,7 @@ extern ConstantString pull_torque_string;
 extern ConstantString trial_string;
 extern ConstantString block_string;
 extern ConstantString set_string;
+extern ConstantString successful_trial_count_string;
 
 extern const long seconds_per_minute;
 extern const long milliseconds_per_second;
@@ -122,35 +122,40 @@ extern ConstantString percent_units;
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
 extern const long channel_count;
 
-extern const long steps_per_position_units_default[CHANNEL_COUNT];
+extern const long steps_per_position_units_element_default;
 
-extern const long velocity_max_default[CHANNEL_COUNT];
+extern const long velocity_max_element_default;
 
-extern const long velocity_min_default[CHANNEL_COUNT];
+extern const long velocity_min_element_default;
 
-extern const long acceleration_max_default[CHANNEL_COUNT];
+extern const long acceleration_max_element_default;
 
-extern const long home_velocity_default[CHANNEL_COUNT];
+extern const long home_velocity_element_default;
 
-extern const bool invert_driver_direction_default[CHANNEL_COUNT];
+extern const long invert_driver_direction_element_0_default;
+extern const long invert_driver_direction_element_1_default;
 
-extern const long run_current_default[CHANNEL_COUNT];
+extern const long run_current_element_0_default;
+extern const long run_current_element_1_default;
 
-extern const long hold_current_default[CHANNEL_COUNT];
+extern const long hold_current_element_0_default;
+extern const long hold_current_element_1_default;
 
-extern const long hold_delay_default[CHANNEL_COUNT];
 extern const long hold_delay_element_default;
 
 extern const long stage_channel_count_min;
 extern const long stage_channel_count_max;
 extern const long stage_channel_count_default;
 
-extern const long stage_position_min_default[CHANNEL_COUNT];
+extern const long stage_position_min_element_0_default;
+extern const long stage_position_min_element_1_default;
 
-extern const long stage_position_max_default[CHANNEL_COUNT];
+extern const long stage_position_max_element_0_default;
+extern const long stage_position_max_element_1_default;
 
 extern ConstantString base_position_property_name;
-extern const long base_position_default[CHANNEL_COUNT];
+extern const long base_position_element_0_default;
+extern const long base_position_element_1_default;
 
 extern ConstantString reach_position_0_property_name;
 extern const long reach_position_0_default;

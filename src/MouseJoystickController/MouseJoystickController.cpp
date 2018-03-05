@@ -42,6 +42,7 @@ void MouseJoystickController::setup()
   assay_status_.trial = 0;
   assay_status_.block = 0;
   assay_status_.set = 0;
+  assay_status_.successful_trial_count = 0;
 
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
@@ -367,6 +368,7 @@ void MouseJoystickController::startAssay()
     assay_status_.trial = 0;
     assay_status_.block = 0;
     assay_status_.set = 0;
+    assay_status_.successful_trial_count = 0;
     trial_aborted_ = false;
     assay_aborted_ = false;
     reach_position_1_index_ = 0;
@@ -567,6 +569,7 @@ void MouseJoystickController::finishTrial()
       }
     }
   }
+  ++assay_status_.successful_trial_count;
   updateReachPosition();
   updatePullTorque();
 }
@@ -656,6 +659,7 @@ void MouseJoystickController::getAssayStatusHandler()
   modular_server_.response().write(constants::trial_string,assay_status_.trial);
   modular_server_.response().write(constants::block_string,assay_status_.block);
   modular_server_.response().write(constants::set_string,assay_status_.set);
+  modular_server_.response().write(constants::successful_trial_count_string,assay_status_.successful_trial_count);
 
   modular_server_.response().endObject();
 
