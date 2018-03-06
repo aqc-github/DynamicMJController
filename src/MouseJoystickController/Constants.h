@@ -24,7 +24,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=16};
 enum{PARAMETER_COUNT_MAX=1};
-enum{FUNCTION_COUNT_MAX=4};
+enum{FUNCTION_COUNT_MAX=5};
 enum{CALLBACK_COUNT_MAX=5};
 
 enum{EVENT_COUNT_MAX=32};
@@ -77,6 +77,8 @@ extern ConstantString successful_trial_count_string;
 extern const long seconds_per_minute;
 extern const long milliseconds_per_second;
 extern const long milliseconds_per_minute;
+
+extern const long activate_lickport_delay;
 
 // Ready
 extern const long ready_tone_delay;
@@ -198,10 +200,10 @@ extern const long reward_lickport_delay_min;
 extern const long reward_lickport_delay_max;
 extern const long reward_lickport_delay_default;
 
-extern ConstantString reward_lickport_duration_property_name;
-extern const long reward_lickport_duration_min;
-extern const long reward_lickport_duration_max;
-extern const long reward_lickport_duration_default;
+extern ConstantString lickport_duration_property_name;
+extern const long lickport_duration_min;
+extern const long lickport_duration_max;
+extern const long lickport_duration_default;
 
 extern ConstantString trial_timeout_duration_property_name;
 extern const long trial_timeout_duration_min;
@@ -222,12 +224,16 @@ extern const long set_count_max;
 extern const long set_count_default;
 
 // Parameters
+extern ConstantString count_parameter_name;
+extern const long count_min;
+extern const long count_max;
 
 // Functions
 extern ConstantString set_client_property_values_function_name;
 extern ConstantString get_assay_status_function_name;
 extern ConstantString move_joystick_to_base_position_function_name;
 extern ConstantString move_joystick_to_reach_position_function_name;
+extern ConstantString activate_lickport_function_name;
 
 // Callbacks
 extern ConstantString start_trial_callback_name;

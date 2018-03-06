@@ -134,9 +134,9 @@ void MouseJoystickController::setup()
   reward_lickport_delay_property.setRange(constants::reward_lickport_delay_min,constants::reward_lickport_delay_max);
   reward_lickport_delay_property.setUnits(power_switch_controller::constants::ms_units);
 
-  modular_server::Property & reward_lickport_duration_property = modular_server_.createProperty(constants::reward_lickport_duration_property_name,constants::reward_lickport_duration_default);
-  reward_lickport_duration_property.setRange(constants::reward_lickport_duration_min,constants::reward_lickport_duration_max);
-  reward_lickport_duration_property.setUnits(power_switch_controller::constants::ms_units);
+  modular_server::Property & lickport_duration_property = modular_server_.createProperty(constants::lickport_duration_property_name,constants::lickport_duration_default);
+  lickport_duration_property.setRange(constants::lickport_duration_min,constants::lickport_duration_max);
+  lickport_duration_property.setUnits(power_switch_controller::constants::ms_units);
 
   modular_server::Property & trial_timeout_duration_property = modular_server_.createProperty(constants::trial_timeout_duration_property_name,constants::trial_timeout_duration_default);
   trial_timeout_duration_property.setRange(constants::trial_timeout_duration_min,constants::trial_timeout_duration_max);
@@ -151,6 +151,8 @@ void MouseJoystickController::setup()
   set_count_property.setRange(constants::set_count_min,constants::set_count_max);
 
   // Parameters
+  modular_server::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
+  count_parameter.setRange(constants::count_min,constants::count_max);
 
   // Functions
   modular_server::Function & set_client_property_values_function = modular_server_.createFunction(constants::set_client_property_values_function_name);
@@ -166,6 +168,10 @@ void MouseJoystickController::setup()
 
   modular_server::Function & move_joystick_to_reach_position_function = modular_server_.createFunction(constants::move_joystick_to_reach_position_function_name);
   move_joystick_to_reach_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::moveJoystickToReachPositionHandler));
+
+  modular_server::Function & activate_lickport_function = modular_server_.createFunction(constants::activate_lickport_function_name);
+  activate_lickport_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::activateLickportHandler));
+  activate_lickport_function.addParameter(count_parameter);
 
   // Callbacks
   modular_server::Callback & start_trial_callback = modular_server_.createCallback(constants::start_trial_callback_name);
@@ -225,7 +231,7 @@ void MouseJoystickController::update()
   else if (state_ptr == &constants::state_move_to_base_start_string)
   {
     assay_status_.state_ptr = &constants::state_moving_to_base_start_string;
-    moveJoystickToBasePosition();
+    moveToBasePosition();
   }
   else if (state_ptr == &constants::state_moving_to_base_start_string)
   {
@@ -245,7 +251,7 @@ void MouseJoystickController::update()
   else if (state_ptr == &constants::state_move_to_reach_string)
   {
     assay_status_.state_ptr = &constants::state_moving_to_reach_string;
-    moveJoystickToReachPosition();
+    moveToReachPosition();
   }
   else if (state_ptr == &constants::state_moving_to_reach_string)
   {
@@ -294,7 +300,7 @@ void MouseJoystickController::update()
   else if (state_ptr == &constants::state_move_to_base_stop_string)
   {
     assay_status_.state_ptr = &constants::state_moving_to_base_stop_string;
-    moveJoystickToBasePosition();
+    moveToBasePosition();
   }
   else if (state_ptr == &constants::state_moving_to_base_stop_string)
   {
@@ -330,14 +336,29 @@ long MouseJoystickController::getPullTorque()
 
 void MouseJoystickController::moveJoystickToBasePosition()
 {
-  StageController::PositionArray base_position = getBasePosition();
-  moveStageTo(base_position);
+  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
+      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+  {
+    moveToBasePosition();
+  }
 }
 
 void MouseJoystickController::moveJoystickToReachPosition()
 {
-  StageController::PositionArray reach_position = getReachPosition();
-  moveStageTo(reach_position);
+  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
+      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+  {
+    moveToReachPosition();
+  }
+}
+
+void MouseJoystickController::activateLickport(const long count)
+{
+  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
+      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+  {
+    triggerLickport(constants::activate_lickport_delay,count);
+  }
 }
 
 void MouseJoystickController::setupAssay()
@@ -437,12 +458,6 @@ void MouseJoystickController::setupPull()
   disableAutomaticCurrentScaling(constants::pull_channel);
   setPwmOffset(constants::pull_channel,pwm_offset);
 
-  long ready_tone_frequency;
-  modular_server_.property(constants::ready_tone_frequency_property_name).getValue(ready_tone_frequency);
-
-  long ready_tone_duration;
-  modular_server_.property(constants::ready_tone_duration_property_name).getValue(ready_tone_duration);
-
   long trial_timeout_duration;
   modular_server_.property(constants::trial_timeout_duration_property_name).getValue(trial_timeout_duration);
 
@@ -450,13 +465,7 @@ void MouseJoystickController::setupPull()
                                                                  trial_timeout_duration*constants::milliseconds_per_second);
   event_controller_.enable(trial_timeout_event_id_);
 
-  audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_function_name,
-                              ready_tone_frequency,
-                              audio_controller::constants::speaker_all,
-                              constants::ready_tone_delay,
-                              ready_tone_duration,
-                              ready_tone_duration,
-                              constants::ready_tone_count);
+  playReadyTone();
 
   assay_status_.state_ptr = &constants::state_waiting_for_pull_string;
 }
@@ -487,35 +496,11 @@ void MouseJoystickController::checkForPullOrPush()
 
 void MouseJoystickController::reward()
 {
-  long reward_tone_frequency;
-  modular_server_.property(constants::reward_tone_frequency_property_name).getValue(reward_tone_frequency);
-
-  long reward_tone_duration;
-  modular_server_.property(constants::reward_tone_duration_property_name).getValue(reward_tone_duration);
-
-  audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_function_name,
-                              reward_tone_frequency,
-                              audio_controller::constants::speaker_all,
-                              constants::reward_tone_delay,
-                              reward_tone_duration,
-                              reward_tone_duration,
-                              constants::reward_tone_count);
+  playRewardTone();
 
   encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_all_outputs_function_name);
 
-  long reward_lickport_delay;
-  modular_server_.property(constants::reward_lickport_delay_property_name).getValue(reward_lickport_delay);
-
-  long reward_lickport_duration;
-  modular_server_.property(constants::reward_lickport_duration_property_name).getValue(reward_lickport_duration);
-
-  Array<long,constants::REWARD_LICKPORT_CHANNEL_COUNT> lickport_channels(constants::reward_lickport_channels);
-  power_switch_controller_ptr_->call(power_switch_controller::constants::add_pwm_function_name,
-                                     lickport_channels,
-                                     reward_lickport_delay,
-                                     reward_lickport_duration*2,
-                                     reward_lickport_duration,
-                                     constants::reward_lickport_count);
+  triggerLickportReward();
 
   assay_status_.state_ptr = &constants::state_retract_string;
 }
@@ -595,6 +580,74 @@ void MouseJoystickController::updatePullTorque()
   assay_status_.pull_torque = pull_torque_mean;
 }
 
+void MouseJoystickController::moveToBasePosition()
+{
+  StageController::PositionArray base_position = getBasePosition();
+  moveStageTo(base_position);
+}
+
+void MouseJoystickController::moveToReachPosition()
+{
+  StageController::PositionArray reach_position = getReachPosition();
+  moveStageTo(reach_position);
+}
+
+void MouseJoystickController::playReadyTone()
+{
+  long ready_tone_frequency;
+  modular_server_.property(constants::ready_tone_frequency_property_name).getValue(ready_tone_frequency);
+
+  long ready_tone_duration;
+  modular_server_.property(constants::ready_tone_duration_property_name).getValue(ready_tone_duration);
+
+  audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_function_name,
+                              ready_tone_frequency,
+                              audio_controller::constants::speaker_all,
+                              constants::ready_tone_delay,
+                              ready_tone_duration,
+                              ready_tone_duration,
+                              constants::ready_tone_count);
+}
+
+void MouseJoystickController::playRewardTone()
+{
+  long reward_tone_frequency;
+  modular_server_.property(constants::reward_tone_frequency_property_name).getValue(reward_tone_frequency);
+
+  long reward_tone_duration;
+  modular_server_.property(constants::reward_tone_duration_property_name).getValue(reward_tone_duration);
+
+  audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_function_name,
+                              reward_tone_frequency,
+                              audio_controller::constants::speaker_all,
+                              constants::reward_tone_delay,
+                              reward_tone_duration,
+                              reward_tone_duration,
+                              constants::reward_tone_count);
+}
+
+void MouseJoystickController::triggerLickportReward()
+{
+  long reward_lickport_delay;
+  modular_server_.property(constants::reward_lickport_delay_property_name).getValue(reward_lickport_delay);
+
+  triggerLickport(reward_lickport_delay,constants::reward_lickport_count);
+}
+
+void MouseJoystickController::triggerLickport(const long delay, const long count)
+{
+  long lickport_duration;
+  modular_server_.property(constants::lickport_duration_property_name).getValue(lickport_duration);
+
+  Array<long,constants::REWARD_LICKPORT_CHANNEL_COUNT> lickport_channels(constants::reward_lickport_channels);
+  power_switch_controller_ptr_->call(power_switch_controller::constants::add_pwm_function_name,
+                                     lickport_channels,
+                                     delay,
+                                     lickport_duration*2,
+                                     lickport_duration,
+                                     count);
+}
+
 // Handlers must be non-blocking (avoid 'delay')
 //
 // modular_server_.parameter(parameter_name).getValue(value) value type must be either:
@@ -667,20 +720,20 @@ void MouseJoystickController::getAssayStatusHandler()
 
 void MouseJoystickController::moveJoystickToBasePositionHandler()
 {
-  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
-      (assay_status_.state_ptr == &constants::state_assay_finished_string))
-  {
-    moveJoystickToBasePosition();
-  }
+  moveJoystickToBasePosition();
 }
 
 void MouseJoystickController::moveJoystickToReachPositionHandler()
 {
-  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
-      (assay_status_.state_ptr == &constants::state_assay_finished_string))
-  {
-    moveJoystickToReachPosition();
-  }
+  moveJoystickToReachPosition();
+}
+
+void MouseJoystickController::activateLickportHandler()
+{
+  long count;
+  modular_server_.parameter(constants::count_parameter_name).getValue(count);
+
+  activateLickport(count);
 }
 
 void MouseJoystickController::startTrialHandler(modular_server::Interrupt * interrupt_ptr)

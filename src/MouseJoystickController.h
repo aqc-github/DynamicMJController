@@ -56,6 +56,7 @@ public:
 
   void moveJoystickToBasePosition();
   void moveJoystickToReachPosition();
+  void activateLickport(const long count);
 
   void setupAssay();
   void startTrial();
@@ -94,12 +95,19 @@ private:
 
   void updateReachPosition();
   void updatePullTorque();
+  void moveToBasePosition();
+  void moveToReachPosition();
+  void playReadyTone();
+  void playRewardTone();
+  void triggerLickportReward();
+  void triggerLickport(const long delay, const long count);
 
   // Handlers
   void setClientPropertyValuesHandler();
   void getAssayStatusHandler();
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();
+  void activateLickportHandler();
   void startTrialHandler(modular_server::Interrupt * interrupt_ptr);
   void startAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void abortTrialHandler(modular_server::Interrupt * interrupt_ptr);

@@ -57,6 +57,8 @@ const long seconds_per_minute = 60;
 const long milliseconds_per_second = 1000;
 const long milliseconds_per_minute = milliseconds_per_second*seconds_per_minute;
 
+const long activate_lickport_delay = 40;
+
 // Ready
 const long ready_tone_delay = 40;
 const long ready_tone_count = 1;
@@ -195,10 +197,10 @@ const long reward_lickport_delay_min = 100;
 const long reward_lickport_delay_max = 5000;
 const long reward_lickport_delay_default = 1000;
 
-CONSTANT_STRING(reward_lickport_duration_property_name,"rewardLickportDuration");
-const long reward_lickport_duration_min = 5;
-const long reward_lickport_duration_max = 1000;
-const long reward_lickport_duration_default = 80;
+CONSTANT_STRING(lickport_duration_property_name,"rewardLickportDuration");
+const long lickport_duration_min = 5;
+const long lickport_duration_max = 1000;
+const long lickport_duration_default = 80;
 
 CONSTANT_STRING(trial_timeout_duration_property_name,"trialTimeoutDuration");
 const long trial_timeout_duration_min = 1;
@@ -219,12 +221,16 @@ const long set_count_max = 100;
 const long set_count_default = 2;
 
 // Parameters
+CONSTANT_STRING(count_parameter_name,"count");
+const long count_min = 1;
+const long count_max = 20;
 
 // Functions
 CONSTANT_STRING(set_client_property_values_function_name,"setClientPropertyValues");
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
 CONSTANT_STRING(move_joystick_to_base_position_function_name,"moveJoystickToBasePosition");
 CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToReachPosition");
+CONSTANT_STRING(activate_lickport_function_name,"activateLickport");
 
 // Callbacks
 CONSTANT_STRING(start_trial_callback_name,"startTrial");
