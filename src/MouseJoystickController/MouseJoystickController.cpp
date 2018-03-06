@@ -130,13 +130,13 @@ void MouseJoystickController::setup()
   reward_tone_duration_property.setRange(constants::reward_tone_duration_min,constants::reward_tone_duration_max);
   reward_tone_duration_property.setUnits(audio_controller::constants::ms_units);
 
-  modular_server::Property & reward_solenoid_delay_property = modular_server_.createProperty(constants::reward_solenoid_delay_property_name,constants::reward_solenoid_delay_default);
-  reward_solenoid_delay_property.setRange(constants::reward_solenoid_delay_min,constants::reward_solenoid_delay_max);
-  reward_solenoid_delay_property.setUnits(power_switch_controller::constants::ms_units);
+  modular_server::Property & reward_lickport_delay_property = modular_server_.createProperty(constants::reward_lickport_delay_property_name,constants::reward_lickport_delay_default);
+  reward_lickport_delay_property.setRange(constants::reward_lickport_delay_min,constants::reward_lickport_delay_max);
+  reward_lickport_delay_property.setUnits(power_switch_controller::constants::ms_units);
 
-  modular_server::Property & reward_solenoid_duration_property = modular_server_.createProperty(constants::reward_solenoid_duration_property_name,constants::reward_solenoid_duration_default);
-  reward_solenoid_duration_property.setRange(constants::reward_solenoid_duration_min,constants::reward_solenoid_duration_max);
-  reward_solenoid_duration_property.setUnits(power_switch_controller::constants::ms_units);
+  modular_server::Property & reward_lickport_duration_property = modular_server_.createProperty(constants::reward_lickport_duration_property_name,constants::reward_lickport_duration_default);
+  reward_lickport_duration_property.setRange(constants::reward_lickport_duration_min,constants::reward_lickport_duration_max);
+  reward_lickport_duration_property.setUnits(power_switch_controller::constants::ms_units);
 
   modular_server::Property & trial_timeout_duration_property = modular_server_.createProperty(constants::trial_timeout_duration_property_name,constants::trial_timeout_duration_default);
   trial_timeout_duration_property.setRange(constants::trial_timeout_duration_min,constants::trial_timeout_duration_max);
@@ -503,19 +503,19 @@ void MouseJoystickController::reward()
 
   encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_all_outputs_function_name);
 
-  long reward_solenoid_delay;
-  modular_server_.property(constants::reward_solenoid_delay_property_name).getValue(reward_solenoid_delay);
+  long reward_lickport_delay;
+  modular_server_.property(constants::reward_lickport_delay_property_name).getValue(reward_lickport_delay);
 
-  long reward_solenoid_duration;
-  modular_server_.property(constants::reward_solenoid_duration_property_name).getValue(reward_solenoid_duration);
+  long reward_lickport_duration;
+  modular_server_.property(constants::reward_lickport_duration_property_name).getValue(reward_lickport_duration);
 
-  Array<long,constants::REWARD_SOLENOID_CHANNEL_COUNT> solenoid_channels(constants::reward_solenoid_channels);
+  Array<long,constants::REWARD_LICKPORT_CHANNEL_COUNT> lickport_channels(constants::reward_lickport_channels);
   power_switch_controller_ptr_->call(power_switch_controller::constants::add_pwm_function_name,
-                                     solenoid_channels,
-                                     reward_solenoid_delay,
-                                     reward_solenoid_duration*2,
-                                     reward_solenoid_duration,
-                                     constants::reward_solenoid_count);
+                                     lickport_channels,
+                                     reward_lickport_delay,
+                                     reward_lickport_duration*2,
+                                     reward_lickport_duration,
+                                     constants::reward_lickport_count);
 
   assay_status_.state_ptr = &constants::state_retract_string;
 }

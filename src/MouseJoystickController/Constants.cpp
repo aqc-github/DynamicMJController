@@ -75,11 +75,11 @@ const long pull_torque_array_length_max = PULL_TORQUE_COUNT_MAX;
 // Reward
 const long reward_tone_delay = 40;
 const long reward_tone_count = 1;
-const long reward_solenoid_channels[REWARD_SOLENOID_CHANNEL_COUNT] =
+const long reward_lickport_channels[REWARD_LICKPORT_CHANNEL_COUNT] =
   {
    0,
   };
-const long reward_solenoid_count = 1;
+const long reward_lickport_count = 1;
 
 // Clients
 const size_t encoder_interface_simple_address[1] =
@@ -190,15 +190,15 @@ const long reward_tone_duration_min = 100;
 const long reward_tone_duration_max = 2000;
 const long reward_tone_duration_default = 500;
 
-CONSTANT_STRING(reward_solenoid_delay_property_name,"rewardSolenoidDelay");
-const long reward_solenoid_delay_min = 100;
-const long reward_solenoid_delay_max = 5000;
-const long reward_solenoid_delay_default = 1000;
+CONSTANT_STRING(reward_lickport_delay_property_name,"rewardLickportDelay");
+const long reward_lickport_delay_min = 100;
+const long reward_lickport_delay_max = 5000;
+const long reward_lickport_delay_default = 1000;
 
-CONSTANT_STRING(reward_solenoid_duration_property_name,"rewardSolenoidDuration");
-const long reward_solenoid_duration_min = 5;
-const long reward_solenoid_duration_max = 1000;
-const long reward_solenoid_duration_default = 80;
+CONSTANT_STRING(reward_lickport_duration_property_name,"rewardLickportDuration");
+const long reward_lickport_duration_min = 5;
+const long reward_lickport_duration_max = 1000;
+const long reward_lickport_duration_default = 80;
 
 CONSTANT_STRING(trial_timeout_duration_property_name,"trialTimeoutDuration");
 const long trial_timeout_duration_min = 1;

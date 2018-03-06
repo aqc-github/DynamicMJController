@@ -98,9 +98,9 @@ extern const long pull_torque_array_length_max;
 // Reward
 extern const long reward_tone_delay;
 extern const long reward_tone_count;
-enum{REWARD_SOLENOID_CHANNEL_COUNT=1};
-extern const long reward_solenoid_channels[REWARD_SOLENOID_CHANNEL_COUNT];
-extern const long reward_solenoid_count;
+enum{REWARD_LICKPORT_CHANNEL_COUNT=1};
+extern const long reward_lickport_channels[REWARD_LICKPORT_CHANNEL_COUNT];
+extern const long reward_lickport_count;
 
 // Clients
 extern const size_t encoder_interface_simple_address[1];
@@ -193,15 +193,15 @@ extern const long reward_tone_duration_min;
 extern const long reward_tone_duration_max;
 extern const long reward_tone_duration_default;
 
-extern ConstantString reward_solenoid_delay_property_name;
-extern const long reward_solenoid_delay_min;
-extern const long reward_solenoid_delay_max;
-extern const long reward_solenoid_delay_default;
+extern ConstantString reward_lickport_delay_property_name;
+extern const long reward_lickport_delay_min;
+extern const long reward_lickport_delay_max;
+extern const long reward_lickport_delay_default;
 
-extern ConstantString reward_solenoid_duration_property_name;
-extern const long reward_solenoid_duration_min;
-extern const long reward_solenoid_duration_max;
-extern const long reward_solenoid_duration_default;
+extern ConstantString reward_lickport_duration_property_name;
+extern const long reward_lickport_duration_min;
+extern const long reward_lickport_duration_max;
+extern const long reward_lickport_duration_default;
 
 extern ConstantString trial_timeout_duration_property_name;
 extern const long trial_timeout_duration_min;
