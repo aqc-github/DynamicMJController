@@ -50,29 +50,16 @@ public:
   virtual void update();
 
   mouse_joystick_controller::constants::AssayStatus getAssayStatus();
-  StageController::PositionArray getBasePosition();
-  StageController::PositionArray getReachPosition();
-  long getPullTorque();
 
   void moveJoystickToBasePosition();
   void moveJoystickToReachPosition();
   void activateLickport(const long count);
 
-  void setupAssay();
   void startTrial();
   void startAssay();
   void abortTrial();
   void abortAssay();
   void restartAssay();
-
-  void setupTrial();
-  void checkForStartTrial();
-
-  void setupPull();
-  void checkForPullOrPush();
-
-  void reward();
-  void finishTrial();
 
 private:
   modular_server::Property properties_[mouse_joystick_controller::constants::PROPERTY_COUNT_MAX];
@@ -92,6 +79,22 @@ private:
   bool assay_aborted_;
   size_t reach_position_1_index_;
   size_t pull_torque_index_;
+
+  StageController::PositionArray getBasePosition();
+  StageController::PositionArray getReachPosition();
+  long getPullTorque();
+
+  void setupAssay();
+  void setupTrial();
+  void checkForStartTrial();
+
+  void setupPull();
+  void checkForPullOrPush();
+
+  void reward();
+  void checkTrialTermination();
+  void addFinishTrialEvent();
+  void finishTrial();
 
   void updateReachPosition();
   void updatePullTorque();
@@ -113,7 +116,8 @@ private:
   void abortTrialHandler(modular_server::Interrupt * interrupt_ptr);
   void abortAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void restartAssayHandler(modular_server::Interrupt * interrupt_ptr);
-  void trialTimeoutHandler(int arg);
+  void trialTimeoutEventHandler(int arg);
+  void finishTrialEventHandler(int arg);
 
 };
 

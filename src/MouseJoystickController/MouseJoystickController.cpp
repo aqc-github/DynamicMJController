@@ -150,6 +150,10 @@ void MouseJoystickController::setup()
   modular_server::Property & set_count_property = modular_server_.createProperty(constants::set_count_property_name,constants::set_count_default);
   set_count_property.setRange(constants::set_count_min,constants::set_count_max);
 
+  modular_server::Property & finish_trial_duration_property = modular_server_.createProperty(constants::finish_trial_duration_property_name,constants::finish_trial_duration_default);
+  finish_trial_duration_property.setRange(constants::finish_trial_duration_min,constants::finish_trial_duration_max);
+  finish_trial_duration_property.setUnits(constants::seconds_units);
+
   // Parameters
   modular_server::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
   count_parameter.setRange(constants::count_min,constants::count_max);
@@ -290,8 +294,19 @@ void MouseJoystickController::update()
   {
     if (homed(1))
     {
-      assay_status_.state_ptr = &constants::state_finish_trial_string;
+      assay_status_.state_ptr = &constants::state_check_trial_termination_string;
     }
+  }
+  else if (state_ptr == &constants::state_check_trial_termination_string)
+  {
+    checkTrialTermination();
+  }
+  else if (state_ptr == &constants::state_wait_to_finish_trial_string)
+  {
+    addFinishTrialEvent();
+  }
+  else if (state_ptr == &constants::state_waiting_to_finish_trial_string)
+  {
   }
   else if (state_ptr == &constants::state_finish_trial_string)
   {
@@ -314,24 +329,6 @@ void MouseJoystickController::update()
 constants::AssayStatus MouseJoystickController::getAssayStatus()
 {
   return assay_status_;
-}
-
-StageController::PositionArray MouseJoystickController::getBasePosition()
-{
-  StageController::PositionArray base_position_array;
-  modular_server_.property(constants::base_position_property_name).getValue(base_position_array);
-
-  return base_position_array;
-}
-
-StageController::PositionArray MouseJoystickController::getReachPosition()
-{
-  return assay_status_.reach_position;
-}
-
-long MouseJoystickController::getPullTorque()
-{
-  return assay_status_.pull_torque;
 }
 
 void MouseJoystickController::moveJoystickToBasePosition()
@@ -358,14 +355,6 @@ void MouseJoystickController::activateLickport(const long count)
       (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
     triggerLickport(constants::activate_lickport_delay,count);
-  }
-}
-
-void MouseJoystickController::setupAssay()
-{
-  if (assay_status_.state_ptr == &constants::state_assay_started_string)
-  {
-    encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_all_outputs_function_name);
   }
 }
 
@@ -425,6 +414,32 @@ void MouseJoystickController::restartAssay()
   startAssay();
 }
 
+StageController::PositionArray MouseJoystickController::getBasePosition()
+{
+  StageController::PositionArray base_position_array;
+  modular_server_.property(constants::base_position_property_name).getValue(base_position_array);
+
+  return base_position_array;
+}
+
+StageController::PositionArray MouseJoystickController::getReachPosition()
+{
+  return assay_status_.reach_position;
+}
+
+long MouseJoystickController::getPullTorque()
+{
+  return assay_status_.pull_torque;
+}
+
+void MouseJoystickController::setupAssay()
+{
+  if (assay_status_.state_ptr == &constants::state_assay_started_string)
+  {
+    encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_all_outputs_function_name);
+  }
+}
+
 void MouseJoystickController::setupTrial()
 {
   trial_aborted_ = false;
@@ -461,7 +476,7 @@ void MouseJoystickController::setupPull()
   long trial_timeout_duration;
   modular_server_.property(constants::trial_timeout_duration_property_name).getValue(trial_timeout_duration);
 
-  trial_timeout_event_id_ = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystickController::trialTimeoutHandler),
+  trial_timeout_event_id_ = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystickController::trialTimeoutEventHandler),
                                                                  trial_timeout_duration*constants::milliseconds_per_second);
   event_controller_.enable(trial_timeout_event_id_);
 
@@ -505,15 +520,29 @@ void MouseJoystickController::reward()
   assay_status_.state_ptr = &constants::state_retract_string;
 }
 
-void MouseJoystickController::finishTrial()
+void MouseJoystickController::checkTrialTermination()
 {
-  assay_status_.state_ptr = &constants::state_move_to_base_start_string;
-
   if (assay_aborted_)
   {
     assay_status_.state_ptr = &constants::state_move_to_base_stop_string;
     return;
   }
+  assay_status_.state_ptr = &constants::state_wait_to_finish_trial_string;
+}
+
+void MouseJoystickController::addFinishTrialEvent()
+{
+  long finish_trial_duration;
+  modular_server_.property(constants::finish_trial_duration_property_name).getValue(finish_trial_duration);
+
+  EventId finish_trial_event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystickController::finishTrialEventHandler),
+                                                                       finish_trial_duration*constants::milliseconds_per_second);
+  event_controller_.enable(finish_trial_event_id);
+}
+
+void MouseJoystickController::finishTrial()
+{
+  assay_status_.state_ptr = &constants::state_move_to_base_start_string;
 
   if (trial_aborted_)
   {
@@ -762,7 +791,12 @@ void MouseJoystickController::restartAssayHandler(modular_server::Interrupt * in
   restartAssay();
 }
 
-void MouseJoystickController::trialTimeoutHandler(int arg)
+void MouseJoystickController::trialTimeoutEventHandler(int arg)
 {
   abortTrial();
+}
+
+void MouseJoystickController::finishTrialEventHandler(int arg)
+{
+  assay_status_.state_ptr = &constants::state_finish_trial_string;
 }

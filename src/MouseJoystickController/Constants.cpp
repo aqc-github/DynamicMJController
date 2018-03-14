@@ -41,6 +41,9 @@ CONSTANT_STRING(state_reward_string,"REWARD");
 CONSTANT_STRING(state_retract_string,"RETRACT");
 CONSTANT_STRING(state_retracting_0_string,"RETRACTING_0");
 CONSTANT_STRING(state_retracting_1_string,"RETRACTING_1");
+CONSTANT_STRING(state_check_trial_termination_string,"CHECK_TRIAL_TERMINATION");
+CONSTANT_STRING(state_wait_to_finish_trial_string,"WAIT_TO_FINISH_TRIAL");
+CONSTANT_STRING(state_waiting_to_finish_trial_string,"WAITING_TO_FINISH_TRIAL");
 CONSTANT_STRING(state_finish_trial_string,"FINISH_TRIAL");
 CONSTANT_STRING(state_move_to_base_stop_string,"MOVE_TO_BASE_STOP");
 CONSTANT_STRING(state_moving_to_base_stop_string,"MOVING_TO_BASE_STOP");
@@ -219,6 +222,11 @@ CONSTANT_STRING(set_count_property_name,"setCount");
 const long set_count_min = 1;
 const long set_count_max = 100;
 const long set_count_default = 2;
+
+CONSTANT_STRING(finish_trial_duration_property_name,"finishTrialDuration");
+const long finish_trial_duration_min = 1;
+const long finish_trial_duration_max = 60;
+const long finish_trial_duration_default = 1;
 
 // Parameters
 CONSTANT_STRING(count_parameter_name,"count");
