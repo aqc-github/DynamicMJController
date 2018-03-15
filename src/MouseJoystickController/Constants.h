@@ -54,6 +54,8 @@ extern ConstantString state_move_to_base_start_string;
 extern ConstantString state_moving_to_base_start_string;
 extern ConstantString state_wait_to_start_trial_string;
 extern ConstantString state_waiting_to_start_trial_string;
+extern ConstantString state_wait_for_mouse_ready_string;
+extern ConstantString state_waiting_for_mouse_ready_string;
 extern ConstantString state_move_to_reach_string;
 extern ConstantString state_moving_to_reach_string;
 extern ConstantString state_wait_for_pull_string;
@@ -63,8 +65,6 @@ extern ConstantString state_retract_string;
 extern ConstantString state_retracting_0_string;
 extern ConstantString state_retracting_1_string;
 extern ConstantString state_check_trial_termination_string;
-extern ConstantString state_wait_to_finish_trial_string;
-extern ConstantString state_waiting_to_finish_trial_string;
 extern ConstantString state_finish_trial_string;
 extern ConstantString state_move_to_base_stop_string;
 extern ConstantString state_moving_to_base_stop_string;
@@ -226,10 +226,10 @@ extern const long set_count_min;
 extern const long set_count_max;
 extern const long set_count_default;
 
-extern ConstantString finish_trial_duration_property_name;
-extern const long finish_trial_duration_min;
-extern const long finish_trial_duration_max;
-extern const long finish_trial_duration_default;
+extern ConstantString start_trial_duration_property_name;
+extern const long start_trial_duration_min;
+extern const long start_trial_duration_max;
+extern const long start_trial_duration_default;
 
 // Parameters
 extern ConstantString count_parameter_name;

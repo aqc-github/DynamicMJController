@@ -86,14 +86,14 @@ private:
 
   void setupAssay();
   void setupTrial();
-  void checkForStartTrial();
+  void addStartTrialEvent();
+  void checkForMouseReady();
 
   void setupPull();
   void checkForPullOrPush();
 
   void reward();
   void checkTrialTermination();
-  void addFinishTrialEvent();
   void finishTrial();
 
   void updateReachPosition();
@@ -116,8 +116,8 @@ private:
   void abortTrialHandler(modular_server::Interrupt * interrupt_ptr);
   void abortAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void restartAssayHandler(modular_server::Interrupt * interrupt_ptr);
+  void startTrialEventHandler(int arg);
   void trialTimeoutEventHandler(int arg);
-  void finishTrialEventHandler(int arg);
 
 };
 

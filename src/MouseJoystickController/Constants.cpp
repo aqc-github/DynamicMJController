@@ -33,6 +33,8 @@ CONSTANT_STRING(state_move_to_base_start_string,"MOVE_TO_BASE_START");
 CONSTANT_STRING(state_moving_to_base_start_string,"MOVING_TO_BASE_START");
 CONSTANT_STRING(state_wait_to_start_trial_string,"WAIT_TO_START_TRIAL");
 CONSTANT_STRING(state_waiting_to_start_trial_string,"WAITING_TO_START_TRIAL");
+CONSTANT_STRING(state_wait_for_mouse_ready_string,"WAIT_FOR_MOUSE_READY");
+CONSTANT_STRING(state_waiting_for_mouse_ready_string,"WAITING_FOR_MOUSE_READY");
 CONSTANT_STRING(state_move_to_reach_string,"MOVE_TO_REACH");
 CONSTANT_STRING(state_moving_to_reach_string,"MOVING_TO_REACH");
 CONSTANT_STRING(state_wait_for_pull_string,"WAIT_FOR_PULL");
@@ -42,8 +44,6 @@ CONSTANT_STRING(state_retract_string,"RETRACT");
 CONSTANT_STRING(state_retracting_0_string,"RETRACTING_0");
 CONSTANT_STRING(state_retracting_1_string,"RETRACTING_1");
 CONSTANT_STRING(state_check_trial_termination_string,"CHECK_TRIAL_TERMINATION");
-CONSTANT_STRING(state_wait_to_finish_trial_string,"WAIT_TO_FINISH_TRIAL");
-CONSTANT_STRING(state_waiting_to_finish_trial_string,"WAITING_TO_FINISH_TRIAL");
 CONSTANT_STRING(state_finish_trial_string,"FINISH_TRIAL");
 CONSTANT_STRING(state_move_to_base_stop_string,"MOVE_TO_BASE_STOP");
 CONSTANT_STRING(state_moving_to_base_stop_string,"MOVING_TO_BASE_STOP");
@@ -223,10 +223,10 @@ const long set_count_min = 1;
 const long set_count_max = 100;
 const long set_count_default = 2;
 
-CONSTANT_STRING(finish_trial_duration_property_name,"finishTrialDuration");
-const long finish_trial_duration_min = 1;
-const long finish_trial_duration_max = 60;
-const long finish_trial_duration_default = 1;
+CONSTANT_STRING(start_trial_duration_property_name,"startTrialDuration");
+const long start_trial_duration_min = 1;
+const long start_trial_duration_max = 60;
+const long start_trial_duration_default = 1;
 
 // Parameters
 CONSTANT_STRING(count_parameter_name,"count");
