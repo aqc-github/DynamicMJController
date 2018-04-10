@@ -17,12 +17,12 @@ CONSTANT_STRING(device_name,"mouse_joystick_controller");
 CONSTANT_STRING(firmware_name,"MouseJoystickController");
 // Use semantic versioning http://semver.org/
 const modular_server::FirmwareInfo firmware_info =
-  {
-   .name_ptr=&firmware_name,
-   .version_major=1,
-   .version_minor=2,
-   .version_patch=0,
-  };
+{
+  .name_ptr=&firmware_name,
+  .version_major=1,
+  .version_minor=2,
+  .version_patch=0,
+};
 
 CONSTANT_STRING(state_string,"state");
 CONSTANT_STRING(state_assay_not_started_string,"ASSAY_NOT_STARTED");
@@ -81,32 +81,32 @@ const long pull_torque_array_length_max = PULL_TORQUE_COUNT_MAX;
 const long reward_tone_delay = 40;
 const long reward_tone_count = 1;
 const long reward_lickport_channels[REWARD_LICKPORT_CHANNEL_COUNT] =
-  {
-   0,
-  };
+{
+  0,
+};
 const long reward_lickport_count = 1;
 
 // Clients
 const size_t encoder_interface_simple_address[1] =
-  {
-   3,
-  };
+{
+  3,
+};
 
 const size_t power_switch_controller_address[2] =
-  {
-   3,
-   3,
-  };
+{
+  3,
+  3,
+};
 
 const size_t audio_controller_address[4] =
-  {
-   3,
-   3,
-   3,
-   3,
-  };
+{
+  3,
+  3,
+  3,
+  3,
+};
 
-// Interrupts
+// Pins
 
 // Units
 CONSTANT_STRING(mm_units,"mm");
@@ -154,11 +154,11 @@ const long reach_position_0_default = 50;
 
 CONSTANT_STRING(reach_position_1_means_property_name,"reachPosition1Means");
 const long reach_position_1_means_default[REACH_POSITION_1_COUNT_MAX] =
-  {
-   110,
-   150,
-   190,
-  };
+{
+  110,
+  150,
+  190,
+};
 
 CONSTANT_STRING(pull_threshold_property_name,"pullThreshold");
 const long pull_threshold_min = -1000;
@@ -172,12 +172,12 @@ const long push_threshold_default = 50;
 
 CONSTANT_STRING(pull_torque_means_property_name,"pullTorqueMeans");
 const long pull_torque_means_default[PULL_TORQUE_COUNT_MAX] =
-  {
-   20,
-   40,
-   60,
-   80,
-  };
+{
+  20,
+  40,
+  60,
+  80,
+};
 
 CONSTANT_STRING(ready_tone_frequency_property_name,"readyToneFrequency");
 const long ready_tone_frequency_default = 8000;

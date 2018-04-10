@@ -14,7 +14,7 @@ namespace mouse_joystick_controller
 {
 namespace constants
 {
-// Interrupts
+// Pins
 
 // Units
 
@@ -22,64 +22,64 @@ namespace constants
 const long channel_count = CHANNEL_COUNT;
 
 const long steps_per_position_units_default[CHANNEL_COUNT] =
-  {
-   steps_per_position_units_element_default,
-  };
+{
+  steps_per_position_units_element_default,
+};
 
 const long velocity_max_default[CHANNEL_COUNT] =
-  {
-   velocity_max_element_default,
-  };
+{
+  velocity_max_element_default,
+};
 
- const long velocity_min_default[CHANNEL_COUNT] =
-  {
-   velocity_min_element_default,
-  };
+const long velocity_min_default[CHANNEL_COUNT] =
+{
+  velocity_min_element_default,
+};
 
 const long acceleration_max_default[CHANNEL_COUNT] =
-  {
-   acceleration_max_element_default,
-  };
+{
+  acceleration_max_element_default,
+};
 
 const long home_velocity_default[CHANNEL_COUNT] =
-  {
-   home_velocity_element_default,
-  };
+{
+  home_velocity_element_default,
+};
 
 const bool invert_driver_direction_default[CHANNEL_COUNT] =
-  {
-   invert_driver_direction_element_0_default,
-  };
+{
+  invert_driver_direction_element_0_default,
+};
 
 const long run_current_default[CHANNEL_COUNT] =
-  {
-   run_current_element_0_default,
-  };
+{
+  run_current_element_0_default,
+};
 
 const long hold_current_default[CHANNEL_COUNT] =
-  {
-   hold_current_element_0_default,
-  };
+{
+  hold_current_element_0_default,
+};
 
 const long hold_delay_default[CHANNEL_COUNT] =
-  {
-   hold_delay_element_default,
-  };
+{
+  hold_delay_element_default,
+};
 
 const long stage_position_min_default[CHANNEL_COUNT] =
-  {
-   stage_position_min_element_0_default,
-  };
+{
+  stage_position_min_element_0_default,
+};
 
 const long stage_position_max_default[CHANNEL_COUNT] =
-  {
-   stage_position_max_element_0_default,
-  };
+{
+  stage_position_max_element_0_default,
+};
 
 const long base_position_default[CHANNEL_COUNT] =
-  {
-   base_position_element_0_default,
-  };
+{
+  base_position_element_0_default,
+};
 
 // Parameters
 

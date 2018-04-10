@@ -18,7 +18,7 @@ namespace constants
 {
 enum{CHANNEL_COUNT=2};
 
-// Interrupts
+// Pins
 
 // Units
 

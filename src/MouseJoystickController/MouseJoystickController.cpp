@@ -49,7 +49,7 @@ void MouseJoystickController::setup()
 
   // Add Hardware
 
-  // Interrupts
+  // Pins
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,
@@ -179,26 +179,26 @@ void MouseJoystickController::setup()
 
   // Callbacks
   modular_server::Callback & start_trial_callback = modular_server_.createCallback(constants::start_trial_callback_name);
-  start_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::startTrialHandler));
+  start_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&MouseJoystickController::startTrialHandler));
 
   modular_server::Callback & start_assay_callback = modular_server_.createCallback(constants::start_assay_callback_name);
-  start_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::startAssayHandler));
+  start_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&MouseJoystickController::startAssayHandler));
 
   modular_server::Callback & abort_trial_callback = modular_server_.createCallback(constants::abort_trial_callback_name);
-  abort_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::abortTrialHandler));
-  abort_trial_callback.attachTo(modular_device_base::constants::bnc_a_interrupt_name,modular_server::interrupt::mode_falling);
+  abort_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&MouseJoystickController::abortTrialHandler));
+  abort_trial_callback.attachTo(modular_device_base::constants::bnc_a_pin_name,modular_server::pin::mode_falling);
 #if !defined(__AVR_ATmega2560__)
-  abort_trial_callback.attachTo(modular_device_base::constants::btn_a_interrupt_name,modular_server::interrupt::mode_falling);
+  abort_trial_callback.attachTo(modular_device_base::constants::btn_a_pin_name,modular_server::pin::mode_falling);
 #endif
 
   modular_server::Callback & abort_assay_callback = modular_server_.createCallback(constants::abort_assay_callback_name);
-  abort_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::abortAssayHandler));
+  abort_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&MouseJoystickController::abortAssayHandler));
 
   modular_server::Callback & restart_assay_callback = modular_server_.createCallback(constants::restart_assay_callback_name);
-  restart_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&MouseJoystickController::restartAssayHandler));
-  restart_assay_callback.attachTo(modular_device_base::constants::bnc_b_interrupt_name,modular_server::interrupt::mode_falling);
+  restart_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&MouseJoystickController::restartAssayHandler));
+  restart_assay_callback.attachTo(modular_device_base::constants::bnc_b_pin_name,modular_server::pin::mode_falling);
 #if defined(__MK64FX512__)
-  restart_assay_callback.attachTo(modular_device_base::constants::btn_b_interrupt_name,modular_server::interrupt::mode_falling);
+  restart_assay_callback.attachTo(modular_device_base::constants::btn_b_pin_name,modular_server::pin::mode_falling);
 #endif
 
 }
@@ -769,27 +769,27 @@ void MouseJoystickController::activateLickportHandler()
   activateLickport(count);
 }
 
-void MouseJoystickController::startTrialHandler(modular_server::Interrupt * interrupt_ptr)
+void MouseJoystickController::startTrialHandler(modular_server::Pin * pin_ptr)
 {
   startTrial();
 }
 
-void MouseJoystickController::startAssayHandler(modular_server::Interrupt * interrupt_ptr)
+void MouseJoystickController::startAssayHandler(modular_server::Pin * pin_ptr)
 {
   startAssay();
 }
 
-void MouseJoystickController::abortTrialHandler(modular_server::Interrupt * interrupt_ptr)
+void MouseJoystickController::abortTrialHandler(modular_server::Pin * pin_ptr)
 {
   abortTrial();
 }
 
-void MouseJoystickController::abortAssayHandler(modular_server::Interrupt * interrupt_ptr)
+void MouseJoystickController::abortAssayHandler(modular_server::Pin * pin_ptr)
 {
   abortAssay();
 }
 
-void MouseJoystickController::restartAssayHandler(modular_server::Interrupt * interrupt_ptr)
+void MouseJoystickController::restartAssayHandler(modular_server::Pin * pin_ptr)
 {
   restartAssay();
 }

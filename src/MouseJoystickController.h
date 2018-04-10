@@ -99,11 +99,11 @@ private:
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();
   void activateLickportHandler();
-  void startTrialHandler(modular_server::Interrupt * interrupt_ptr);
-  void startAssayHandler(modular_server::Interrupt * interrupt_ptr);
-  void abortTrialHandler(modular_server::Interrupt * interrupt_ptr);
-  void abortAssayHandler(modular_server::Interrupt * interrupt_ptr);
-  void restartAssayHandler(modular_server::Interrupt * interrupt_ptr);
+  void startTrialHandler(modular_server::Pin * pin_ptr);
+  void startAssayHandler(modular_server::Pin * pin_ptr);
+  void abortTrialHandler(modular_server::Pin * pin_ptr);
+  void abortAssayHandler(modular_server::Pin * pin_ptr);
+  void restartAssayHandler(modular_server::Pin * pin_ptr);
   void startTrialEventHandler(int arg);
   void trialTimeoutEventHandler(int arg);
 

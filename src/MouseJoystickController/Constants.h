@@ -114,7 +114,7 @@ extern const size_t power_switch_controller_address[2];
 
 extern const size_t audio_controller_address[4];
 
-// Interrupts
+// Pins
 
 // Units
 extern ConstantString mm_units;
