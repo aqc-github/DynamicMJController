@@ -186,19 +186,16 @@ void MouseJoystickController::setup()
 
   modular_server::Callback & abort_trial_callback = modular_server_.createCallback(constants::abort_trial_callback_name);
   abort_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&MouseJoystickController::abortTrialHandler));
-  abort_trial_callback.attachTo(modular_device_base::constants::bnc_a_pin_name,modular_server::pin::mode_falling);
-#if !defined(__AVR_ATmega2560__)
-  abort_trial_callback.attachTo(modular_device_base::constants::btn_a_pin_name,modular_server::pin::mode_falling);
-#endif
+  abort_trial_callback.attachTo(modular_device_base::constants::bnc_a_pin_name,modular_server::constants::pin_mode_interrupt_falling);
 
   modular_server::Callback & abort_assay_callback = modular_server_.createCallback(constants::abort_assay_callback_name);
   abort_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&MouseJoystickController::abortAssayHandler));
 
   modular_server::Callback & restart_assay_callback = modular_server_.createCallback(constants::restart_assay_callback_name);
   restart_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&MouseJoystickController::restartAssayHandler));
-  restart_assay_callback.attachTo(modular_device_base::constants::bnc_b_pin_name,modular_server::pin::mode_falling);
+  restart_assay_callback.attachTo(modular_device_base::constants::bnc_b_pin_name,modular_server::constants::pin_mode_interrupt_falling);
 #if defined(__MK64FX512__)
-  restart_assay_callback.attachTo(modular_device_base::constants::btn_b_pin_name,modular_server::pin::mode_falling);
+  restart_assay_callback.attachTo(modular_device_base::constants::btn_b_pin_name,modular_server::constants::pin_mode_interrupt_falling);
 #endif
 
 }
