@@ -19,8 +19,8 @@ CONSTANT_STRING(firmware_name,"MouseJoystickController");
 const modular_server::FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
-  .version_major=1,
-  .version_minor=2,
+  .version_major=2,
+  .version_minor=0,
   .version_patch=0,
 };
 
@@ -61,6 +61,8 @@ const long milliseconds_per_second = 1000;
 const long milliseconds_per_minute = milliseconds_per_second*seconds_per_minute;
 
 const long activate_lickport_delay = 40;
+
+const long pulse_duration = 25;
 
 // Ready
 const long ready_tone_delay = 40;
@@ -234,7 +236,6 @@ const long count_min = 1;
 const long count_max = 20;
 
 // Functions
-CONSTANT_STRING(set_client_property_values_function_name,"setClientPropertyValues");
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
 CONSTANT_STRING(move_joystick_to_base_position_function_name,"moveJoystickToBasePosition");
 CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToReachPosition");

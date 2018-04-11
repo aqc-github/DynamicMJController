@@ -45,6 +45,50 @@ License:
 ## API NAMES
 
 ```json
+{
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "MouseJoystickController"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
+      "getAssayStatus",
+      "moveJoystickToBasePosition",
+      "moveJoystickToReachPosition",
+      "activateLickport"
+    ],
+    "parameters": [
+      "count"
+    ],
+    "properties": [
+      "basePosition",
+      "reachPosition0",
+      "reachPosition1Means",
+      "pullThreshold",
+      "pushThreshold",
+      "pullTorqueMeans",
+      "readyToneFrequency",
+      "readyToneDuration",
+      "rewardToneFrequency",
+      "rewardToneDuration",
+      "rewardLickportDelay",
+      "rewardLickportDuration",
+      "trialTimeoutDuration",
+      "repeatAbortedTrial",
+      "trialCount",
+      "setCount",
+      "startTrialDuration"
+    ],
+    "callbacks": [
+      "startTrial",
+      "startAssay",
+      "abortTrial",
+      "abortAssay",
+      "restartAssay"
+    ]
+  }
+}
 ```
 
 ## API GENERAL

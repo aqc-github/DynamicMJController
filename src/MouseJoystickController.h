@@ -68,6 +68,7 @@ private:
   size_t reach_position_1_index_;
   size_t pull_torque_index_;
 
+  bool setupClients();
   StageController::PositionArray getBasePosition();
   StageController::PositionArray getReachPosition();
   long getPullTorque();
@@ -94,7 +95,6 @@ private:
   void triggerLickport(const long delay, const long count);
 
   // Handlers
-  void setClientPropertyValuesHandler();
   void getAssayStatusHandler();
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();

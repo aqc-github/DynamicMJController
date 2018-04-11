@@ -24,7 +24,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=17};
 enum{PARAMETER_COUNT_MAX=1};
-enum{FUNCTION_COUNT_MAX=5};
+enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=5};
 
 enum{EVENT_COUNT_MAX=32};
@@ -82,6 +82,8 @@ extern const long milliseconds_per_second;
 extern const long milliseconds_per_minute;
 
 extern const long activate_lickport_delay;
+
+extern const long pulse_duration;
 
 // Ready
 extern const long ready_tone_delay;
@@ -237,7 +239,6 @@ extern const long count_min;
 extern const long count_max;
 
 // Functions
-extern ConstantString set_client_property_values_function_name;
 extern ConstantString get_assay_status_function_name;
 extern ConstantString move_joystick_to_base_position_function_name;
 extern ConstantString move_joystick_to_reach_position_function_name;

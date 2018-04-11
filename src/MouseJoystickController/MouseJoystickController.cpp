@@ -159,10 +159,6 @@ void MouseJoystickController::setup()
   count_parameter.setRange(constants::count_min,constants::count_max);
 
   // Functions
-  modular_server::Function & set_client_property_values_function = modular_server_.createFunction(constants::set_client_property_values_function_name);
-  set_client_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::setClientPropertyValuesHandler));
-  set_client_property_values_function.setResultTypeObject();
-
   modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
   get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getAssayStatusHandler));
   get_assay_status_function.setResultTypeObject();
@@ -209,6 +205,7 @@ void MouseJoystickController::update()
 
   if (state_ptr == &constants::state_assay_started_string)
   {
+    setupClients();
     setupAssay();
     assay_status_.state_ptr = &constants::state_homing_0_string;
     reinitialize();
@@ -411,6 +408,35 @@ void MouseJoystickController::restartAssay()
   abortAssay();
   assay_status_.state_ptr = &constants::state_assay_not_started_string;
   startAssay();
+}
+
+// private
+
+bool MouseJoystickController::setupClients()
+{
+  bool setup_was_successful = true;
+
+  encoder_interface_simple_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name,
+                                      modular_server::constants::all_array);
+  setup_was_successful = setup_was_successful && encoder_interface_simple_ptr_->callWasSuccessful();
+
+  power_switch_controller_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name,
+                                     modular_server::constants::all_array);
+  setup_was_successful = setup_was_successful && power_switch_controller_ptr_->callWasSuccessful();
+  power_switch_controller_ptr_->call(modular_server::constants::set_pin_mode_function_name,
+                                     modular_device_base::constants::bnc_b_pin_name,
+                                     modular_server::constants::pin_mode_pulse_rising);
+  setup_was_successful = setup_was_successful && power_switch_controller_ptr_->callWasSuccessful();
+
+  audio_controller_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name,
+                              modular_server::constants::all_array);
+  setup_was_successful = setup_was_successful && audio_controller_ptr_->callWasSuccessful();
+  audio_controller_ptr_->call(modular_server::constants::set_pin_mode_function_name,
+                              modular_device_base::constants::bnc_b_pin_name,
+                              modular_server::constants::pin_mode_pulse_rising);
+  setup_was_successful = setup_was_successful && audio_controller_ptr_->callWasSuccessful();
+
+  return setup_was_successful;
 }
 
 StageController::PositionArray MouseJoystickController::getBasePosition()
@@ -636,6 +662,9 @@ void MouseJoystickController::playReadyTone()
                               ready_tone_duration,
                               ready_tone_duration,
                               constants::ready_tone_count);
+  audio_controller_ptr_->call(modular_server::constants::set_pin_value_function_name,
+                              modular_device_base::constants::bnc_b_pin_name,
+                              constants::pulse_duration);
 }
 
 void MouseJoystickController::playRewardTone()
@@ -675,6 +704,9 @@ void MouseJoystickController::triggerLickport(const long delay, const long count
                                      lickport_duration*2,
                                      lickport_duration,
                                      count);
+  power_switch_controller_ptr_->call(modular_server::constants::set_pin_value_function_name,
+                                     modular_device_base::constants::bnc_b_pin_name,
+                                     constants::pulse_duration);
 }
 
 // Handlers must be non-blocking (avoid 'delay')
@@ -694,41 +726,6 @@ void MouseJoystickController::triggerLickport(const long delay, const long count
 // modular_server_.property(property_name).setValue(value) value type must match the property default type
 // modular_server_.property(property_name).getElementValue(element_index,value) value type must match the property array element default type
 // modular_server_.property(property_name).setElementValue(element_index,value) value type must match the property array element default type
-
-void MouseJoystickController::setClientPropertyValuesHandler()
-{
-  modular_server_.response().writeResultKey();
-
-  modular_server_.response().beginObject();
-
-  bool call_was_successful;
-
-  modular_server_.response().writeKey(encoder_interface_simple::constants::device_name);
-  modular_server_.response().beginArray();
-  encoder_interface_simple_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name,
-                                      modular_server::constants::all_array);
-  call_was_successful = encoder_interface_simple_ptr_->callWasSuccessful();
-  modular_server_.response().write(call_was_successful);
-  modular_server_.response().endArray();
-
-  modular_server_.response().writeKey(power_switch_controller::constants::device_name);
-  modular_server_.response().beginArray();
-  power_switch_controller_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name,
-                                     modular_server::constants::all_array);
-  call_was_successful = power_switch_controller_ptr_->callWasSuccessful();
-  modular_server_.response().write(call_was_successful);
-  modular_server_.response().endArray();
-
-  modular_server_.response().writeKey(audio_controller::constants::device_name);
-  modular_server_.response().beginArray();
-  audio_controller_ptr_->call(modular_server::constants::set_properties_to_defaults_function_name,
-                              modular_server::constants::all_array);
-  call_was_successful = audio_controller_ptr_->callWasSuccessful();
-  modular_server_.response().write(call_was_successful);
-  modular_server_.response().endArray();
-
-  modular_server_.response().endObject();
-}
 
 void MouseJoystickController::getAssayStatusHandler()
 {
