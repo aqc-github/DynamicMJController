@@ -1,0 +1,100 @@
+#+TITLE: MouseJoystickController
+#+AUTHOR: Peter Polidoro
+#+EMAIL: peterpolidoro@gmail.com
+
+* Library Information
+  - Author :: Peter Polidoro
+  - License :: BSD
+
+* Ancestors
+
+  [[https://github.com/janelia-arduino/ModularServer][ModularServer]]
+
+  [[https://github.com/janelia-arduino/ModularDeviceBase][ModularDeviceBase]]
+
+  [[https://github.com/janelia-arduino/StepDirController][StepDirController]]
+
+  [[https://github.com/janelia-arduino/StepperController][StepperController]]
+
+  [[https://github.com/janelia-arduino/StageController][StageController]]
+
+* Clients
+
+  [[https://github.com/janelia-arduino/EncoderInterfaceSimple][EncoderInterfaceSimple]]
+
+  [[https://github.com/janelia-arduino/PowerSwitchController][PowerSwitchController]]
+
+  [[https://github.com/janelia-arduino/AudioController][AudioController]]
+
+* Devices
+
+  [[https://github.com/janelia-modular-devices/modular_device_base.git][modular_device_base]]
+
+  [[https://github.com/janelia-modular-devices/stepper_controller.git][stepper_controller]]
+
+  [[https://github.com/janelia-modular-devices/encoder_interface_simple.git][encoder_interface_simple]]
+
+  [[https://github.com/janelia-modular-devices/power_switch_controller.git][power_switch_controller]]
+
+  [[https://github.com/janelia-modular-devices/audio_controller.git][audio_controller]]
+
+* API NAMES
+
+  #+BEGIN_SRC js
+{
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "MouseJoystickController"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
+      "getAssayStatus",
+      "moveJoystickToBasePosition",
+      "moveJoystickToReachPosition",
+      "activateLickport"
+    ],
+    "parameters": [
+      "count"
+    ],
+    "properties": [
+      "basePosition",
+      "reachPosition0",
+      "reachPosition1Means",
+      "pullThreshold",
+      "pushThreshold",
+      "pullTorqueMeans",
+      "readyToneFrequency",
+      "readyToneDuration",
+      "rewardToneFrequency",
+      "rewardToneDuration",
+      "rewardLickportDelay",
+      "rewardLickportDuration",
+      "trialTimeoutDuration",
+      "repeatAbortedTrial",
+      "trialCount",
+      "setCount",
+      "startTrialDuration"
+    ],
+    "callbacks": [
+      "startTrial",
+      "startAssay",
+      "abortTrial",
+      "abortAssay",
+      "restartAssay"
+    ]
+  }
+}
+  #+END_SRC
+
+* API GENERAL
+
+  [[./api.json][API GENERAL]]
+
+* More Detailed Modular Device Information
+
+  [[https://github.com/janelia-modular-devices/modular-devices][modular-devices]]
+
+* Library Dependencies
+
+  [[https://github.com/janelia-arduino/arduino-libraries][arduino-libraries]]
