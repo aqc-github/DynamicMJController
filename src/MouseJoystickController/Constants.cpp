@@ -132,7 +132,7 @@ const long home_velocity_element_default = -75;
 const long invert_driver_direction_element_0_default = false;
 const long invert_driver_direction_element_1_default = true;
 
-const long run_current_element_0_default = 20;
+const long run_current_element_0_default = 25;
 const long run_current_element_1_default = 50;
 
 const long hold_current_element_0_default = 10;
@@ -143,7 +143,7 @@ const long hold_delay_element_default = 50;
 const long stage_position_min_element_0_default = 0;
 const long stage_position_min_element_1_default = 0;
 
-const long stage_position_max_element_0_default = 100;
+const long stage_position_max_element_0_default = 175;
 const long stage_position_max_element_1_default = 300;
 
 const long base_position_element_0_default = 5;
@@ -152,7 +152,7 @@ const long base_position_element_1_default = 300;
 CONSTANT_STRING(base_position_property_name,"basePosition");
 
 CONSTANT_STRING(reach_position_0_property_name,"reachPosition0");
-const long reach_position_0_default = 50;
+const long reach_position_0_default = 145;
 
 CONSTANT_STRING(reach_position_1_means_property_name,"reachPosition1Means");
 const long reach_position_1_means_default[REACH_POSITION_1_COUNT_MAX] =

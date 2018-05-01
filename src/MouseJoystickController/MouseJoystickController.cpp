@@ -213,6 +213,10 @@ void MouseJoystickController::update()
     setupAssay();
     assay_status_.state_ptr = &constants::state_homing_0_string;
     reinitialize();
+    for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+    {
+      maximizeHoldCurrent(channel);
+    }
     home(0);
   }
   else if (state_ptr == &constants::state_homing_0_string)
@@ -239,6 +243,10 @@ void MouseJoystickController::update()
   {
     if (stageAtTargetPosition())
     {
+      for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+      {
+        restoreHoldCurrent(channel);
+      }
       assay_status_.state_ptr = &constants::state_wait_to_start_trial_string;
     }
   }
@@ -287,6 +295,10 @@ void MouseJoystickController::update()
   {
     assay_status_.state_ptr = &constants::state_retracting_0_string;
     reinitialize();
+    for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+    {
+      maximizeHoldCurrent(channel);
+    }
     home(0);
   }
   else if (state_ptr == &constants::state_retracting_0_string)
@@ -321,6 +333,10 @@ void MouseJoystickController::update()
   {
     if (stageAtTargetPosition())
     {
+      for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+      {
+        restoreHoldCurrent(channel);
+      }
       assay_status_.state_ptr = &constants::state_assay_finished_string;
     }
   }

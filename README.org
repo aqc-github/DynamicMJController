@@ -41,50 +41,51 @@
 * API NAMES
 
   #+BEGIN_SRC js
-{
-  "id": "getApi",
-  "result": {
-    "firmware": [
-      "MouseJoystickController"
-    ],
-    "verbosity": "NAMES",
-    "functions": [
-      "getAssayStatus",
-      "moveJoystickToBasePosition",
-      "moveJoystickToReachPosition",
-      "activateLickport"
-    ],
-    "parameters": [
-      "count"
-    ],
-    "properties": [
-      "basePosition",
-      "reachPosition0",
-      "reachPosition1Means",
-      "pullThreshold",
-      "pushThreshold",
-      "pullTorqueMeans",
-      "readyToneFrequency",
-      "readyToneDuration",
-      "rewardToneFrequency",
-      "rewardToneDuration",
-      "rewardLickportDelay",
-      "rewardLickportDuration",
-      "trialTimeoutDuration",
-      "repeatAbortedTrial",
-      "trialCount",
-      "setCount",
-      "startTrialDuration"
-    ],
-    "callbacks": [
-      "startTrial",
-      "startAssay",
-      "abortTrial",
-      "abortAssay",
-      "restartAssay"
-    ]
-  }
-}
+    {
+      "id": "getApi",
+      "result": {
+        "firmware": [
+          "MouseJoystickController"
+        ],
+        "verbosity": "NAMES",
+        "functions": [
+          "getAssayStatus",
+          "moveJoystickToBasePosition",
+          "moveJoystickToReachPosition",
+          "activateLickport"
+        ],
+        "parameters": [
+          "count"
+        ],
+        "properties": [
+          "basePosition",
+          "reachPosition0",
+          "reachPosition1Means",
+          "pullThreshold",
+          "pushThreshold",
+          "pullTorqueMeans",
+          "readyToneFrequency",
+          "readyToneDuration",
+          "rewardToneFrequency",
+          "rewardToneDuration",
+          "toneVolume",
+          "rewardLickportDelay",
+          "rewardLickportDuration",
+          "trialTimeoutDuration",
+          "repeatAbortedTrial",
+          "trialCount",
+          "setCount",
+          "startTrialDuration"
+        ],
+        "callbacks": [
+          "startTrial",
+          "startAssay",
+          "abortTrial",
+          "abortAssay",
+          "restartAssay"
+        ]
+      }
+    }
   #+END_SRC
 
 * API GENERAL
