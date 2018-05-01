@@ -130,6 +130,10 @@ void MouseJoystickController::setup()
   reward_tone_duration_property.setRange(constants::reward_tone_duration_min,constants::reward_tone_duration_max);
   reward_tone_duration_property.setUnits(audio_controller::constants::ms_units);
 
+  modular_server::Property & tone_volume_property = modular_server_.createProperty(constants::tone_volume_property_name,constants::tone_volume_default);
+  tone_volume_property.setRange(constants::tone_volume_min,constants::tone_volume_max);
+  tone_volume_property.setUnits(audio_controller::constants::percent_units);
+
   modular_server::Property & reward_lickport_delay_property = modular_server_.createProperty(constants::reward_lickport_delay_property_name,constants::reward_lickport_delay_default);
   reward_lickport_delay_property.setRange(constants::reward_lickport_delay_min,constants::reward_lickport_delay_max);
   reward_lickport_delay_property.setUnits(power_switch_controller::constants::ms_units);
@@ -475,9 +479,16 @@ void MouseJoystickController::addStartTrialEvent()
   long start_trial_duration;
   modular_server_.property(constants::start_trial_duration_property_name).getValue(start_trial_duration);
 
-  EventId start_trial_event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystickController::startTrialEventHandler),
-                                                                      start_trial_duration*constants::milliseconds_per_second);
-  event_controller_.enable(start_trial_event_id);
+  if (start_trial_duration > 0)
+  {
+    EventId start_trial_event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystickController::startTrialEventHandler),
+                                                                        start_trial_duration*constants::milliseconds_per_second);
+    event_controller_.enable(start_trial_event_id);
+  }
+  else
+  {
+    startTrialEventHandler(0);
+  }
 }
 
 void MouseJoystickController::checkForMouseReady()
@@ -655,9 +666,13 @@ void MouseJoystickController::playReadyTone()
   long ready_tone_duration;
   modular_server_.property(constants::ready_tone_duration_property_name).getValue(ready_tone_duration);
 
-  audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_function_name,
+  long tone_volume;
+  modular_server_.property(constants::tone_volume_property_name).getValue(tone_volume);
+
+  audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_at_function_name,
                               ready_tone_frequency,
                               audio_controller::constants::speaker_all,
+                              tone_volume,
                               constants::ready_tone_delay,
                               ready_tone_duration,
                               ready_tone_duration,
@@ -675,9 +690,13 @@ void MouseJoystickController::playRewardTone()
   long reward_tone_duration;
   modular_server_.property(constants::reward_tone_duration_property_name).getValue(reward_tone_duration);
 
-  audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_function_name,
+  long tone_volume;
+  modular_server_.property(constants::tone_volume_property_name).getValue(tone_volume);
+
+  audio_controller_ptr_->call(audio_controller::constants::add_tone_pwm_at_function_name,
                               reward_tone_frequency,
                               audio_controller::constants::speaker_all,
+                              tone_volume,
                               constants::reward_tone_delay,
                               reward_tone_duration,
                               reward_tone_duration,

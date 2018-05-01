@@ -20,7 +20,7 @@ const modular_server::FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
   .version_major=2,
-  .version_minor=0,
+  .version_minor=1,
   .version_patch=0,
 };
 
@@ -197,6 +197,11 @@ const long reward_tone_duration_min = 100;
 const long reward_tone_duration_max = 2000;
 const long reward_tone_duration_default = 500;
 
+CONSTANT_STRING(tone_volume_property_name,"toneVolume");
+const long tone_volume_min = 0;
+const long tone_volume_max = 100;
+const long tone_volume_default = 25;
+
 CONSTANT_STRING(reward_lickport_delay_property_name,"rewardLickportDelay");
 const long reward_lickport_delay_min = 100;
 const long reward_lickport_delay_max = 5000;
@@ -226,9 +231,9 @@ const long set_count_max = 100;
 const long set_count_default = 2;
 
 CONSTANT_STRING(start_trial_duration_property_name,"startTrialDuration");
-const long start_trial_duration_min = 1;
+const long start_trial_duration_min = 0;
 const long start_trial_duration_max = 60;
-const long start_trial_duration_default = 1;
+const long start_trial_duration_default = 0;
 
 // Parameters
 CONSTANT_STRING(count_parameter_name,"count");

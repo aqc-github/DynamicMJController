@@ -22,7 +22,7 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=17};
+enum{PROPERTY_COUNT_MAX=18};
 enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=5};
@@ -199,6 +199,11 @@ extern ConstantString reward_tone_duration_property_name;
 extern const long reward_tone_duration_min;
 extern const long reward_tone_duration_max;
 extern const long reward_tone_duration_default;
+
+extern ConstantString tone_volume_property_name;
+extern const long tone_volume_min;
+extern const long tone_volume_max;
+extern const long tone_volume_default;
 
 extern ConstantString reward_lickport_delay_property_name;
 extern const long reward_lickport_delay_min;
