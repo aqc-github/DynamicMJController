@@ -89,7 +89,7 @@
 
 * API GENERAL
 
-  [[./api.json][API GENERAL]]
+  [[./api/][API GENERAL]]
 
 * More Detailed Modular Device Information
 
