@@ -21,7 +21,7 @@ const modular_server::FirmwareInfo firmware_info =
   .name_ptr=&firmware_name,
   .version_major=2,
   .version_minor=1,
-  .version_patch=0,
+  .version_patch=1,
 };
 
 CONSTANT_STRING(state_string,"state");
@@ -78,6 +78,7 @@ const long pull_torque_min = 0;
 const long pull_torque_max = 100;
 const long pull_torque_array_length_min = 1;
 const long pull_torque_array_length_max = PULL_TORQUE_COUNT_MAX;
+const unsigned long pull_push_poll_period = 50;
 
 // Reward
 const long reward_tone_delay = 40;
@@ -133,10 +134,10 @@ const long invert_driver_direction_element_0_default = false;
 const long invert_driver_direction_element_1_default = true;
 
 const long run_current_element_0_default = 25;
-const long run_current_element_1_default = 50;
+const long run_current_element_1_default = 60;
 
 const long hold_current_element_0_default = 10;
-const long hold_current_element_1_default = 25;
+const long hold_current_element_1_default = 30;
 
 const long hold_delay_element_default = 50;
 

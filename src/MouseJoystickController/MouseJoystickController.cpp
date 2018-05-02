@@ -543,14 +543,31 @@ void MouseJoystickController::setupPull()
 
   playReadyTone();
 
+  pull_push_poll_time_previous_ = millis();
+
   assay_status_.state_ptr = &constants::state_waiting_for_pull_string;
 }
 
 void MouseJoystickController::checkForPullOrPush()
 {
+  time_ = millis();
+  if ((time_ - pull_push_poll_time_previous_) < constants::pull_push_poll_period)
+  {
+    return;
+  }
+  pull_push_poll_time_previous_ = time_;
+
   StaticJsonBuffer<constants::ENCODER_POSITIONS_JSON_BUFFER_SIZE> json_buffer;
   JsonArray & position_array = encoder_interface_simple_ptr_->callGetResult(json_buffer,encoder_interface_simple::constants::get_positions_function_name);
-  long position = position_array[constants::pull_encoder_index];
+  long position;
+  if (encoder_interface_simple_ptr_->callWasSuccessful())
+  {
+    position = position_array[constants::pull_encoder_index];
+  }
+  else
+  {
+    return;
+  }
 
   long pull_threshold;
   modular_server_.property(constants::pull_threshold_property_name).getValue(pull_threshold);

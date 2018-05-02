@@ -68,6 +68,9 @@ private:
   size_t reach_position_1_index_;
   size_t pull_torque_index_;
 
+  unsigned long time_;
+  unsigned long pull_push_poll_time_previous_;
+
   bool setupClients();
   StageController::PositionArray getBasePosition();
   StageController::PositionArray getReachPosition();

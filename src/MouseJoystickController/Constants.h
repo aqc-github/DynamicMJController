@@ -101,6 +101,7 @@ extern const long pull_torque_min;
 extern const long pull_torque_max;
 extern const long pull_torque_array_length_min;
 extern const long pull_torque_array_length_max;
+extern const unsigned long pull_push_poll_period;
 
 // Reward
 extern const long reward_tone_delay;
