@@ -20,8 +20,8 @@ const modular_server::FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
   .version_major=2,
-  .version_minor=1,
-  .version_patch=1,
+  .version_minor=2,
+  .version_patch=0,
 };
 
 CONSTANT_STRING(state_string,"state");
@@ -29,8 +29,10 @@ CONSTANT_STRING(state_assay_not_started_string,"ASSAY_NOT_STARTED");
 CONSTANT_STRING(state_assay_started_string,"ASSAY_STARTED");
 CONSTANT_STRING(state_homing_0_string,"HOMING_0");
 CONSTANT_STRING(state_homing_1_string,"HOMING_1");
-CONSTANT_STRING(state_move_to_base_start_string,"MOVE_TO_BASE_START");
-CONSTANT_STRING(state_moving_to_base_start_string,"MOVING_TO_BASE_START");
+CONSTANT_STRING(state_move_to_base_start_0_string,"MOVE_TO_BASE_START_0");
+CONSTANT_STRING(state_moving_to_base_start_0_string,"MOVING_TO_BASE_START_0");
+CONSTANT_STRING(state_move_to_base_start_1_string,"MOVE_TO_BASE_START_1");
+CONSTANT_STRING(state_moving_to_base_start_1_string,"MOVING_TO_BASE_START_1");
 CONSTANT_STRING(state_wait_to_start_trial_string,"WAIT_TO_START_TRIAL");
 CONSTANT_STRING(state_waiting_to_start_trial_string,"WAITING_TO_START_TRIAL");
 CONSTANT_STRING(state_wait_for_mouse_ready_string,"WAIT_FOR_MOUSE_READY");
@@ -133,11 +135,11 @@ const long home_velocity_element_default = -75;
 const long invert_driver_direction_element_0_default = false;
 const long invert_driver_direction_element_1_default = true;
 
-const long run_current_element_0_default = 25;
-const long run_current_element_1_default = 60;
+const long run_current_element_0_default = 18;
+const long run_current_element_1_default = 40;
 
-const long hold_current_element_0_default = 10;
-const long hold_current_element_1_default = 30;
+const long hold_current_element_0_default = 9;
+const long hold_current_element_1_default = 20;
 
 const long hold_delay_element_default = 50;
 
@@ -147,10 +149,13 @@ const long stage_position_min_element_1_default = 0;
 const long stage_position_max_element_0_default = 175;
 const long stage_position_max_element_1_default = 300;
 
-const long base_position_element_0_default = 5;
-const long base_position_element_1_default = 300;
+CONSTANT_STRING(home_current_property_name,"homeCurrent");
+const long home_current_element_0_default = 25;
+const long home_current_element_1_default = 60;
 
 CONSTANT_STRING(base_position_property_name,"basePosition");
+const long base_position_element_0_default = 15;
+const long base_position_element_1_default = 300;
 
 CONSTANT_STRING(reach_position_0_property_name,"reachPosition0");
 const long reach_position_0_default = 145;

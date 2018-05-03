@@ -91,11 +91,15 @@ private:
   void updateReachPosition();
   void updatePullTorque();
   void moveToBasePosition();
+  void moveToBasePosition(const size_t channel);
   void moveToReachPosition();
   void playReadyTone();
   void playRewardTone();
   void triggerLickportReward();
-  void triggerLickport(const long delay, const long count);
+  void triggerLickport(const long delay,
+                       const long count);
+  void setHomeCurrent(const size_t channel);
+  void restoreCurrentSettings(const size_t channel);
 
   // Handlers
   void getAssayStatusHandler();

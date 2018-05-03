@@ -96,6 +96,10 @@ void MouseJoystickController::setup()
   modular_server::Property & stage_position_max_property = modular_server_.property(stage_controller::constants::stage_position_max_property_name);
   stage_position_max_property.setDefaultValue(constants::stage_position_max_default);
 
+  modular_server::Property & home_current_property = modular_server_.createProperty(constants::home_current_property_name,constants::home_current_default);
+  home_current_property.setUnits(stepper_controller::constants::percent_units);
+  home_current_property.setRange(stepper_controller::constants::percent_min,stepper_controller::constants::percent_max);
+
   modular_server_.createProperty(constants::base_position_property_name,constants::base_position_default);
 
   modular_server_.createProperty(constants::reach_position_0_property_name,constants::reach_position_0_default);
@@ -213,17 +217,28 @@ void MouseJoystickController::update()
     setupAssay();
     assay_status_.state_ptr = &constants::state_homing_0_string;
     reinitialize();
-    for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
-    {
-      maximizeHoldCurrent(channel);
-    }
+    setHomeCurrent(0);
     home(0);
   }
   else if (state_ptr == &constants::state_homing_0_string)
   {
     if (homed(0))
     {
+      assay_status_.state_ptr = &constants::state_move_to_base_start_0_string;
+    }
+  }
+  else if (state_ptr == &constants::state_move_to_base_start_0_string)
+  {
+    assay_status_.state_ptr = &constants::state_moving_to_base_start_0_string;
+    moveToBasePosition(0);
+  }
+  else if (state_ptr == &constants::state_moving_to_base_start_0_string)
+  {
+    if (stageAtTargetPosition())
+    {
+      restoreCurrentSettings(0);
       assay_status_.state_ptr = &constants::state_homing_1_string;
+      setHomeCurrent(1);
       home(1);
     }
   }
@@ -231,22 +246,19 @@ void MouseJoystickController::update()
   {
     if (homed(1))
     {
-      assay_status_.state_ptr = &constants::state_move_to_base_start_string;
+      assay_status_.state_ptr = &constants::state_move_to_base_start_1_string;
     }
   }
-  else if (state_ptr == &constants::state_move_to_base_start_string)
+  else if (state_ptr == &constants::state_move_to_base_start_1_string)
   {
-    assay_status_.state_ptr = &constants::state_moving_to_base_start_string;
-    moveToBasePosition();
+    assay_status_.state_ptr = &constants::state_moving_to_base_start_1_string;
+    moveToBasePosition(1);
   }
-  else if (state_ptr == &constants::state_moving_to_base_start_string)
+  else if (state_ptr == &constants::state_moving_to_base_start_1_string)
   {
     if (stageAtTargetPosition())
     {
-      for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
-      {
-        restoreHoldCurrent(channel);
-      }
+      restoreCurrentSettings(1);
       assay_status_.state_ptr = &constants::state_wait_to_start_trial_string;
     }
   }
@@ -295,10 +307,7 @@ void MouseJoystickController::update()
   {
     assay_status_.state_ptr = &constants::state_retracting_0_string;
     reinitialize();
-    for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
-    {
-      maximizeHoldCurrent(channel);
-    }
+    setHomeCurrent(0);
     home(0);
   }
   else if (state_ptr == &constants::state_retracting_0_string)
@@ -306,6 +315,7 @@ void MouseJoystickController::update()
     if (homed(0))
     {
       assay_status_.state_ptr = &constants::state_retracting_1_string;
+      setHomeCurrent(1);
       home(1);
     }
   }
@@ -333,10 +343,7 @@ void MouseJoystickController::update()
   {
     if (stageAtTargetPosition())
     {
-      for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
-      {
-        restoreHoldCurrent(channel);
-      }
+      restoreHoldCurrent(channel);
       assay_status_.state_ptr = &constants::state_assay_finished_string;
     }
   }
@@ -744,7 +751,8 @@ void MouseJoystickController::triggerLickportReward()
   triggerLickport(reward_lickport_delay,constants::reward_lickport_count);
 }
 
-void MouseJoystickController::triggerLickport(const long delay, const long count)
+void MouseJoystickController::triggerLickport(const long delay,
+                                              const long count)
 {
   long lickport_duration;
   modular_server_.property(constants::lickport_duration_property_name).getValue(lickport_duration);
@@ -759,6 +767,21 @@ void MouseJoystickController::triggerLickport(const long delay, const long count
   power_switch_controller_ptr_->call(modular_server::constants::set_pin_value_function_name,
                                      modular_device_base::constants::bnc_b_pin_name,
                                      constants::pulse_duration);
+}
+
+void MouseJoystickController::setHomeCurrent(const size_t channel)
+{
+  long home_current;
+  modular_server_.property(constants::home_current_property_name).getValue(home_current);
+
+  modifyRunCurrent(channel,home_current);
+  modifyHoldCurrent(channel,home_current);
+}
+
+void MouseJoystickController::restoreCurrentSettings(const size_t channel)
+{
+  restoreHoldCurrent(channel);
+  restoreRunCurrent(channel);
 }
 
 // Handlers must be non-blocking (avoid 'delay')

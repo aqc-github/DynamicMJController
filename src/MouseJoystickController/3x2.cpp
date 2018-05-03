@@ -76,6 +76,11 @@ const long stage_position_max_default[CHANNEL_COUNT] =
   stage_position_max_element_0_default,
 };
 
+const long home_current_default[CHANNEL_COUNT] =
+{
+  home_current_element_0_default,
+};
+
 const long base_position_default[CHANNEL_COUNT] =
 {
   base_position_element_0_default,

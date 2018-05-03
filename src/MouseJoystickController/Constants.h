@@ -22,7 +22,7 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=18};
+enum{PROPERTY_COUNT_MAX=19};
 enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=5};
@@ -50,8 +50,10 @@ extern ConstantString state_assay_not_started_string;
 extern ConstantString state_assay_started_string;
 extern ConstantString state_homing_0_string;
 extern ConstantString state_homing_1_string;
-extern ConstantString state_move_to_base_start_string;
-extern ConstantString state_moving_to_base_start_string;
+extern ConstantString state_move_to_base_start_0_string;
+extern ConstantString state_moving_to_base_start_0_string;
+extern ConstantString state_move_to_base_start_1_string;
+extern ConstantString state_moving_to_base_start_1_string;
 extern ConstantString state_wait_to_start_trial_string;
 extern ConstantString state_waiting_to_start_trial_string;
 extern ConstantString state_wait_for_mouse_ready_string;
@@ -160,6 +162,10 @@ extern const long stage_position_min_element_1_default;
 
 extern const long stage_position_max_element_0_default;
 extern const long stage_position_max_element_1_default;
+
+extern ConstantString home_current_property_name;
+extern const long home_current_element_0_default;
+extern const long home_current_element_1_default;
 
 extern ConstantString base_position_property_name;
 extern const long base_position_element_0_default;
