@@ -29,10 +29,12 @@ CONSTANT_STRING(state_assay_not_started_string,"ASSAY_NOT_STARTED");
 CONSTANT_STRING(state_assay_started_string,"ASSAY_STARTED");
 CONSTANT_STRING(state_homing_0_string,"HOMING_0");
 CONSTANT_STRING(state_homing_1_string,"HOMING_1");
-CONSTANT_STRING(state_move_to_base_start_0_string,"MOVE_TO_BASE_START_0");
-CONSTANT_STRING(state_moving_to_base_start_0_string,"MOVING_TO_BASE_START_0");
-CONSTANT_STRING(state_move_to_base_start_1_string,"MOVE_TO_BASE_START_1");
-CONSTANT_STRING(state_moving_to_base_start_1_string,"MOVING_TO_BASE_START_1");
+CONSTANT_STRING(state_move_to_homed_0_string,"MOVE_TO_HOMED_0");
+CONSTANT_STRING(state_moving_to_homed_0_string,"MOVING_TO_HOMED_0");
+CONSTANT_STRING(state_move_to_homed_1_string,"MOVE_TO_HOMED_1");
+CONSTANT_STRING(state_moving_to_homed_1_string,"MOVING_TO_HOMED_1");
+CONSTANT_STRING(state_move_to_base_start_string,"MOVE_TO_BASE_START");
+CONSTANT_STRING(state_moving_to_base_start_string,"MOVING_TO_BASE_START");
 CONSTANT_STRING(state_wait_to_start_trial_string,"WAIT_TO_START_TRIAL");
 CONSTANT_STRING(state_waiting_to_start_trial_string,"WAITING_TO_START_TRIAL");
 CONSTANT_STRING(state_wait_for_mouse_ready_string,"WAIT_FOR_MOUSE_READY");
@@ -45,6 +47,10 @@ CONSTANT_STRING(state_reward_string,"REWARD");
 CONSTANT_STRING(state_retract_string,"RETRACT");
 CONSTANT_STRING(state_retracting_0_string,"RETRACTING_0");
 CONSTANT_STRING(state_retracting_1_string,"RETRACTING_1");
+CONSTANT_STRING(state_move_to_retracted_0_string,"MOVE_TO_RETRACTED_0");
+CONSTANT_STRING(state_moving_to_retracted_0_string,"MOVING_TO_RETRACTED_0");
+CONSTANT_STRING(state_move_to_retracted_1_string,"MOVE_TO_RETRACTED_1");
+CONSTANT_STRING(state_moving_to_retracted_1_string,"MOVING_TO_RETRACTED_1");
 CONSTANT_STRING(state_check_trial_termination_string,"CHECK_TRIAL_TERMINATION");
 CONSTANT_STRING(state_finish_trial_string,"FINISH_TRIAL");
 CONSTANT_STRING(state_move_to_base_stop_string,"MOVE_TO_BASE_STOP");
@@ -65,6 +71,8 @@ const long milliseconds_per_minute = milliseconds_per_second*seconds_per_minute;
 const long activate_lickport_delay = 40;
 
 const long pulse_duration = 25;
+
+const long not_touching_switch_position = 20;
 
 // Ready
 const long ready_tone_delay = 40;
@@ -154,7 +162,7 @@ const long home_current_element_0_default = 25;
 const long home_current_element_1_default = 60;
 
 CONSTANT_STRING(base_position_property_name,"basePosition");
-const long base_position_element_0_default = 15;
+const long base_position_element_0_default = not_touching_switch_position;
 const long base_position_element_1_default = 300;
 
 CONSTANT_STRING(reach_position_0_property_name,"reachPosition0");

@@ -224,17 +224,17 @@ void MouseJoystickController::update()
   {
     if (homed(0))
     {
-      assay_status_.state_ptr = &constants::state_move_to_base_start_0_string;
+      assay_status_.state_ptr = &constants::state_move_to_homed_0_string;
     }
   }
-  else if (state_ptr == &constants::state_move_to_base_start_0_string)
+  else if (state_ptr == &constants::state_move_to_homed_0_string)
   {
-    assay_status_.state_ptr = &constants::state_moving_to_base_start_0_string;
-    moveToBasePosition(0);
+    assay_status_.state_ptr = &constants::state_moving_to_homed_0_string;
+    moveTo(0,constants::not_touching_switch_position);
   }
-  else if (state_ptr == &constants::state_moving_to_base_start_0_string)
+  else if (state_ptr == &constants::state_moving_to_homed_0_string)
   {
-    if (stageAtTargetPosition())
+    if (atTargetPosition(0))
     {
       restoreCurrentSettings(0);
       assay_status_.state_ptr = &constants::state_homing_1_string;
@@ -246,19 +246,31 @@ void MouseJoystickController::update()
   {
     if (homed(1))
     {
-      assay_status_.state_ptr = &constants::state_move_to_base_start_1_string;
+      assay_status_.state_ptr = &constants::state_move_to_homed_1_string;
     }
   }
-  else if (state_ptr == &constants::state_move_to_base_start_1_string)
+  else if (state_ptr == &constants::state_move_to_homed_1_string)
   {
-    assay_status_.state_ptr = &constants::state_moving_to_base_start_1_string;
-    moveToBasePosition(1);
+    assay_status_.state_ptr = &constants::state_moving_to_homed_1_string;
+    moveTo(1,constants::not_touching_switch_position);
   }
-  else if (state_ptr == &constants::state_moving_to_base_start_1_string)
+  else if (state_ptr == &constants::state_moving_to_homed_1_string)
+  {
+    if (atTargetPosition(1))
+    {
+      restoreCurrentSettings(1);
+      assay_status_.state_ptr = &constants::state_move_to_base_start_string;
+    }
+  }
+  else if (state_ptr == &constants::state_move_to_base_start_string)
+  {
+    assay_status_.state_ptr = &constants::state_moving_to_base_start_string;
+    moveToBasePosition();
+  }
+  else if (state_ptr == &constants::state_moving_to_base_start_string)
   {
     if (stageAtTargetPosition())
     {
-      restoreCurrentSettings(1);
       assay_status_.state_ptr = &constants::state_wait_to_start_trial_string;
     }
   }
@@ -314,6 +326,19 @@ void MouseJoystickController::update()
   {
     if (homed(0))
     {
+      assay_status_.state_ptr = &constants::state_move_to_retracted_0_string;
+    }
+  }
+  else if (state_ptr == &constants::state_move_to_retracted_0_string)
+  {
+    assay_status_.state_ptr = &constants::state_moving_to_retracted_0_string;
+    moveTo(0,constants::not_touching_switch_position);
+  }
+  else if (state_ptr == &constants::state_moving_to_retracted_0_string)
+  {
+    if (atTargetPosition(0))
+    {
+      restoreCurrentSettings(0);
       assay_status_.state_ptr = &constants::state_retracting_1_string;
       setHomeCurrent(1);
       home(1);
@@ -323,6 +348,19 @@ void MouseJoystickController::update()
   {
     if (homed(1))
     {
+      assay_status_.state_ptr = &constants::state_move_to_retracted_1_string;
+    }
+  }
+  else if (state_ptr == &constants::state_move_to_retracted_1_string)
+  {
+    assay_status_.state_ptr = &constants::state_moving_to_retracted_1_string;
+    moveTo(1,constants::not_touching_switch_position);
+  }
+  else if (state_ptr == &constants::state_moving_to_retracted_1_string)
+  {
+    if (atTargetPosition(1))
+    {
+      restoreCurrentSettings(1);
       assay_status_.state_ptr = &constants::state_check_trial_termination_string;
     }
   }
@@ -343,7 +381,6 @@ void MouseJoystickController::update()
   {
     if (stageAtTargetPosition())
     {
-      restoreHoldCurrent(channel);
       assay_status_.state_ptr = &constants::state_assay_finished_string;
     }
   }
@@ -771,8 +808,12 @@ void MouseJoystickController::triggerLickport(const long delay,
 
 void MouseJoystickController::setHomeCurrent(const size_t channel)
 {
+  if (channel >= constants::CHANNEL_COUNT)
+  {
+    return;
+  }
   long home_current;
-  modular_server_.property(constants::home_current_property_name).getValue(home_current);
+  modular_server_.property(constants::home_current_property_name).getElementValue(channel,home_current);
 
   modifyRunCurrent(channel,home_current);
   modifyHoldCurrent(channel,home_current);

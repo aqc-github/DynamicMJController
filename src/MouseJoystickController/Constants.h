@@ -50,10 +50,12 @@ extern ConstantString state_assay_not_started_string;
 extern ConstantString state_assay_started_string;
 extern ConstantString state_homing_0_string;
 extern ConstantString state_homing_1_string;
-extern ConstantString state_move_to_base_start_0_string;
-extern ConstantString state_moving_to_base_start_0_string;
-extern ConstantString state_move_to_base_start_1_string;
-extern ConstantString state_moving_to_base_start_1_string;
+extern ConstantString state_move_to_homed_0_string;
+extern ConstantString state_moving_to_homed_0_string;
+extern ConstantString state_move_to_homed_1_string;
+extern ConstantString state_moving_to_homed_1_string;
+extern ConstantString state_move_to_base_start_string;
+extern ConstantString state_moving_to_base_start_string;
 extern ConstantString state_wait_to_start_trial_string;
 extern ConstantString state_waiting_to_start_trial_string;
 extern ConstantString state_wait_for_mouse_ready_string;
@@ -66,6 +68,10 @@ extern ConstantString state_reward_string;
 extern ConstantString state_retract_string;
 extern ConstantString state_retracting_0_string;
 extern ConstantString state_retracting_1_string;
+extern ConstantString state_move_to_retracted_0_string;
+extern ConstantString state_moving_to_retracted_0_string;
+extern ConstantString state_move_to_retracted_1_string;
+extern ConstantString state_moving_to_retracted_1_string;
 extern ConstantString state_check_trial_termination_string;
 extern ConstantString state_finish_trial_string;
 extern ConstantString state_move_to_base_stop_string;
@@ -86,6 +92,8 @@ extern const long milliseconds_per_minute;
 extern const long activate_lickport_delay;
 
 extern const long pulse_duration;
+
+extern const long not_touching_switch_position;
 
 // Ready
 extern const long ready_tone_delay;

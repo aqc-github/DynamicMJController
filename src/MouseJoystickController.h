@@ -91,7 +91,6 @@ private:
   void updateReachPosition();
   void updatePullTorque();
   void moveToBasePosition();
-  void moveToBasePosition(const size_t channel);
   void moveToReachPosition();
   void playReadyTone();
   void playRewardTone();
