@@ -21,7 +21,7 @@ const modular_server::FirmwareInfo firmware_info =
   .name_ptr=&firmware_name,
   .version_major=2,
   .version_minor=2,
-  .version_patch=0,
+  .version_patch=1,
 };
 
 CONSTANT_STRING(state_string,"state");
@@ -59,6 +59,7 @@ CONSTANT_STRING(state_assay_finished_string,"ASSAY_FINISHED");
 
 CONSTANT_STRING(reach_position_string,"reach_position");
 CONSTANT_STRING(pull_torque_string,"pull_torque");
+CONSTANT_STRING(pull_threshold_string,"pull_threshold");
 CONSTANT_STRING(trial_string,"trial");
 CONSTANT_STRING(block_string,"block");
 CONSTANT_STRING(set_string,"set");

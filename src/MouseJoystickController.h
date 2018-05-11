@@ -90,6 +90,7 @@ private:
 
   void updateReachPosition();
   void updatePullTorque();
+  void updatePullThreshold();
   void moveToBasePosition();
   void moveToReachPosition();
   void playReadyTone();

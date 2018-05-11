@@ -27,21 +27,25 @@ void MouseJoystickController::setup()
 
   // Clients Setup
   encoder_interface_simple_ptr_ = &(createClientAtAddress(constants::encoder_interface_simple_address));
+  encoder_interface_simple_ptr_->setName(encoder_interface_simple::constants::device_name);
   power_switch_controller_ptr_ = &(createClientAtAddress(constants::power_switch_controller_address));
+  power_switch_controller_ptr_->setName(power_switch_controller::constants::device_name);
   audio_controller_ptr_ = &(createClientAtAddress(constants::audio_controller_address));
+  audio_controller_ptr_->setName(audio_controller::constants::device_name);
 
   // Pin Setup
 
   // Assay Status Setup
   assay_status_.state_ptr = &constants::state_assay_not_started_string;
+  assay_status_.trial = 0;
+  assay_status_.block = 0;
+  assay_status_.set = 0;
   for (size_t channel=0; channel < constants::CHANNEL_COUNT; ++channel)
   {
     assay_status_.reach_position.push_back(0);
   }
   assay_status_.pull_torque = 0;
-  assay_status_.trial = 0;
-  assay_status_.block = 0;
-  assay_status_.set = 0;
+  assay_status_.pull_threshold = 0;
   assay_status_.successful_trial_count = 0;
 
   // Set Device ID
@@ -445,6 +449,7 @@ void MouseJoystickController::startAssay()
     updateReachPosition();
     pull_torque_index_ = 0;
     updatePullTorque();
+    updatePullThreshold();
 
     assay_status_.state_ptr = &constants::state_assay_started_string;
   }
@@ -601,6 +606,12 @@ void MouseJoystickController::checkForPullOrPush()
   }
   pull_push_poll_time_previous_ = time_;
 
+  if (!encoder_interface_simple_ptr_->enabled())
+  {
+    event_controller_.remove(trial_timeout_event_id_);
+    assay_status_.state_ptr = &constants::state_reward_string;
+  }
+
   StaticJsonBuffer<constants::ENCODER_POSITIONS_JSON_BUFFER_SIZE> json_buffer;
   JsonArray & position_array = encoder_interface_simple_ptr_->callGetResult(json_buffer,encoder_interface_simple::constants::get_positions_function_name);
   long position;
@@ -613,13 +624,10 @@ void MouseJoystickController::checkForPullOrPush()
     return;
   }
 
-  long pull_threshold;
-  modular_server_.property(constants::pull_threshold_property_name).getValue(pull_threshold);
-
   long push_threshold;
   modular_server_.property(constants::push_threshold_property_name).getValue(push_threshold);
 
-  if (position <= pull_threshold)
+  if (position <= assay_status_.pull_threshold)
   {
     event_controller_.remove(trial_timeout_event_id_);
     assay_status_.state_ptr = &constants::state_reward_string;
@@ -700,6 +708,7 @@ void MouseJoystickController::finishTrial()
   ++assay_status_.successful_trial_count;
   updateReachPosition();
   updatePullTorque();
+  updatePullThreshold();
 }
 
 void MouseJoystickController::updateReachPosition()
@@ -721,6 +730,14 @@ void MouseJoystickController::updatePullTorque()
   modular_server_.property(constants::pull_torque_means_property_name).getElementValue(pull_torque_index_,
                                                                                        pull_torque_mean);
   assay_status_.pull_torque = pull_torque_mean;
+}
+
+void MouseJoystickController::updatePullThreshold()
+{
+  long pull_threshold;
+  modular_server_.property(constants::pull_threshold_property_name).getValue(pull_threshold);
+
+  assay_status_.pull_threshold = pull_threshold;
 }
 
 void MouseJoystickController::moveToBasePosition()
@@ -850,11 +867,12 @@ void MouseJoystickController::getAssayStatusHandler()
   modular_server_.response().beginObject();
 
   modular_server_.response().write(constants::state_string,assay_status_.state_ptr);
-  modular_server_.response().write(constants::reach_position_string,assay_status_.reach_position);
-  modular_server_.response().write(constants::pull_torque_string,assay_status_.pull_torque);
   modular_server_.response().write(constants::trial_string,assay_status_.trial);
   modular_server_.response().write(constants::block_string,assay_status_.block);
   modular_server_.response().write(constants::set_string,assay_status_.set);
+  modular_server_.response().write(constants::reach_position_string,assay_status_.reach_position);
+  modular_server_.response().write(constants::pull_torque_string,assay_status_.pull_torque);
+  modular_server_.response().write(constants::pull_threshold_string,assay_status_.pull_threshold);
   modular_server_.response().write(constants::successful_trial_count_string,assay_status_.successful_trial_count);
 
   modular_server_.response().endObject();

@@ -37,11 +37,12 @@ extern const modular_server::FirmwareInfo firmware_info;
 struct AssayStatus
 {
   const ConstantString * state_ptr;
-  StageController::PositionArray reach_position;
-  long pull_torque;
   size_t trial;
   size_t block;
   size_t set;
+  StageController::PositionArray reach_position;
+  long pull_torque;
+  long pull_threshold;
   size_t successful_trial_count;
 };
 
@@ -80,6 +81,7 @@ extern ConstantString state_assay_finished_string;
 
 extern ConstantString reach_position_string;
 extern ConstantString pull_torque_string;
+extern ConstantString pull_threshold_string;
 extern ConstantString trial_string;
 extern ConstantString block_string;
 extern ConstantString set_string;
