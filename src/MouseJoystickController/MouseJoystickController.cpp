@@ -675,7 +675,19 @@ void MouseJoystickController::finishTrial()
       return;
     }
   }
+  else
+  {
+    ++assay_status_.successful_trial_count;
+  }
 
+  updateTrialBlockSet();
+  updateReachPosition();
+  updatePullTorque();
+  updatePullThreshold();
+}
+
+void MouseJoystickController::updateTrialBlockSet()
+{
   long trial_count;
   modular_server_.property(constants::trial_count_property_name).getValue(trial_count);
   if (++assay_status_.trial >= (size_t)trial_count)
@@ -705,10 +717,6 @@ void MouseJoystickController::finishTrial()
       }
     }
   }
-  ++assay_status_.successful_trial_count;
-  updateReachPosition();
-  updatePullTorque();
-  updatePullThreshold();
 }
 
 void MouseJoystickController::updateReachPosition()
