@@ -3,40 +3,16 @@
 #+EMAIL: peterpolidoro@gmail.com
 
 * Library Information
-  - Author :: Peter Polidoro
+  - Name :: MouseJoystickController
+  - Version :: 2.3.0
   - License :: BSD
+  - URL :: https://github.com/janelia-arduino/MouseJoystickController
+  - Author :: Peter Polidoro
+  - Email :: peterpolidoro@gmail.com
 
-* Ancestors
+** Description
 
-  [[https://github.com/janelia-arduino/ModularServer][ModularServer]]
-
-  [[https://github.com/janelia-arduino/ModularDeviceBase][ModularDeviceBase]]
-
-  [[https://github.com/janelia-arduino/StepDirController][StepDirController]]
-
-  [[https://github.com/janelia-arduino/StepperController][StepperController]]
-
-  [[https://github.com/janelia-arduino/StageController][StageController]]
-
-* Clients
-
-  [[https://github.com/janelia-arduino/EncoderInterfaceSimple][EncoderInterfaceSimple]]
-
-  [[https://github.com/janelia-arduino/PowerSwitchController][PowerSwitchController]]
-
-  [[https://github.com/janelia-arduino/AudioController][AudioController]]
-
-* Devices
-
-  [[https://github.com/janelia-modular-devices/modular_device_base.git][modular_device_base]]
-
-  [[https://github.com/janelia-modular-devices/stepper_controller.git][stepper_controller]]
-
-  [[https://github.com/janelia-modular-devices/encoder_interface_simple.git][encoder_interface_simple]]
-
-  [[https://github.com/janelia-modular-devices/power_switch_controller.git][power_switch_controller]]
-
-  [[https://github.com/janelia-modular-devices/audio_controller.git][audio_controller]]
+   Modular device mouse joystick controller library.
 
 * API NAMES
 
@@ -91,12 +67,44 @@
 
 * API GENERAL
 
-  [[./api/][API GENERAL]]
+  [[./api/]]
+
+* Ancestors
+
+  [[https://github.com/janelia-arduino/ModularServer]]
+
+  [[https://github.com/janelia-arduino/ModularDeviceBase]]
+
+  [[https://github.com/janelia-arduino/StepDirController]]
+
+  [[https://github.com/janelia-arduino/StepperController]]
+
+  [[https://github.com/janelia-arduino/StageController]]
+
+* Clients
+
+  [[https://github.com/janelia-arduino/EncoderInterfaceSimple]]
+
+  [[https://github.com/janelia-arduino/PowerSwitchController]]
+
+  [[https://github.com/janelia-arduino/AudioController]]
+
+* Devices
+
+  [[https://github.com/janelia-modular-devices/modular_device_base.git]]
+
+  [[https://github.com/janelia-modular-devices/stepper_controller.git]]
+
+  [[https://github.com/janelia-modular-devices/encoder_interface_simple.git]]
+
+  [[https://github.com/janelia-modular-devices/power_switch_controller.git]]
+
+  [[https://github.com/janelia-modular-devices/audio_controller.git]]
 
 * More Detailed Modular Device Information
 
-  [[https://github.com/janelia-modular-devices/modular-devices][modular-devices]]
+  [[https://github.com/janelia-modular-devices/modular-devices]]
 
-* Library Dependencies
+* Installation Instructions
 
-  [[https://github.com/janelia-arduino/arduino-libraries][arduino-libraries]]
+  [[https://github.com/janelia-arduino/arduino-libraries]]
