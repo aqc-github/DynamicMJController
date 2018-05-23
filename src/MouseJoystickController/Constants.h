@@ -22,7 +22,7 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=19};
+enum{PROPERTY_COUNT_MAX=20};
 enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=5};
@@ -44,6 +44,7 @@ struct AssayStatus
   long pull_torque;
   long pull_threshold;
   size_t successful_trial_count;
+  bool unread_trial_data;
 };
 
 extern ConstantString state_string;
@@ -75,6 +76,8 @@ extern ConstantString state_move_to_retracted_1_string;
 extern ConstantString state_moving_to_retracted_1_string;
 extern ConstantString state_check_trial_termination_string;
 extern ConstantString state_finish_trial_string;
+extern ConstantString state_wait_until_trial_data_read_string;
+extern ConstantString state_waiting_until_trial_data_read_string;
 extern ConstantString state_move_to_base_stop_string;
 extern ConstantString state_moving_to_base_stop_string;
 extern ConstantString state_assay_finished_string;
@@ -254,6 +257,9 @@ extern ConstantString start_trial_duration_property_name;
 extern const long start_trial_duration_min;
 extern const long start_trial_duration_max;
 extern const long start_trial_duration_default;
+
+extern ConstantString block_until_trial_data_read_property_name;
+extern const bool block_until_trial_data_read_default;
 
 // Parameters
 extern ConstantString count_parameter_name;

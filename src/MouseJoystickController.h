@@ -88,6 +88,7 @@ private:
   void checkTrialTermination();
   void finishTrial();
 
+  void prepareNextTrial();
   void updateTrialBlockSet();
   void updateReachPosition();
   void updatePullTorque();

@@ -47,6 +47,7 @@ void MouseJoystickController::setup()
   assay_status_.pull_torque = 0;
   assay_status_.pull_threshold = 0;
   assay_status_.successful_trial_count = 0;
+  assay_status_.unread_trial_data = false;
 
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
@@ -165,6 +166,8 @@ void MouseJoystickController::setup()
   modular_server::Property & start_trial_duration_property = modular_server_.createProperty(constants::start_trial_duration_property_name,constants::start_trial_duration_default);
   start_trial_duration_property.setRange(constants::start_trial_duration_min,constants::start_trial_duration_max);
   start_trial_duration_property.setUnits(constants::seconds_units);
+
+  modular_server_.createProperty(constants::block_until_trial_data_read_property_name,constants::block_until_trial_data_read_default);
 
   // Parameters
   modular_server::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
@@ -375,6 +378,13 @@ void MouseJoystickController::update()
   else if (state_ptr == &constants::state_finish_trial_string)
   {
     finishTrial();
+  }
+  else if (state_ptr == &constants::state_wait_until_trial_data_read_string)
+  {
+    assay_status_.state_ptr = &constants::state_waiting_until_trial_data_read_string;
+  }
+  else if (state_ptr == &constants::state_waiting_until_trial_data_read_string)
+  {
   }
   else if (state_ptr == &constants::state_move_to_base_stop_string)
   {
@@ -666,7 +676,20 @@ void MouseJoystickController::finishTrial()
 {
   assay_status_.state_ptr = &constants::state_move_to_base_start_string;
 
-  if (trial_aborted_)
+  if (!trial_aborted_)
+  {
+    ++assay_status_.successful_trial_count;
+    assay_status_.unread_trial_data = true;
+
+    bool block_until_trial_data_read;
+    modular_server_.property(constants::block_until_trial_data_read_property_name).getValue(block_until_trial_data_read);
+    if (block_until_trial_data_read)
+    {
+      assay_status_.state_ptr = &constants::state_wait_until_trial_data_read_string;
+      return;
+    }
+  }
+  else
   {
     bool repeat_aborted_trial;
     modular_server_.property(constants::repeat_aborted_trial_property_name).getValue(repeat_aborted_trial);
@@ -675,11 +698,11 @@ void MouseJoystickController::finishTrial()
       return;
     }
   }
-  else
-  {
-    ++assay_status_.successful_trial_count;
-  }
+  prepareNextTrial();
+}
 
+void MouseJoystickController::prepareNextTrial()
+{
   updateTrialBlockSet();
   updateReachPosition();
   updatePullTorque();

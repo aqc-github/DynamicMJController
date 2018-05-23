@@ -4,7 +4,7 @@
 
 * Library Information
   - Name :: MouseJoystickController
-  - Version :: 2.3.0
+  - Version :: 2.4.0
   - License :: BSD
   - URL :: https://github.com/janelia-arduino/MouseJoystickController
   - Author :: Peter Polidoro
@@ -17,52 +17,6 @@
 * API NAMES
 
   #+BEGIN_SRC js
-    {
-      "id": "getApi",
-      "result": {
-        "firmware": [
-          "MouseJoystickController"
-        ],
-        "verbosity": "NAMES",
-        "functions": [
-          "getAssayStatus",
-          "moveJoystickToBasePosition",
-          "moveJoystickToReachPosition",
-          "activateLickport"
-        ],
-        "parameters": [
-          "count"
-        ],
-        "properties": [
-          "homeCurrent",
-          "basePosition",
-          "reachPosition0",
-          "reachPosition1Means",
-          "pullThreshold",
-          "pushThreshold",
-          "pullTorqueMeans",
-          "readyToneFrequency",
-          "readyToneDuration",
-          "rewardToneFrequency",
-          "rewardToneDuration",
-          "toneVolume",
-          "rewardLickportDelay",
-          "rewardLickportDuration",
-          "trialTimeoutDuration",
-          "repeatAbortedTrial",
-          "trialCount",
-          "setCount",
-          "startTrialDuration"
-        ],
-        "callbacks": [
-          "startTrial",
-          "startAssay",
-          "abortTrial",
-          "abortAssay",
-          "restartAssay"
-        ]
-      }
-    }
   #+END_SRC
 
 * API GENERAL

@@ -20,7 +20,7 @@ const modular_server::FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
   .version_major=2,
-  .version_minor=3,
+  .version_minor=4,
   .version_patch=0,
 };
 
@@ -53,6 +53,8 @@ CONSTANT_STRING(state_move_to_retracted_1_string,"MOVE_TO_RETRACTED_1");
 CONSTANT_STRING(state_moving_to_retracted_1_string,"MOVING_TO_RETRACTED_1");
 CONSTANT_STRING(state_check_trial_termination_string,"CHECK_TRIAL_TERMINATION");
 CONSTANT_STRING(state_finish_trial_string,"FINISH_TRIAL");
+CONSTANT_STRING(state_wait_until_trial_data_read_string,"WAIT_UNTIL_TRIAL_DATA_READ");
+CONSTANT_STRING(state_waiting_until_trial_data_read_string,"WAITING_UNTIL_TRIAL_DATA_READ");
 CONSTANT_STRING(state_move_to_base_stop_string,"MOVE_TO_BASE_STOP");
 CONSTANT_STRING(state_moving_to_base_stop_string,"MOVING_TO_BASE_STOP");
 CONSTANT_STRING(state_assay_finished_string,"ASSAY_FINISHED");
@@ -249,6 +251,9 @@ CONSTANT_STRING(start_trial_duration_property_name,"startTrialDuration");
 const long start_trial_duration_min = 0;
 const long start_trial_duration_max = 60;
 const long start_trial_duration_default = 0;
+
+CONSTANT_STRING(block_until_trial_data_read_property_name,"blockUntilTrialDataRead");
+const bool block_until_trial_data_read_default = true;
 
 // Parameters
 CONSTANT_STRING(count_parameter_name,"count");
