@@ -66,6 +66,7 @@ CONSTANT_STRING(trial_string,"trial");
 CONSTANT_STRING(block_string,"block");
 CONSTANT_STRING(set_string,"set");
 CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
+CONSTANT_STRING(unread_trial_data_string,"unread_trial_data");
 
 const long seconds_per_minute = 60;
 const long milliseconds_per_second = 1000;
@@ -231,8 +232,8 @@ const long lickport_duration_default = 80;
 
 CONSTANT_STRING(trial_timeout_duration_property_name,"trialTimeoutDuration");
 const long trial_timeout_duration_min = 1;
-const long trial_timeout_duration_max = 3600;
-const long trial_timeout_duration_default = 30;
+const long trial_timeout_duration_max = 20;
+const long trial_timeout_duration_default = 20;
 
 CONSTANT_STRING(repeat_aborted_trial_property_name,"repeatAbortedTrial");
 const bool repeat_aborted_trial_default = true;
@@ -252,8 +253,8 @@ const long start_trial_duration_min = 0;
 const long start_trial_duration_max = 60;
 const long start_trial_duration_default = 0;
 
-CONSTANT_STRING(block_until_trial_data_read_property_name,"blockUntilTrialDataRead");
-const bool block_until_trial_data_read_default = true;
+CONSTANT_STRING(wait_until_trial_data_read_property_name,"waitUntilTrialDataRead");
+const bool wait_until_trial_data_read_default = true;
 
 // Parameters
 CONSTANT_STRING(count_parameter_name,"count");
@@ -265,6 +266,7 @@ CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
 CONSTANT_STRING(move_joystick_to_base_position_function_name,"moveJoystickToBasePosition");
 CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToReachPosition");
 CONSTANT_STRING(activate_lickport_function_name,"activateLickport");
+CONSTANT_STRING(read_trial_data_function_name,"readTrialData");
 
 // Callbacks
 CONSTANT_STRING(start_trial_callback_name,"startTrial");

@@ -167,7 +167,7 @@ void MouseJoystickController::setup()
   start_trial_duration_property.setRange(constants::start_trial_duration_min,constants::start_trial_duration_max);
   start_trial_duration_property.setUnits(constants::seconds_units);
 
-  modular_server_.createProperty(constants::block_until_trial_data_read_property_name,constants::block_until_trial_data_read_default);
+  modular_server_.createProperty(constants::wait_until_trial_data_read_property_name,constants::wait_until_trial_data_read_default);
 
   // Parameters
   modular_server::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
@@ -187,6 +187,10 @@ void MouseJoystickController::setup()
   modular_server::Function & activate_lickport_function = modular_server_.createFunction(constants::activate_lickport_function_name);
   activate_lickport_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::activateLickportHandler));
   activate_lickport_function.addParameter(count_parameter);
+
+  modular_server::Function & read_trial_data_function = modular_server_.createFunction(constants::read_trial_data_function_name);
+  read_trial_data_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::readTrialDataHandler));
+  read_trial_data_function.setResultTypeObject();
 
   // Callbacks
   modular_server::Callback & start_trial_callback = modular_server_.createCallback(constants::start_trial_callback_name);
@@ -385,6 +389,10 @@ void MouseJoystickController::update()
   }
   else if (state_ptr == &constants::state_waiting_until_trial_data_read_string)
   {
+    if (!assay_status_.unread_trial_data)
+    {
+      prepareNextTrial();
+    }
   }
   else if (state_ptr == &constants::state_move_to_base_stop_string)
   {
@@ -470,7 +478,8 @@ void MouseJoystickController::abortTrial()
   stopAll();
   event_controller_.removeAllEvents();
 
-  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_all_outputs_function_name);
+  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::stop_sampling_callback_name);
+  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_outputs_callback_name);
 
   trial_aborted_ = true;
   assay_status_.state_ptr = &constants::state_retract_string;
@@ -540,7 +549,8 @@ void MouseJoystickController::setupAssay()
 {
   if (assay_status_.state_ptr == &constants::state_assay_started_string)
   {
-    encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_all_outputs_function_name);
+    encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::stop_sampling_callback_name);
+    encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_outputs_callback_name);
   }
 }
 
@@ -577,10 +587,12 @@ void MouseJoystickController::checkForMouseReady()
 
 void MouseJoystickController::setupPull()
 {
-  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::enable_all_outputs_function_name);
+  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::enable_outputs_callback_name);
   encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::set_position_function_name,
                                       constants::pull_encoder_index,
                                       constants::pull_encoder_initial_value);
+  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::clear_samples_callback_name);
+  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::start_sampling_callback_name);
 
   long pull_torque = getPullTorque();
 
@@ -653,7 +665,8 @@ void MouseJoystickController::reward()
 {
   playRewardTone();
 
-  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_all_outputs_function_name);
+  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::stop_sampling_callback_name);
+  encoder_interface_simple_ptr_->call(encoder_interface_simple::constants::disable_outputs_callback_name);
 
   triggerLickportReward();
 
@@ -681,9 +694,9 @@ void MouseJoystickController::finishTrial()
     ++assay_status_.successful_trial_count;
     assay_status_.unread_trial_data = true;
 
-    bool block_until_trial_data_read;
-    modular_server_.property(constants::block_until_trial_data_read_property_name).getValue(block_until_trial_data_read);
-    if (block_until_trial_data_read)
+    bool wait_until_trial_data_read;
+    modular_server_.property(constants::wait_until_trial_data_read_property_name).getValue(wait_until_trial_data_read);
+    if (wait_until_trial_data_read)
     {
       assay_status_.state_ptr = &constants::state_wait_until_trial_data_read_string;
       return;
@@ -698,15 +711,21 @@ void MouseJoystickController::finishTrial()
       return;
     }
   }
-  prepareNextTrial();
 }
 
 void MouseJoystickController::prepareNextTrial()
 {
+  assay_status_.state_ptr = &constants::state_move_to_base_start_string;
+
   updateTrialBlockSet();
   updateReachPosition();
   updatePullTorque();
   updatePullThreshold();
+}
+
+void MouseJoystickController::resetTrialData()
+{
+  assay_status_.unread_trial_data = false;
 }
 
 void MouseJoystickController::updateTrialBlockSet()
@@ -905,6 +924,7 @@ void MouseJoystickController::getAssayStatusHandler()
   modular_server_.response().write(constants::pull_torque_string,assay_status_.pull_torque);
   modular_server_.response().write(constants::pull_threshold_string,assay_status_.pull_threshold);
   modular_server_.response().write(constants::successful_trial_count_string,assay_status_.successful_trial_count);
+  modular_server_.response().write(constants::unread_trial_data_string,assay_status_.unread_trial_data);
 
   modular_server_.response().endObject();
 
@@ -926,6 +946,10 @@ void MouseJoystickController::activateLickportHandler()
   modular_server_.parameter(constants::count_parameter_name).getValue(count);
 
   activateLickport(count);
+}
+
+void MouseJoystickController::readTrialDataHandler()
+{
 }
 
 void MouseJoystickController::startTrialHandler(modular_server::Pin * pin_ptr)

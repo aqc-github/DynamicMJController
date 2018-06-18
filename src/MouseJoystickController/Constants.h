@@ -24,7 +24,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=20};
 enum{PARAMETER_COUNT_MAX=1};
-enum{FUNCTION_COUNT_MAX=4};
+enum{FUNCTION_COUNT_MAX=5};
 enum{CALLBACK_COUNT_MAX=5};
 
 enum{EVENT_COUNT_MAX=32};
@@ -89,6 +89,7 @@ extern ConstantString trial_string;
 extern ConstantString block_string;
 extern ConstantString set_string;
 extern ConstantString successful_trial_count_string;
+extern ConstantString unread_trial_data_string;
 
 extern const long seconds_per_minute;
 extern const long milliseconds_per_second;
@@ -258,8 +259,8 @@ extern const long start_trial_duration_min;
 extern const long start_trial_duration_max;
 extern const long start_trial_duration_default;
 
-extern ConstantString block_until_trial_data_read_property_name;
-extern const bool block_until_trial_data_read_default;
+extern ConstantString wait_until_trial_data_read_property_name;
+extern const bool wait_until_trial_data_read_default;
 
 // Parameters
 extern ConstantString count_parameter_name;
@@ -271,6 +272,7 @@ extern ConstantString get_assay_status_function_name;
 extern ConstantString move_joystick_to_base_position_function_name;
 extern ConstantString move_joystick_to_reach_position_function_name;
 extern ConstantString activate_lickport_function_name;
+extern ConstantString read_trial_data_function_name;
 
 // Callbacks
 extern ConstantString start_trial_callback_name;

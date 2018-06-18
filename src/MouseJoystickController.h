@@ -89,6 +89,7 @@ private:
   void finishTrial();
 
   void prepareNextTrial();
+  void resetTrialData();
   void updateTrialBlockSet();
   void updateReachPosition();
   void updatePullTorque();
@@ -108,6 +109,7 @@ private:
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();
   void activateLickportHandler();
+  void readTrialDataHandler();
   void startTrialHandler(modular_server::Pin * pin_ptr);
   void startAssayHandler(modular_server::Pin * pin_ptr);
   void abortTrialHandler(modular_server::Pin * pin_ptr);
