@@ -36,18 +36,8 @@ void MouseJoystickController::setup()
   // Pin Setup
 
   // Assay Status Setup
+  resetAssayStatus();
   assay_status_.state_ptr = &constants::state_assay_not_started_string;
-  assay_status_.trial = 0;
-  assay_status_.block = 0;
-  assay_status_.set = 0;
-  for (size_t channel=0; channel < constants::CHANNEL_COUNT; ++channel)
-  {
-    assay_status_.reach_position.push_back(0);
-  }
-  assay_status_.pull_torque = 0;
-  assay_status_.pull_threshold = 0;
-  assay_status_.successful_trial_count = 0;
-  assay_status_.unread_trial_data = false;
 
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
@@ -67,6 +57,8 @@ void MouseJoystickController::setup()
   modular_server::Property & channel_count_property = modular_server_.property(step_dir_controller::constants::channel_count_property_name);
   channel_count_property.setDefaultValue(constants::channel_count);
   channel_count_property.setRange(constants::channel_count,constants::channel_count);
+
+  setChannelCountHandler();
 
   modular_server::Property & steps_per_position_units_property = modular_server_.property(step_dir_controller::constants::steps_per_position_units_property_name);
   steps_per_position_units_property.setDefaultValue(constants::steps_per_position_units_default);
@@ -444,7 +436,11 @@ void MouseJoystickController::startTrial()
 {
   if (assay_status_.state_ptr == &constants::state_waiting_to_start_trial_string)
   {
-    assay_status_.state_ptr = &constants::state_move_to_reach_string;
+    if (timeIsSet())
+    {
+      trial_data_.trial_start = getTime();
+    }
+    assay_status_.state_ptr = &constants::state_wait_for_mouse_ready_string;
   }
   else
   {
@@ -457,11 +453,7 @@ void MouseJoystickController::startAssay()
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
       (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
-    assay_status_.trial = 0;
-    assay_status_.block = 0;
-    assay_status_.set = 0;
-    assay_status_.successful_trial_count = 0;
-    assay_status_.unread_trial_data = false;
+    resetAssayStatus();
     trial_aborted_ = false;
     assay_aborted_ = false;
     reach_position_1_index_ = 0;
@@ -546,6 +538,21 @@ long MouseJoystickController::getPullTorque()
   return assay_status_.pull_torque;
 }
 
+void MouseJoystickController::resetAssayStatus()
+{
+  assay_status_.trial_index = 0;
+  assay_status_.trial = 0;
+  assay_status_.block = 0;
+  assay_status_.set = 0;
+  for (size_t channel=0; channel < constants::CHANNEL_COUNT; ++channel)
+  {
+    assay_status_.reach_position.push_back(0);
+  }
+  assay_status_.pull_torque = 0;
+  assay_status_.pull_threshold = 0;
+  assay_status_.unread_trial_data = false;
+}
+
 void MouseJoystickController::setupAssay()
 {
   if (assay_status_.state_ptr == &constants::state_assay_started_string)
@@ -557,6 +564,7 @@ void MouseJoystickController::setupAssay()
 
 void MouseJoystickController::setupTrial()
 {
+  resetTrialData();
   trial_aborted_ = false;
 }
 
@@ -582,6 +590,10 @@ void MouseJoystickController::checkForMouseReady()
   // todo: sense paws
   if (true)
   {
+    if (timeIsSet())
+    {
+      trial_data_.mouse_ready = getTime();
+    }
     assay_status_.state_ptr = &constants::state_move_to_reach_string;
   }
 }
@@ -692,7 +704,6 @@ void MouseJoystickController::finishTrial()
 
   if (!trial_aborted_)
   {
-    ++assay_status_.successful_trial_count;
     assay_status_.unread_trial_data = true;
 
     bool wait_until_trial_data_read;
@@ -726,6 +737,8 @@ void MouseJoystickController::prepareNextTrial()
 
 void MouseJoystickController::resetTrialData()
 {
+  trial_data_.trial_start = 0;
+  trial_data_.mouse_ready = 0;
   assay_status_.unread_trial_data = false;
 }
 
@@ -733,6 +746,7 @@ void MouseJoystickController::updateTrialBlockSet()
 {
   long trial_count;
   modular_server_.property(constants::trial_count_property_name).getValue(trial_count);
+  ++assay_status_.trial_index;
   if (++assay_status_.trial >= (size_t)trial_count)
   {
     assay_status_.trial = 0;
@@ -918,13 +932,14 @@ void MouseJoystickController::getAssayStatusHandler()
   modular_server_.response().beginObject();
 
   modular_server_.response().write(constants::state_string,assay_status_.state_ptr);
+  modular_server_.response().write(constants::trial_index_string,assay_status_.trial_index);
   modular_server_.response().write(constants::trial_string,assay_status_.trial);
   modular_server_.response().write(constants::block_string,assay_status_.block);
   modular_server_.response().write(constants::set_string,assay_status_.set);
-  modular_server_.response().write(constants::reach_position_string,assay_status_.reach_position);
+  modular_server_.response().write(constants::reach_position_0_string,assay_status_.reach_position[0]);
+  modular_server_.response().write(constants::reach_position_1_string,assay_status_.reach_position[1]);
   modular_server_.response().write(constants::pull_torque_string,assay_status_.pull_torque);
   modular_server_.response().write(constants::pull_threshold_string,assay_status_.pull_threshold);
-  modular_server_.response().write(constants::successful_trial_count_string,assay_status_.successful_trial_count);
   modular_server_.response().write(constants::unread_trial_data_string,assay_status_.unread_trial_data);
 
   modular_server_.response().endObject();
@@ -954,6 +969,9 @@ void MouseJoystickController::readTrialDataHandler()
   modular_server_.response().writeResultKey();
 
   modular_server_.response().beginObject();
+
+  modular_server_.response().write(constants::trial_start_string,trial_data_.trial_start);
+  modular_server_.response().write(constants::mouse_ready_string,trial_data_.mouse_ready);
 
   modular_server_.response().endObject();
 
@@ -987,7 +1005,7 @@ void MouseJoystickController::restartAssayHandler(modular_server::Pin * pin_ptr)
 
 void MouseJoystickController::startTrialEventHandler(int arg)
 {
-  assay_status_.state_ptr = &constants::state_wait_for_mouse_ready_string;
+  startTrial();
 }
 
 void MouseJoystickController::trialTimeoutEventHandler(int arg)

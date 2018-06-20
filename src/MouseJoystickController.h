@@ -59,6 +59,8 @@ private:
   EventController<mouse_joystick_controller::constants::EVENT_COUNT_MAX> event_controller_;
   EventId trial_timeout_event_id_;
 
+  mouse_joystick_controller::constants::TrialData trial_data_;
+
   ModularClient * encoder_interface_simple_ptr_;
   ModularClient * power_switch_controller_ptr_;
   ModularClient * audio_controller_ptr_;
@@ -75,6 +77,8 @@ private:
   StageController::PositionArray getBasePosition();
   StageController::PositionArray getReachPosition();
   long getPullTorque();
+
+  void resetAssayStatus();
 
   void setupAssay();
   void setupTrial();

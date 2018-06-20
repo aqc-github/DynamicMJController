@@ -24,6 +24,19 @@ const modular_server::FirmwareInfo firmware_info =
   .version_patch=0,
 };
 
+CONSTANT_STRING(trial_index_string,"trial_index");
+CONSTANT_STRING(trial_string,"trial");
+CONSTANT_STRING(block_string,"block");
+CONSTANT_STRING(set_string,"set");
+CONSTANT_STRING(reach_position_0_string,"reach_position_0");
+CONSTANT_STRING(reach_position_1_string,"reach_position_1");
+CONSTANT_STRING(pull_torque_string,"pull_torque");
+CONSTANT_STRING(pull_threshold_string,"pull_threshold");
+CONSTANT_STRING(unread_trial_data_string,"unread_trial_data");
+
+CONSTANT_STRING(trial_start_string,"trial_start");
+CONSTANT_STRING(mouse_ready_string,"mouse_ready");
+
 CONSTANT_STRING(state_string,"state");
 CONSTANT_STRING(state_assay_not_started_string,"ASSAY_NOT_STARTED");
 CONSTANT_STRING(state_assay_started_string,"ASSAY_STARTED");
@@ -58,15 +71,6 @@ CONSTANT_STRING(state_waiting_until_trial_data_read_string,"WAITING_UNTIL_TRIAL_
 CONSTANT_STRING(state_move_to_base_stop_string,"MOVE_TO_BASE_STOP");
 CONSTANT_STRING(state_moving_to_base_stop_string,"MOVING_TO_BASE_STOP");
 CONSTANT_STRING(state_assay_finished_string,"ASSAY_FINISHED");
-
-CONSTANT_STRING(reach_position_string,"reach_position");
-CONSTANT_STRING(pull_torque_string,"pull_torque");
-CONSTANT_STRING(pull_threshold_string,"pull_threshold");
-CONSTANT_STRING(trial_string,"trial");
-CONSTANT_STRING(block_string,"block");
-CONSTANT_STRING(set_string,"set");
-CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
-CONSTANT_STRING(unread_trial_data_string,"unread_trial_data");
 
 const long seconds_per_minute = 60;
 const long milliseconds_per_second = 1000;

@@ -8,6 +8,8 @@
 #ifndef MOUSE_JOYSTICK_CONTROLLER_CONSTANTS_H
 #define MOUSE_JOYSTICK_CONTROLLER_CONSTANTS_H
 #include <ConstantVariable.h>
+#include <Time.h>
+
 #include <StepDirController.h>
 #include <StepperController.h>
 #include <StageController.h>
@@ -37,15 +39,34 @@ extern const modular_server::FirmwareInfo firmware_info;
 struct AssayStatus
 {
   const ConstantString * state_ptr;
+  size_t trial_index;
   size_t trial;
   size_t block;
   size_t set;
   StageController::PositionArray reach_position;
   long pull_torque;
   long pull_threshold;
-  size_t successful_trial_count;
   bool unread_trial_data;
 };
+
+extern ConstantString trial_index_string;
+extern ConstantString trial_string;
+extern ConstantString block_string;
+extern ConstantString set_string;
+extern ConstantString reach_position_0_string;
+extern ConstantString reach_position_1_string;
+extern ConstantString pull_torque_string;
+extern ConstantString pull_threshold_string;
+extern ConstantString unread_trial_data_string;
+
+struct TrialData
+{
+  time_t trial_start;
+  time_t mouse_ready;
+};
+
+extern ConstantString trial_start_string;
+extern ConstantString mouse_ready_string;
 
 extern ConstantString state_string;
 extern ConstantString state_assay_not_started_string;
@@ -81,15 +102,6 @@ extern ConstantString state_waiting_until_trial_data_read_string;
 extern ConstantString state_move_to_base_stop_string;
 extern ConstantString state_moving_to_base_stop_string;
 extern ConstantString state_assay_finished_string;
-
-extern ConstantString reach_position_string;
-extern ConstantString pull_torque_string;
-extern ConstantString pull_threshold_string;
-extern ConstantString trial_string;
-extern ConstantString block_string;
-extern ConstantString set_string;
-extern ConstantString successful_trial_count_string;
-extern ConstantString unread_trial_data_string;
 
 extern const long seconds_per_minute;
 extern const long milliseconds_per_second;
