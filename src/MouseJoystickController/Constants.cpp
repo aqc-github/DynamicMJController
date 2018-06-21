@@ -19,8 +19,8 @@ CONSTANT_STRING(firmware_name,"MouseJoystickController");
 const modular_server::FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
-  .version_major=2,
-  .version_minor=4,
+  .version_major=3,
+  .version_minor=0,
   .version_patch=0,
 };
 
@@ -32,10 +32,12 @@ CONSTANT_STRING(reach_position_0_string,"reach_position_0");
 CONSTANT_STRING(reach_position_1_string,"reach_position_1");
 CONSTANT_STRING(pull_torque_string,"pull_torque");
 CONSTANT_STRING(pull_threshold_string,"pull_threshold");
-CONSTANT_STRING(unread_trial_data_string,"unread_trial_data");
+CONSTANT_STRING(unread_trial_timing_data_string,"unread_trial_timing_data");
 
 CONSTANT_STRING(trial_start_string,"trial_start");
 CONSTANT_STRING(mouse_ready_string,"mouse_ready");
+CONSTANT_STRING(joystick_ready_string,"joystick_ready");
+CONSTANT_STRING(reward_string,"reward");
 
 CONSTANT_STRING(state_string,"state");
 CONSTANT_STRING(state_assay_not_started_string,"ASSAY_NOT_STARTED");
@@ -66,8 +68,8 @@ CONSTANT_STRING(state_move_to_retracted_1_string,"MOVE_TO_RETRACTED_1");
 CONSTANT_STRING(state_moving_to_retracted_1_string,"MOVING_TO_RETRACTED_1");
 CONSTANT_STRING(state_check_trial_termination_string,"CHECK_TRIAL_TERMINATION");
 CONSTANT_STRING(state_finish_trial_string,"FINISH_TRIAL");
-CONSTANT_STRING(state_wait_until_trial_data_read_string,"WAIT_UNTIL_TRIAL_DATA_READ");
-CONSTANT_STRING(state_waiting_until_trial_data_read_string,"WAITING_UNTIL_TRIAL_DATA_READ");
+CONSTANT_STRING(state_wait_until_trial_timing_data_read_string,"WAIT_UNTIL_TRIAL_TIMING_DATA_READ");
+CONSTANT_STRING(state_waiting_until_trial_timing_data_read_string,"WAITING_UNTIL_TRIAL_TIMING_DATA_READ");
 CONSTANT_STRING(state_move_to_base_stop_string,"MOVE_TO_BASE_STOP");
 CONSTANT_STRING(state_moving_to_base_stop_string,"MOVING_TO_BASE_STOP");
 CONSTANT_STRING(state_assay_finished_string,"ASSAY_FINISHED");
@@ -83,8 +85,8 @@ const long pulse_duration = 25;
 const long not_touching_switch_position = 20;
 
 // Ready
-const long ready_tone_delay = 40;
-const long ready_tone_count = 1;
+const long joystick_ready_tone_delay = 40;
+const long joystick_ready_tone_count = 1;
 
 // Pull
 const size_t pull_encoder_index = 0;
@@ -203,13 +205,13 @@ const long pull_torque_means_default[PULL_TORQUE_COUNT_MAX] =
   80,
 };
 
-CONSTANT_STRING(ready_tone_frequency_property_name,"readyToneFrequency");
-const long ready_tone_frequency_default = 8000;
+CONSTANT_STRING(joystick_ready_tone_frequency_property_name,"joystickReadyToneFrequency");
+const long joystick_ready_tone_frequency_default = 8000;
 
-CONSTANT_STRING(ready_tone_duration_property_name,"readyToneDuration");
-const long ready_tone_duration_min = 100;
-const long ready_tone_duration_max = 2000;
-const long ready_tone_duration_default = 200;
+CONSTANT_STRING(joystick_ready_tone_duration_property_name,"joystickReadyToneDuration");
+const long joystick_ready_tone_duration_min = 100;
+const long joystick_ready_tone_duration_max = 2000;
+const long joystick_ready_tone_duration_default = 200;
 
 CONSTANT_STRING(reward_tone_frequency_property_name,"rewardToneFrequency");
 const long reward_tone_frequency_default = 4000;
@@ -257,8 +259,8 @@ const long start_trial_duration_min = 0;
 const long start_trial_duration_max = 60;
 const long start_trial_duration_default = 0;
 
-CONSTANT_STRING(wait_until_trial_data_read_property_name,"waitUntilTrialDataRead");
-const bool wait_until_trial_data_read_default = true;
+CONSTANT_STRING(wait_until_trial_timing_data_read_property_name,"waitUntilTrialTimingDataRead");
+const bool wait_until_trial_timing_data_read_default = true;
 
 // Parameters
 CONSTANT_STRING(count_parameter_name,"count");
@@ -270,7 +272,7 @@ CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
 CONSTANT_STRING(move_joystick_to_base_position_function_name,"moveJoystickToBasePosition");
 CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToReachPosition");
 CONSTANT_STRING(activate_lickport_function_name,"activateLickport");
-CONSTANT_STRING(read_trial_data_function_name,"readTrialData");
+CONSTANT_STRING(get_trial_timing_data_function_name,"getTrialTimingData");
 
 // Callbacks
 CONSTANT_STRING(start_trial_callback_name,"startTrial");

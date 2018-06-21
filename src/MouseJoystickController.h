@@ -59,7 +59,7 @@ private:
   EventController<mouse_joystick_controller::constants::EVENT_COUNT_MAX> event_controller_;
   EventId trial_timeout_event_id_;
 
-  mouse_joystick_controller::constants::TrialData trial_data_;
+  mouse_joystick_controller::constants::TrialTimingData trial_timing_data_;
 
   ModularClient * encoder_interface_simple_ptr_;
   ModularClient * power_switch_controller_ptr_;
@@ -93,14 +93,14 @@ private:
   void finishTrial();
 
   void prepareNextTrial();
-  void resetTrialData();
+  void resetTrialTimingData();
   void updateTrialBlockSet();
   void updateReachPosition();
   void updatePullTorque();
   void updatePullThreshold();
   void moveToBasePosition();
   void moveToReachPosition();
-  void playReadyTone();
+  void playJoystickReadyTone();
   void playRewardTone();
   void triggerLickportReward();
   void triggerLickport(const long delay,
@@ -113,7 +113,7 @@ private:
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();
   void activateLickportHandler();
-  void readTrialDataHandler();
+  void getTrialTimingDataHandler();
   void startTrialHandler(modular_server::Pin * pin_ptr);
   void startAssayHandler(modular_server::Pin * pin_ptr);
   void abortTrialHandler(modular_server::Pin * pin_ptr);

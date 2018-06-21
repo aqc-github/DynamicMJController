@@ -46,7 +46,7 @@ struct AssayStatus
   StageController::PositionArray reach_position;
   long pull_torque;
   long pull_threshold;
-  bool unread_trial_data;
+  bool unread_trial_timing_data;
 };
 
 extern ConstantString trial_index_string;
@@ -57,16 +57,20 @@ extern ConstantString reach_position_0_string;
 extern ConstantString reach_position_1_string;
 extern ConstantString pull_torque_string;
 extern ConstantString pull_threshold_string;
-extern ConstantString unread_trial_data_string;
+extern ConstantString unread_trial_timing_data_string;
 
-struct TrialData
+struct TrialTimingData
 {
   time_t trial_start;
   time_t mouse_ready;
+  time_t joystick_ready;
+  time_t reward;
 };
 
 extern ConstantString trial_start_string;
 extern ConstantString mouse_ready_string;
+extern ConstantString joystick_ready_string;
+extern ConstantString reward_string;
 
 extern ConstantString state_string;
 extern ConstantString state_assay_not_started_string;
@@ -97,8 +101,8 @@ extern ConstantString state_move_to_retracted_1_string;
 extern ConstantString state_moving_to_retracted_1_string;
 extern ConstantString state_check_trial_termination_string;
 extern ConstantString state_finish_trial_string;
-extern ConstantString state_wait_until_trial_data_read_string;
-extern ConstantString state_waiting_until_trial_data_read_string;
+extern ConstantString state_wait_until_trial_timing_data_read_string;
+extern ConstantString state_waiting_until_trial_timing_data_read_string;
 extern ConstantString state_move_to_base_stop_string;
 extern ConstantString state_moving_to_base_stop_string;
 extern ConstantString state_assay_finished_string;
@@ -114,8 +118,8 @@ extern const long pulse_duration;
 extern const long not_touching_switch_position;
 
 // Ready
-extern const long ready_tone_delay;
-extern const long ready_tone_count;
+extern const long joystick_ready_tone_delay;
+extern const long joystick_ready_tone_count;
 
 // Pull
 extern const size_t pull_encoder_index;
@@ -217,13 +221,13 @@ extern const long push_threshold_default;
 extern ConstantString pull_torque_means_property_name;
 extern const long pull_torque_means_default[PULL_TORQUE_COUNT_MAX];
 
-extern ConstantString ready_tone_frequency_property_name;
-extern const long ready_tone_frequency_default;
+extern ConstantString joystick_ready_tone_frequency_property_name;
+extern const long joystick_ready_tone_frequency_default;
 
-extern ConstantString ready_tone_duration_property_name;
-extern const long ready_tone_duration_min;
-extern const long ready_tone_duration_max;
-extern const long ready_tone_duration_default;
+extern ConstantString joystick_ready_tone_duration_property_name;
+extern const long joystick_ready_tone_duration_min;
+extern const long joystick_ready_tone_duration_max;
+extern const long joystick_ready_tone_duration_default;
 
 extern ConstantString reward_tone_frequency_property_name;
 extern const long reward_tone_frequency_default;
@@ -271,8 +275,8 @@ extern const long start_trial_duration_min;
 extern const long start_trial_duration_max;
 extern const long start_trial_duration_default;
 
-extern ConstantString wait_until_trial_data_read_property_name;
-extern const bool wait_until_trial_data_read_default;
+extern ConstantString wait_until_trial_timing_data_read_property_name;
+extern const bool wait_until_trial_timing_data_read_default;
 
 // Parameters
 extern ConstantString count_parameter_name;
@@ -284,7 +288,7 @@ extern ConstantString get_assay_status_function_name;
 extern ConstantString move_joystick_to_base_position_function_name;
 extern ConstantString move_joystick_to_reach_position_function_name;
 extern ConstantString activate_lickport_function_name;
-extern ConstantString read_trial_data_function_name;
+extern ConstantString get_trial_timing_data_function_name;
 
 // Callbacks
 extern ConstantString start_trial_callback_name;

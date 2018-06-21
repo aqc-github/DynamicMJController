@@ -115,13 +115,13 @@ void MouseJoystickController::setup()
   pull_torque_means_property.setArrayLengthRange(constants::pull_torque_array_length_min,
                                                  constants::pull_torque_array_length_max);
 
-  modular_server::Property & ready_tone_frequency_property = modular_server_.createProperty(constants::ready_tone_frequency_property_name,constants::ready_tone_frequency_default);
-  ready_tone_frequency_property.setRange(audio_controller::constants::frequency_min,audio_controller::constants::frequency_max);
-  ready_tone_frequency_property.setUnits(audio_controller::constants::hz_units);
+  modular_server::Property & joystick_ready_tone_frequency_property = modular_server_.createProperty(constants::joystick_ready_tone_frequency_property_name,constants::joystick_ready_tone_frequency_default);
+  joystick_ready_tone_frequency_property.setRange(audio_controller::constants::frequency_min,audio_controller::constants::frequency_max);
+  joystick_ready_tone_frequency_property.setUnits(audio_controller::constants::hz_units);
 
-  modular_server::Property & ready_tone_duration_property = modular_server_.createProperty(constants::ready_tone_duration_property_name,constants::ready_tone_duration_default);
-  ready_tone_duration_property.setRange(constants::ready_tone_duration_min,constants::ready_tone_duration_max);
-  ready_tone_duration_property.setUnits(audio_controller::constants::ms_units);
+  modular_server::Property & joystick_ready_tone_duration_property = modular_server_.createProperty(constants::joystick_ready_tone_duration_property_name,constants::joystick_ready_tone_duration_default);
+  joystick_ready_tone_duration_property.setRange(constants::joystick_ready_tone_duration_min,constants::joystick_ready_tone_duration_max);
+  joystick_ready_tone_duration_property.setUnits(audio_controller::constants::ms_units);
 
   modular_server::Property & reward_tone_frequency_property = modular_server_.createProperty(constants::reward_tone_frequency_property_name,constants::reward_tone_frequency_default);
   reward_tone_frequency_property.setRange(audio_controller::constants::frequency_min,audio_controller::constants::frequency_max);
@@ -159,7 +159,7 @@ void MouseJoystickController::setup()
   start_trial_duration_property.setRange(constants::start_trial_duration_min,constants::start_trial_duration_max);
   start_trial_duration_property.setUnits(constants::seconds_units);
 
-  modular_server_.createProperty(constants::wait_until_trial_data_read_property_name,constants::wait_until_trial_data_read_default);
+  modular_server_.createProperty(constants::wait_until_trial_timing_data_read_property_name,constants::wait_until_trial_timing_data_read_default);
 
   // Parameters
   modular_server::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
@@ -180,9 +180,9 @@ void MouseJoystickController::setup()
   activate_lickport_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::activateLickportHandler));
   activate_lickport_function.addParameter(count_parameter);
 
-  modular_server::Function & read_trial_data_function = modular_server_.createFunction(constants::read_trial_data_function_name);
-  read_trial_data_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::readTrialDataHandler));
-  read_trial_data_function.setResultTypeObject();
+  modular_server::Function & get_trial_timing_data_function = modular_server_.createFunction(constants::get_trial_timing_data_function_name);
+  get_trial_timing_data_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getTrialTimingDataHandler));
+  get_trial_timing_data_function.setResultTypeObject();
 
   // Callbacks
   modular_server::Callback & start_trial_callback = modular_server_.createCallback(constants::start_trial_callback_name);
@@ -375,13 +375,13 @@ void MouseJoystickController::update()
   {
     finishTrial();
   }
-  else if (state_ptr == &constants::state_wait_until_trial_data_read_string)
+  else if (state_ptr == &constants::state_wait_until_trial_timing_data_read_string)
   {
-    assay_status_.state_ptr = &constants::state_waiting_until_trial_data_read_string;
+    assay_status_.state_ptr = &constants::state_waiting_until_trial_timing_data_read_string;
   }
-  else if (state_ptr == &constants::state_waiting_until_trial_data_read_string)
+  else if (state_ptr == &constants::state_waiting_until_trial_timing_data_read_string)
   {
-    if (!assay_status_.unread_trial_data)
+    if (!assay_status_.unread_trial_timing_data)
     {
       prepareNextTrial();
     }
@@ -438,7 +438,7 @@ void MouseJoystickController::startTrial()
   {
     if (timeIsSet())
     {
-      trial_data_.trial_start = getTime();
+      trial_timing_data_.trial_start = getTime();
     }
     assay_status_.state_ptr = &constants::state_wait_for_mouse_ready_string;
   }
@@ -550,7 +550,7 @@ void MouseJoystickController::resetAssayStatus()
   }
   assay_status_.pull_torque = 0;
   assay_status_.pull_threshold = 0;
-  assay_status_.unread_trial_data = false;
+  assay_status_.unread_trial_timing_data = false;
 }
 
 void MouseJoystickController::setupAssay()
@@ -564,7 +564,7 @@ void MouseJoystickController::setupAssay()
 
 void MouseJoystickController::setupTrial()
 {
-  resetTrialData();
+  resetTrialTimingData();
   trial_aborted_ = false;
 }
 
@@ -592,7 +592,7 @@ void MouseJoystickController::checkForMouseReady()
   {
     if (timeIsSet())
     {
-      trial_data_.mouse_ready = getTime();
+      trial_timing_data_.mouse_ready = getTime();
     }
     assay_status_.state_ptr = &constants::state_move_to_reach_string;
   }
@@ -625,7 +625,11 @@ void MouseJoystickController::setupPull()
                                                                  trial_timeout_duration*constants::milliseconds_per_second);
   event_controller_.enable(trial_timeout_event_id_);
 
-  playReadyTone();
+  if (timeIsSet())
+  {
+    trial_timing_data_.joystick_ready = getTime();
+  }
+  playJoystickReadyTone();
 
   pull_push_poll_time_previous_ = millis();
 
@@ -676,6 +680,10 @@ void MouseJoystickController::checkForPullOrPush()
 
 void MouseJoystickController::reward()
 {
+  if (timeIsSet())
+  {
+    trial_timing_data_.reward = getTime();
+  }
   playRewardTone();
 
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::stop_sampling_callback_name);
@@ -704,13 +712,13 @@ void MouseJoystickController::finishTrial()
 
   if (!trial_aborted_)
   {
-    assay_status_.unread_trial_data = true;
+    assay_status_.unread_trial_timing_data = true;
 
-    bool wait_until_trial_data_read;
-    modular_server_.property(constants::wait_until_trial_data_read_property_name).getValue(wait_until_trial_data_read);
-    if (wait_until_trial_data_read)
+    bool wait_until_trial_timing_data_read;
+    modular_server_.property(constants::wait_until_trial_timing_data_read_property_name).getValue(wait_until_trial_timing_data_read);
+    if (wait_until_trial_timing_data_read)
     {
-      assay_status_.state_ptr = &constants::state_wait_until_trial_data_read_string;
+      assay_status_.state_ptr = &constants::state_wait_until_trial_timing_data_read_string;
       return;
     }
   }
@@ -735,11 +743,11 @@ void MouseJoystickController::prepareNextTrial()
   updatePullThreshold();
 }
 
-void MouseJoystickController::resetTrialData()
+void MouseJoystickController::resetTrialTimingData()
 {
-  trial_data_.trial_start = 0;
-  trial_data_.mouse_ready = 0;
-  assay_status_.unread_trial_data = false;
+  trial_timing_data_.trial_start = 0;
+  trial_timing_data_.mouse_ready = 0;
+  assay_status_.unread_trial_timing_data = false;
 }
 
 void MouseJoystickController::updateTrialBlockSet()
@@ -817,25 +825,25 @@ void MouseJoystickController::moveToReachPosition()
   moveStageTo(reach_position);
 }
 
-void MouseJoystickController::playReadyTone()
+void MouseJoystickController::playJoystickReadyTone()
 {
-  long ready_tone_frequency;
-  modular_server_.property(constants::ready_tone_frequency_property_name).getValue(ready_tone_frequency);
+  long joystick_ready_tone_frequency;
+  modular_server_.property(constants::joystick_ready_tone_frequency_property_name).getValue(joystick_ready_tone_frequency);
 
-  long ready_tone_duration;
-  modular_server_.property(constants::ready_tone_duration_property_name).getValue(ready_tone_duration);
+  long joystick_ready_tone_duration;
+  modular_server_.property(constants::joystick_ready_tone_duration_property_name).getValue(joystick_ready_tone_duration);
 
   long tone_volume;
   modular_server_.property(constants::tone_volume_property_name).getValue(tone_volume);
 
   audio_controller_ptr_->callUntilSuccessful(audio_controller::constants::add_tone_pwm_at_function_name,
-                                             ready_tone_frequency,
+                                             joystick_ready_tone_frequency,
                                              audio_controller::constants::speaker_all,
                                              tone_volume,
-                                             constants::ready_tone_delay,
-                                             ready_tone_duration,
-                                             ready_tone_duration,
-                                             constants::ready_tone_count);
+                                             constants::joystick_ready_tone_delay,
+                                             joystick_ready_tone_duration,
+                                             joystick_ready_tone_duration,
+                                             constants::joystick_ready_tone_count);
   audio_controller_ptr_->callUntilSuccessful(modular_server::constants::set_pin_value_function_name,
                                              modular_device_base::constants::bnc_b_pin_name,
                                              constants::pulse_duration);
@@ -940,7 +948,7 @@ void MouseJoystickController::getAssayStatusHandler()
   modular_server_.response().write(constants::reach_position_1_string,assay_status_.reach_position[1]);
   modular_server_.response().write(constants::pull_torque_string,assay_status_.pull_torque);
   modular_server_.response().write(constants::pull_threshold_string,assay_status_.pull_threshold);
-  modular_server_.response().write(constants::unread_trial_data_string,assay_status_.unread_trial_data);
+  modular_server_.response().write(constants::unread_trial_timing_data_string,assay_status_.unread_trial_timing_data);
 
   modular_server_.response().endObject();
 
@@ -964,18 +972,20 @@ void MouseJoystickController::activateLickportHandler()
   activateLickport(count);
 }
 
-void MouseJoystickController::readTrialDataHandler()
+void MouseJoystickController::getTrialTimingDataHandler()
 {
   modular_server_.response().writeResultKey();
 
   modular_server_.response().beginObject();
 
-  modular_server_.response().write(constants::trial_start_string,trial_data_.trial_start);
-  modular_server_.response().write(constants::mouse_ready_string,trial_data_.mouse_ready);
+  modular_server_.response().write(constants::trial_start_string,trial_timing_data_.trial_start);
+  modular_server_.response().write(constants::mouse_ready_string,trial_timing_data_.mouse_ready);
+  modular_server_.response().write(constants::joystick_ready_string,trial_timing_data_.joystick_ready);
+  modular_server_.response().write(constants::reward_string,trial_timing_data_.reward);
 
   modular_server_.response().endObject();
 
-  resetTrialData();
+  resetTrialTimingData();
 }
 
 void MouseJoystickController::startTrialHandler(modular_server::Pin * pin_ptr)
