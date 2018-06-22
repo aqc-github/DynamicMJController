@@ -40,6 +40,7 @@ struct AssayStatus
 {
   const ConstantString * state_ptr;
   size_t trial_index;
+  size_t successful_trial_count;
   size_t trial;
   size_t block;
   size_t set;
@@ -50,6 +51,7 @@ struct AssayStatus
 };
 
 extern ConstantString trial_index_string;
+extern ConstantString successful_trial_count_string;
 extern ConstantString trial_string;
 extern ConstantString block_string;
 extern ConstantString set_string;
@@ -64,13 +66,19 @@ struct TrialTimingData
   time_t trial_start;
   time_t mouse_ready;
   time_t joystick_ready;
-  time_t reward;
+  time_t pull;
+  time_t push;
+  time_t timeout;
+  time_t trial_abort;
 };
 
 extern ConstantString trial_start_string;
 extern ConstantString mouse_ready_string;
 extern ConstantString joystick_ready_string;
-extern ConstantString reward_string;
+extern ConstantString pull_string;
+extern ConstantString push_string;
+extern ConstantString timeout_string;
+extern ConstantString trial_abort_string;
 
 extern ConstantString state_string;
 extern ConstantString state_assay_not_started_string;

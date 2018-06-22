@@ -321,6 +321,7 @@ void MouseJoystickController::update()
   else if (state_ptr == &constants::state_retract_string)
   {
     assay_status_.state_ptr = &constants::state_retracting_0_string;
+    assay_status_.unread_trial_timing_data = true;
     reinitialize();
     setHomeCurrent(0);
     home(0);
@@ -371,10 +372,6 @@ void MouseJoystickController::update()
   {
     checkTrialTermination();
   }
-  else if (state_ptr == &constants::state_finish_trial_string)
-  {
-    finishTrial();
-  }
   else if (state_ptr == &constants::state_wait_until_trial_timing_data_read_string)
   {
     assay_status_.state_ptr = &constants::state_waiting_until_trial_timing_data_read_string;
@@ -383,8 +380,12 @@ void MouseJoystickController::update()
   {
     if (!assay_status_.unread_trial_timing_data)
     {
-      prepareNextTrial();
+      assay_status_.state_ptr = &constants::state_finish_trial_string;
     }
+  }
+  else if (state_ptr == &constants::state_finish_trial_string)
+  {
+    finishTrial();
   }
   else if (state_ptr == &constants::state_move_to_base_stop_string)
   {
@@ -475,6 +476,10 @@ void MouseJoystickController::abortTrial()
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::disable_outputs_callback_name);
 
   trial_aborted_ = true;
+  if (timeIsSet())
+  {
+    trial_timing_data_.trial_abort = getTime();
+  }
   assay_status_.state_ptr = &constants::state_retract_string;
 }
 
@@ -541,6 +546,7 @@ long MouseJoystickController::getPullTorque()
 void MouseJoystickController::resetAssayStatus()
 {
   assay_status_.trial_index = 0;
+  assay_status_.successful_trial_count = 0;
   assay_status_.trial = 0;
   assay_status_.block = 0;
   assay_status_.set = 0;
@@ -565,6 +571,7 @@ void MouseJoystickController::setupAssay()
 void MouseJoystickController::setupTrial()
 {
   resetTrialTimingData();
+  assay_status_.unread_trial_timing_data = false;
   trial_aborted_ = false;
 }
 
@@ -669,21 +676,26 @@ void MouseJoystickController::checkForPullOrPush()
   if (position <= assay_status_.pull_threshold)
   {
     event_controller_.remove(trial_timeout_event_id_);
+    ++assay_status_.successful_trial_count;
+    if (timeIsSet())
+    {
+      trial_timing_data_.pull = getTime();
+    }
     assay_status_.state_ptr = &constants::state_reward_string;
   }
   else if (position >= push_threshold)
   {
     event_controller_.remove(trial_timeout_event_id_);
+    if (timeIsSet())
+    {
+      trial_timing_data_.push = getTime();
+    }
     abortTrial();
   }
 }
 
 void MouseJoystickController::reward()
 {
-  if (timeIsSet())
-  {
-    trial_timing_data_.reward = getTime();
-  }
   playRewardTone();
 
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::stop_sampling_callback_name);
@@ -702,41 +714,35 @@ void MouseJoystickController::checkTrialTermination()
   }
   else
   {
-    assay_status_.state_ptr = &constants::state_finish_trial_string;
+    bool wait_until_trial_timing_data_read;
+    modular_server_.property(constants::wait_until_trial_timing_data_read_property_name).getValue(wait_until_trial_timing_data_read);
+    if (wait_until_trial_timing_data_read)
+    {
+      assay_status_.state_ptr = &constants::state_wait_until_trial_timing_data_read_string;
+    }
+    else
+    {
+      assay_status_.state_ptr = &constants::state_finish_trial_string;
+    }
   }
 }
 
 void MouseJoystickController::finishTrial()
 {
   assay_status_.state_ptr = &constants::state_move_to_base_start_string;
+  ++assay_status_.trial_index;
 
-  if (!trial_aborted_)
-  {
-    assay_status_.unread_trial_timing_data = true;
+  bool repeat_aborted_trial;
+  modular_server_.property(constants::repeat_aborted_trial_property_name).getValue(repeat_aborted_trial);
 
-    bool wait_until_trial_timing_data_read;
-    modular_server_.property(constants::wait_until_trial_timing_data_read_property_name).getValue(wait_until_trial_timing_data_read);
-    if (wait_until_trial_timing_data_read)
-    {
-      assay_status_.state_ptr = &constants::state_wait_until_trial_timing_data_read_string;
-      return;
-    }
-  }
-  else
+  if (!trial_aborted_ || !repeat_aborted_trial)
   {
-    bool repeat_aborted_trial;
-    modular_server_.property(constants::repeat_aborted_trial_property_name).getValue(repeat_aborted_trial);
-    if (repeat_aborted_trial)
-    {
-      return;
-    }
+    prepareNextTrial();
   }
 }
 
 void MouseJoystickController::prepareNextTrial()
 {
-  assay_status_.state_ptr = &constants::state_move_to_base_start_string;
-
   updateTrialBlockSet();
   updateReachPosition();
   updatePullTorque();
@@ -747,14 +753,17 @@ void MouseJoystickController::resetTrialTimingData()
 {
   trial_timing_data_.trial_start = 0;
   trial_timing_data_.mouse_ready = 0;
-  assay_status_.unread_trial_timing_data = false;
+  trial_timing_data_.joystick_ready = 0;
+  trial_timing_data_.pull = 0;
+  trial_timing_data_.push = 0;
+  trial_timing_data_.timeout = 0;
+  trial_timing_data_.trial_abort = 0;
 }
 
 void MouseJoystickController::updateTrialBlockSet()
 {
   long trial_count;
   modular_server_.property(constants::trial_count_property_name).getValue(trial_count);
-  ++assay_status_.trial_index;
   if (++assay_status_.trial >= (size_t)trial_count)
   {
     assay_status_.trial = 0;
@@ -941,6 +950,7 @@ void MouseJoystickController::getAssayStatusHandler()
 
   modular_server_.response().write(constants::state_string,assay_status_.state_ptr);
   modular_server_.response().write(constants::trial_index_string,assay_status_.trial_index);
+  modular_server_.response().write(constants::successful_trial_count_string,assay_status_.successful_trial_count);
   modular_server_.response().write(constants::trial_string,assay_status_.trial);
   modular_server_.response().write(constants::block_string,assay_status_.block);
   modular_server_.response().write(constants::set_string,assay_status_.set);
@@ -981,11 +991,14 @@ void MouseJoystickController::getTrialTimingDataHandler()
   modular_server_.response().write(constants::trial_start_string,trial_timing_data_.trial_start);
   modular_server_.response().write(constants::mouse_ready_string,trial_timing_data_.mouse_ready);
   modular_server_.response().write(constants::joystick_ready_string,trial_timing_data_.joystick_ready);
-  modular_server_.response().write(constants::reward_string,trial_timing_data_.reward);
+  modular_server_.response().write(constants::pull_string,trial_timing_data_.pull);
+  modular_server_.response().write(constants::push_string,trial_timing_data_.push);
+  modular_server_.response().write(constants::timeout_string,trial_timing_data_.timeout);
+  modular_server_.response().write(constants::trial_abort_string,trial_timing_data_.trial_abort);
 
   modular_server_.response().endObject();
 
-  resetTrialTimingData();
+  assay_status_.unread_trial_timing_data = false;
 }
 
 void MouseJoystickController::startTrialHandler(modular_server::Pin * pin_ptr)
@@ -1020,5 +1033,9 @@ void MouseJoystickController::startTrialEventHandler(int arg)
 
 void MouseJoystickController::trialTimeoutEventHandler(int arg)
 {
+  if (timeIsSet())
+  {
+    trial_timing_data_.timeout = getTime();
+  }
   abortTrial();
 }

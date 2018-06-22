@@ -25,6 +25,7 @@ const modular_server::FirmwareInfo firmware_info =
 };
 
 CONSTANT_STRING(trial_index_string,"trial_index");
+CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
 CONSTANT_STRING(trial_string,"trial");
 CONSTANT_STRING(block_string,"block");
 CONSTANT_STRING(set_string,"set");
@@ -37,7 +38,10 @@ CONSTANT_STRING(unread_trial_timing_data_string,"unread_trial_timing_data");
 CONSTANT_STRING(trial_start_string,"trial_start");
 CONSTANT_STRING(mouse_ready_string,"mouse_ready");
 CONSTANT_STRING(joystick_ready_string,"joystick_ready");
-CONSTANT_STRING(reward_string,"reward");
+CONSTANT_STRING(pull_string,"pull");
+CONSTANT_STRING(push_string,"push");
+CONSTANT_STRING(timeout_string,"timeout");
+CONSTANT_STRING(trial_abort_string,"trial_abort");
 
 CONSTANT_STRING(state_string,"state");
 CONSTANT_STRING(state_assay_not_started_string,"ASSAY_NOT_STARTED");
