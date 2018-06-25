@@ -146,13 +146,13 @@ CONSTANT_STRING(percent_units,"%");
 // Properties
 const long steps_per_position_units_element_default = 32;
 
-const long velocity_max_element_default = 400;
+const long velocity_max_element_default = 1000;
 
 const long velocity_min_element_default = 10;
 
-const long acceleration_max_element_default = 400;
+const long acceleration_max_element_default = 1000;
 
-const long home_velocity_element_default = -75;
+const long home_velocity_element_default = -85;
 
 const long invert_driver_direction_element_0_default = false;
 const long invert_driver_direction_element_1_default = true;
