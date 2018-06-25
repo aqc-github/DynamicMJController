@@ -17,6 +17,54 @@
 * API NAMES
 
   #+BEGIN_SRC js
+    {
+      "id": "getApi",
+      "result": {
+        "firmware": [
+          "MouseJoystickController"
+        ],
+        "verbosity": "NAMES",
+        "functions": [
+          "getAssayStatus",
+          "moveJoystickToBasePosition",
+          "moveJoystickToReachPosition",
+          "activateLickport",
+          "getTrialTimingData"
+        ],
+        "parameters": [
+          "count"
+        ],
+        "properties": [
+          "homeCurrent",
+          "basePosition",
+          "reachPosition0",
+          "reachPosition1Means",
+          "pullThreshold",
+          "pushThreshold",
+          "pullTorqueMeans",
+          "joystickReadyToneFrequency",
+          "joystickReadyToneDuration",
+          "rewardToneFrequency",
+          "rewardToneDuration",
+          "toneVolume",
+          "rewardLickportDelay",
+          "rewardLickportDuration",
+          "trialTimeoutDuration",
+          "repeatAbortedTrial",
+          "trialCount",
+          "setCount",
+          "startTrialDuration",
+          "waitUntilTrialTimingDataRead"
+        ],
+        "callbacks": [
+          "startTrial",
+          "startAssay",
+          "abortTrial",
+          "abortAssay",
+          "restartAssay"
+        ]
+      }
+    }
   #+END_SRC
 
 * API GENERAL
