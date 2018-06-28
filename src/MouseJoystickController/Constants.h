@@ -191,10 +191,6 @@ extern const long hold_current_element_1_default;
 
 extern const long hold_delay_element_default;
 
-extern const long stage_channel_count_min;
-extern const long stage_channel_count_max;
-extern const long stage_channel_count_default;
-
 extern const long stage_position_min_element_0_default;
 extern const long stage_position_min_element_1_default;
 
