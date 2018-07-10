@@ -48,6 +48,8 @@ extern const long stage_position_max_default[CHANNEL_COUNT];
 
 extern const long home_current_default[CHANNEL_COUNT];
 
+extern const long idle_current_default[CHANNEL_COUNT];
+
 extern const long base_position_default[CHANNEL_COUNT];
 
 // Parameters

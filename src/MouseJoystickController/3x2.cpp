@@ -81,6 +81,11 @@ const long home_current_default[CHANNEL_COUNT] =
   home_current_element_0_default,
 };
 
+const long idle_current_default[CHANNEL_COUNT] =
+{
+  idle_current_element_0_default,
+};
+
 const long base_position_default[CHANNEL_COUNT] =
 {
   base_position_element_0_default,

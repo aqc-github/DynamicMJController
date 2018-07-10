@@ -97,6 +97,10 @@ void MouseJoystickController::setup()
   home_current_property.setUnits(stepper_controller::constants::percent_units);
   home_current_property.setRange(stepper_controller::constants::percent_min,stepper_controller::constants::percent_max);
 
+  modular_server::Property & idle_current_property = modular_server_.createProperty(constants::idle_current_property_name,constants::idle_current_default);
+  idle_current_property.setUnits(stepper_controller::constants::percent_units);
+  idle_current_property.setRange(stepper_controller::constants::percent_min,stepper_controller::constants::percent_max);
+
   modular_server_.createProperty(constants::base_position_property_name,constants::base_position_default);
 
   modular_server_.createProperty(constants::reach_position_0_property_name,constants::reach_position_0_default);
@@ -396,6 +400,7 @@ void MouseJoystickController::update()
   {
     if (stageAtTargetPosition())
     {
+      setIdleCurrent();
       assay_status_.state_ptr = &constants::state_assay_finished_string;
     }
   }
@@ -916,6 +921,18 @@ void MouseJoystickController::setHomeCurrent(const size_t channel)
 
   modifyRunCurrent(channel,home_current);
   modifyHoldCurrent(channel,home_current);
+}
+
+void MouseJoystickController::setIdleCurrent()
+{
+  long idle_current;
+  for (size_t channel=0; channel < constants::CHANNEL_COUNT; ++channel)
+  {
+    modular_server_.property(constants::idle_current_property_name).getElementValue(channel,idle_current);
+
+    modifyRunCurrent(channel,idle_current);
+    modifyHoldCurrent(channel,idle_current);
+  }
 }
 
 void MouseJoystickController::restoreCurrentSettings(const size_t channel)

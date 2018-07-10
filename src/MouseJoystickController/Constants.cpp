@@ -20,7 +20,7 @@ const modular_server::FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
   .version_major=3,
-  .version_minor=0,
+  .version_minor=1,
   .version_patch=0,
 };
 
@@ -157,11 +157,11 @@ const long home_velocity_element_default = -85;
 const long invert_driver_direction_element_0_default = false;
 const long invert_driver_direction_element_1_default = true;
 
-const long run_current_element_0_default = 18;
-const long run_current_element_1_default = 40;
+const long run_current_element_0_default = 25;
+const long run_current_element_1_default = 60;
 
-const long hold_current_element_0_default = 9;
-const long hold_current_element_1_default = 20;
+const long hold_current_element_0_default = 12;
+const long hold_current_element_1_default = 25;
 
 const long hold_delay_element_default = 50;
 
@@ -172,8 +172,12 @@ const long stage_position_max_element_0_default = 175;
 const long stage_position_max_element_1_default = 300;
 
 CONSTANT_STRING(home_current_property_name,"homeCurrent");
-const long home_current_element_0_default = 25;
-const long home_current_element_1_default = 60;
+const long home_current_element_0_default = 30;
+const long home_current_element_1_default = 75;
+
+CONSTANT_STRING(idle_current_property_name,"idleCurrent");
+const long idle_current_element_0_default = 6;
+const long idle_current_element_1_default = 12;
 
 CONSTANT_STRING(base_position_property_name,"basePosition");
 const long base_position_element_0_default = not_touching_switch_position;
