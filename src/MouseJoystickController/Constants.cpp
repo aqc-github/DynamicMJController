@@ -21,7 +21,7 @@ const modular_server::FirmwareInfo firmware_info =
   .name_ptr=&firmware_name,
   .version_major=3,
   .version_minor=1,
-  .version_patch=0,
+  .version_patch=1,
 };
 
 CONSTANT_STRING(trial_index_string,"trial_index");
@@ -146,22 +146,22 @@ CONSTANT_STRING(percent_units,"%");
 // Properties
 const long steps_per_position_units_element_default = 32;
 
-const long velocity_max_element_default = 1000;
+const long velocity_max_element_default = 800;
 
 const long velocity_min_element_default = 10;
 
-const long acceleration_max_element_default = 1000;
+const long acceleration_max_element_default = 800;
 
 const long home_velocity_element_default = -85;
 
 const long invert_driver_direction_element_0_default = false;
 const long invert_driver_direction_element_1_default = true;
 
-const long run_current_element_0_default = 25;
-const long run_current_element_1_default = 60;
+const long run_current_element_0_default = 20;
+const long run_current_element_1_default = 35;
 
-const long hold_current_element_0_default = 12;
-const long hold_current_element_1_default = 25;
+const long hold_current_element_0_default = 10;
+const long hold_current_element_1_default = 20;
 
 const long hold_delay_element_default = 50;
 
@@ -172,8 +172,8 @@ const long stage_position_max_element_0_default = 175;
 const long stage_position_max_element_1_default = 300;
 
 CONSTANT_STRING(home_current_property_name,"homeCurrent");
-const long home_current_element_0_default = 30;
-const long home_current_element_1_default = 75;
+const long home_current_element_0_default = 25;
+const long home_current_element_1_default = 35;
 
 CONSTANT_STRING(idle_current_property_name,"idleCurrent");
 const long idle_current_element_0_default = 6;
