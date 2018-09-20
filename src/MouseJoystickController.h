@@ -109,6 +109,13 @@ private:
   void setIdleCurrent();
   void restoreCurrentSettings(const size_t channel);
 
+  bool setupReadyPulse();
+  bool triggerReadyPulse();
+  bool setupRewardPulse();
+  bool triggerRewardPulse();
+  bool setupTrialTerminationPulse();
+  bool triggerTrialTerminationPulse();
+
   // Handlers
   void getAssayStatusHandler();
   void moveJoystickToBasePositionHandler();
