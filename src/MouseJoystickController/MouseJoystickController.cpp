@@ -744,9 +744,6 @@ void MouseJoystickController::finishTrial()
   assay_status_.state_ptr = &constants::state_move_to_base_start_string;
   ++assay_status_.trial_index;
 
-  power_switch_controller_ptr_->callUntilSuccessful(modular_server::constants::set_pin_value_function_name,
-                                                    modular_device_base::constants::bnc_a_pin_name,
-                                                    constants::pulse_duration);
   bool repeat_aborted_trial;
   modular_server_.property(constants::repeat_aborted_trial_property_name).getValue(repeat_aborted_trial);
 
