@@ -41,7 +41,7 @@ public:
 
   void moveJoystickToBasePosition();
   void moveJoystickToReachPosition();
-  void activateLickport(const long count);
+  void activateLickport(long count);
 
   void startTrial();
   void startAssay();
@@ -103,11 +103,11 @@ private:
   void playJoystickReadyTone();
   void playRewardTone();
   void triggerLickportReward();
-  void triggerLickport(const long delay,
-    const long count);
-  void setHomeCurrent(const size_t channel);
+  void triggerLickport(long delay,
+    long count);
+  void setHomeCurrent(size_t channel);
   void setIdleCurrent();
-  void restoreCurrentSettings(const size_t channel);
+  void restoreCurrentSettings(size_t channel);
 
   bool setupReadyPulse();
   bool triggerReadyPulse();

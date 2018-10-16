@@ -429,7 +429,7 @@ void MouseJoystickController::moveJoystickToReachPosition()
   }
 }
 
-void MouseJoystickController::activateLickport(const long count)
+void MouseJoystickController::activateLickport(long count)
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
     (assay_status_.state_ptr == &constants::state_assay_finished_string))
@@ -896,8 +896,8 @@ void MouseJoystickController::triggerLickportReward()
   triggerLickport(reward_lickport_delay,constants::reward_lickport_count);
 }
 
-void MouseJoystickController::triggerLickport(const long delay,
-  const long count)
+void MouseJoystickController::triggerLickport(long delay,
+  long count)
 {
   long lickport_duration;
   modular_server_.property(constants::lickport_duration_property_name).getValue(lickport_duration);
@@ -911,7 +911,7 @@ void MouseJoystickController::triggerLickport(const long delay,
     count);
 }
 
-void MouseJoystickController::setHomeCurrent(const size_t channel)
+void MouseJoystickController::setHomeCurrent(size_t channel)
 {
   if (channel >= constants::CHANNEL_COUNT)
   {
@@ -936,7 +936,7 @@ void MouseJoystickController::setIdleCurrent()
   }
 }
 
-void MouseJoystickController::restoreCurrentSettings(const size_t channel)
+void MouseJoystickController::restoreCurrentSettings(size_t channel)
 {
   restoreHoldCurrent(channel);
   restoreRunCurrent(channel);
