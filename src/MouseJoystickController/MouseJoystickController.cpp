@@ -48,10 +48,10 @@ void MouseJoystickController::setup()
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,
-                              properties_,
-                              parameters_,
-                              functions_,
-                              callbacks_);
+    properties_,
+    parameters_,
+    functions_,
+    callbacks_);
 
   // Properties
   modular_server::Property & channel_count_property = modular_server_.property(step_dir_controller::constants::channel_count_property_name);
@@ -117,7 +117,7 @@ void MouseJoystickController::setup()
   pull_torque_means_property.setRange(constants::pull_torque_min,constants::pull_torque_max);
   pull_torque_means_property.setUnits(constants::percent_units);
   pull_torque_means_property.setArrayLengthRange(constants::pull_torque_array_length_min,
-                                                 constants::pull_torque_array_length_max);
+    constants::pull_torque_array_length_max);
 
   modular_server::Property & joystick_ready_tone_frequency_property = modular_server_.createProperty(constants::joystick_ready_tone_frequency_property_name,constants::joystick_ready_tone_frequency_default);
   joystick_ready_tone_frequency_property.setRange(audio_controller::constants::frequency_min,audio_controller::constants::frequency_max);
@@ -414,7 +414,7 @@ constants::AssayStatus MouseJoystickController::getAssayStatus()
 void MouseJoystickController::moveJoystickToBasePosition()
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
-      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+    (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
     moveToBasePosition();
   }
@@ -423,7 +423,7 @@ void MouseJoystickController::moveJoystickToBasePosition()
 void MouseJoystickController::moveJoystickToReachPosition()
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
-      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+    (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
     moveToReachPosition();
   }
@@ -432,7 +432,7 @@ void MouseJoystickController::moveJoystickToReachPosition()
 void MouseJoystickController::activateLickport(const long count)
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
-      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+    (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
     triggerLickport(constants::activate_lickport_delay,count);
   }
@@ -457,7 +457,7 @@ void MouseJoystickController::startTrial()
 void MouseJoystickController::startAssay()
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
-      (assay_status_.state_ptr == &constants::state_assay_finished_string))
+    (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
     resetAssayStatus();
     trial_aborted_ = false;
@@ -512,11 +512,11 @@ bool MouseJoystickController::setupClients()
   bool call_was_successful;
 
   encoder_interface_simple_ptr_->callUntilSuccessful(modular_server::constants::set_properties_to_defaults_function_name,
-                                                     modular_server::constants::all_array);
+    modular_server::constants::all_array);
   setup_was_successful = setup_was_successful && encoder_interface_simple_ptr_->callWasSuccessful();
 
   power_switch_controller_ptr_->callUntilSuccessful(modular_server::constants::set_properties_to_defaults_function_name,
-                                                    modular_server::constants::all_array);
+    modular_server::constants::all_array);
   setup_was_successful = setup_was_successful && power_switch_controller_ptr_->callWasSuccessful();
   call_was_successful = setupRewardPulse();
   setup_was_successful = setup_was_successful && call_was_successful;
@@ -524,7 +524,7 @@ bool MouseJoystickController::setupClients()
   setup_was_successful = setup_was_successful && call_was_successful;
 
   audio_controller_ptr_->callUntilSuccessful(modular_server::constants::set_properties_to_defaults_function_name,
-                                             modular_server::constants::all_array);
+    modular_server::constants::all_array);
   setup_was_successful = setup_was_successful && audio_controller_ptr_->callWasSuccessful();
   call_was_successful = setupReadyPulse();
   setup_was_successful = setup_was_successful && call_was_successful;
@@ -591,7 +591,7 @@ void MouseJoystickController::addStartTrialEvent()
   if (start_trial_duration > 0)
   {
     EventId start_trial_event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystickController::startTrialEventHandler),
-                                                                        start_trial_duration*constants::milliseconds_per_second);
+      start_trial_duration*constants::milliseconds_per_second);
     event_controller_.enable(start_trial_event_id);
   }
   else
@@ -617,18 +617,18 @@ void MouseJoystickController::setupPull()
 {
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::enable_outputs_callback_name);
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::set_position_function_name,
-                                                     constants::pull_encoder_index,
-                                                     constants::pull_encoder_initial_value);
+    constants::pull_encoder_index,
+    constants::pull_encoder_initial_value);
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::clear_samples_callback_name);
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::start_sampling_callback_name);
 
   long pull_torque = getPullTorque();
 
   long pwm_offset = map(pull_torque,
-                        constants::pull_torque_min,
-                        constants::pull_torque_max,
-                        constants::pull_pwm_offset_min,
-                        constants::pull_pwm_offset_max);
+    constants::pull_torque_min,
+    constants::pull_torque_max,
+    constants::pull_pwm_offset_min,
+    constants::pull_pwm_offset_max);
 
   disableAutomaticCurrentScaling(constants::pull_channel);
   setPwmOffset(constants::pull_channel,pwm_offset);
@@ -637,7 +637,7 @@ void MouseJoystickController::setupPull()
   modular_server_.property(constants::trial_timeout_duration_property_name).getValue(trial_timeout_duration);
 
   trial_timeout_event_id_ = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystickController::trialTimeoutEventHandler),
-                                                                 trial_timeout_duration*constants::milliseconds_per_second);
+    trial_timeout_duration*constants::milliseconds_per_second);
   event_controller_.enable(trial_timeout_event_id_);
 
   if (timeIsSet())
@@ -812,7 +812,7 @@ void MouseJoystickController::updateReachPosition()
 
   long reach_position_1;
   modular_server_.property(constants::reach_position_1_means_property_name).getElementValue(reach_position_1_index_,
-                                                                                            reach_position_1);
+    reach_position_1);
 
   assay_status_.reach_position[0] = reach_position_0;
   assay_status_.reach_position[1] = reach_position_1;
@@ -822,7 +822,7 @@ void MouseJoystickController::updatePullTorque()
 {
   long pull_torque_mean;
   modular_server_.property(constants::pull_torque_means_property_name).getElementValue(pull_torque_index_,
-                                                                                       pull_torque_mean);
+    pull_torque_mean);
   assay_status_.pull_torque = pull_torque_mean;
 }
 
@@ -858,13 +858,13 @@ void MouseJoystickController::playJoystickReadyTone()
   modular_server_.property(constants::tone_volume_property_name).getValue(tone_volume);
 
   audio_controller_ptr_->callUntilSuccessful(audio_controller::constants::add_tone_pwm_at_function_name,
-                                             joystick_ready_tone_frequency,
-                                             audio_controller::constants::speaker_all,
-                                             tone_volume,
-                                             constants::joystick_ready_tone_delay,
-                                             joystick_ready_tone_duration,
-                                             joystick_ready_tone_duration,
-                                             constants::joystick_ready_tone_count);
+    joystick_ready_tone_frequency,
+    audio_controller::constants::speaker_all,
+    tone_volume,
+    constants::joystick_ready_tone_delay,
+    joystick_ready_tone_duration,
+    joystick_ready_tone_duration,
+    constants::joystick_ready_tone_count);
 }
 
 void MouseJoystickController::playRewardTone()
@@ -879,13 +879,13 @@ void MouseJoystickController::playRewardTone()
   modular_server_.property(constants::tone_volume_property_name).getValue(tone_volume);
 
   audio_controller_ptr_->callUntilSuccessful(audio_controller::constants::add_tone_pwm_at_function_name,
-                                             reward_tone_frequency,
-                                             audio_controller::constants::speaker_all,
-                                             tone_volume,
-                                             constants::reward_tone_delay,
-                                             reward_tone_duration,
-                                             reward_tone_duration,
-                                             constants::reward_tone_count);
+    reward_tone_frequency,
+    audio_controller::constants::speaker_all,
+    tone_volume,
+    constants::reward_tone_delay,
+    reward_tone_duration,
+    reward_tone_duration,
+    constants::reward_tone_count);
 }
 
 void MouseJoystickController::triggerLickportReward()
@@ -897,18 +897,18 @@ void MouseJoystickController::triggerLickportReward()
 }
 
 void MouseJoystickController::triggerLickport(const long delay,
-                                              const long count)
+  const long count)
 {
   long lickport_duration;
   modular_server_.property(constants::lickport_duration_property_name).getValue(lickport_duration);
 
   Array<long,constants::REWARD_LICKPORT_CHANNEL_COUNT> lickport_channels(constants::reward_lickport_channels);
   power_switch_controller_ptr_->callUntilSuccessful(power_switch_controller::constants::add_pwm_function_name,
-                                                    lickport_channels,
-                                                    delay,
-                                                    lickport_duration*2,
-                                                    lickport_duration,
-                                                    count);
+    lickport_channels,
+    delay,
+    lickport_duration*2,
+    lickport_duration,
+    count);
 }
 
 void MouseJoystickController::setHomeCurrent(const size_t channel)
@@ -945,48 +945,48 @@ void MouseJoystickController::restoreCurrentSettings(const size_t channel)
 bool MouseJoystickController::setupReadyPulse()
 {
   audio_controller_ptr_->callUntilSuccessful(modular_server::constants::set_pin_mode_function_name,
-                                             modular_device_base::constants::bnc_b_pin_name,
-                                             modular_server::constants::pin_mode_pulse_rising);
+    modular_device_base::constants::bnc_b_pin_name,
+    modular_server::constants::pin_mode_pulse_rising);
   return audio_controller_ptr_->callWasSuccessful();
 }
 
 bool MouseJoystickController::triggerReadyPulse()
 {
   audio_controller_ptr_->callUntilSuccessful(modular_server::constants::set_pin_value_function_name,
-                                             modular_device_base::constants::bnc_b_pin_name,
-                                             constants::pulse_duration);
+    modular_device_base::constants::bnc_b_pin_name,
+    constants::pulse_duration);
   return audio_controller_ptr_->callWasSuccessful();
 }
 
 bool MouseJoystickController::setupRewardPulse()
 {
   power_switch_controller_ptr_->callUntilSuccessful(modular_server::constants::set_pin_mode_function_name,
-                                                    modular_device_base::constants::bnc_b_pin_name,
-                                                    modular_server::constants::pin_mode_pulse_rising);
+    modular_device_base::constants::bnc_b_pin_name,
+    modular_server::constants::pin_mode_pulse_rising);
   return power_switch_controller_ptr_->callWasSuccessful();
 }
 
 bool MouseJoystickController::triggerRewardPulse()
 {
   power_switch_controller_ptr_->callUntilSuccessful(modular_server::constants::set_pin_value_function_name,
-                                                    modular_device_base::constants::bnc_b_pin_name,
-                                                    constants::pulse_duration);
+    modular_device_base::constants::bnc_b_pin_name,
+    constants::pulse_duration);
   return power_switch_controller_ptr_->callWasSuccessful();
 }
 
 bool MouseJoystickController::setupTrialTerminationPulse()
 {
   power_switch_controller_ptr_->callUntilSuccessful(modular_server::constants::set_pin_mode_function_name,
-                                                    modular_device_base::constants::bnc_a_pin_name,
-                                                    modular_server::constants::pin_mode_pulse_rising);
+    modular_device_base::constants::bnc_a_pin_name,
+    modular_server::constants::pin_mode_pulse_rising);
   return power_switch_controller_ptr_->callWasSuccessful();
 }
 
 bool MouseJoystickController::triggerTrialTerminationPulse()
 {
   power_switch_controller_ptr_->callUntilSuccessful(modular_server::constants::set_pin_value_function_name,
-                                                    modular_device_base::constants::bnc_a_pin_name,
-                                                    constants::pulse_duration);
+    modular_device_base::constants::bnc_a_pin_name,
+    constants::pulse_duration);
   return power_switch_controller_ptr_->callWasSuccessful();
 }
 

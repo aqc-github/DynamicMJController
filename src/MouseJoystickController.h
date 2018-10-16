@@ -104,7 +104,7 @@ private:
   void playRewardTone();
   void triggerLickportReward();
   void triggerLickport(const long delay,
-                       const long count);
+    const long count);
   void setHomeCurrent(const size_t channel);
   void setIdleCurrent();
   void restoreCurrentSettings(const size_t channel);
