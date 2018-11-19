@@ -26,12 +26,9 @@ void MouseJoystickController::setup()
   event_controller_.setup();
 
   // Clients Setup
-  encoder_interface_simple_ptr_ = &(createClientAtAddress(constants::encoder_interface_simple_address));
-  encoder_interface_simple_ptr_->setName(encoder_interface_simple::constants::device_name);
-  power_switch_controller_ptr_ = &(createClientAtAddress(constants::power_switch_controller_address));
-  power_switch_controller_ptr_->setName(power_switch_controller::constants::device_name);
-  audio_controller_ptr_ = &(createClientAtAddress(constants::audio_controller_address));
-  audio_controller_ptr_->setName(audio_controller::constants::device_name);
+  encoder_interface_simple_ptr_ = &(createClientAtAddress(encoder_interface_simple::constants::device_name,constants::encoder_interface_simple_address));
+  power_switch_controller_ptr_ = &(createClientAtAddress(power_switch_controller::constants::device_name,constants::power_switch_controller_address));
+  audio_controller_ptr_ = &(createClientAtAddress(audio_controller::constants::device_name,constants::audio_controller_address));
 
   // Pin Setup
 
