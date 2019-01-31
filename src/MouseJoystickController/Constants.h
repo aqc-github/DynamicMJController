@@ -155,7 +155,7 @@ extern const size_t encoder_interface_simple_address[1];
 
 extern const size_t power_switch_controller_address[2];
 
-extern const size_t audio_controller_address[4];
+extern const size_t audio_controller_address[3];
 
 // Pins
 
