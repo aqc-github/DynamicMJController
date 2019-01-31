@@ -21,7 +21,7 @@ const modular_server::FirmwareInfo firmware_info =
   .name_ptr=&firmware_name,
   .version_major=3,
   .version_minor=2,
-  .version_patch=2,
+  .version_patch=3,
 };
 
 CONSTANT_STRING(trial_index_string,"trial_index");
@@ -125,9 +125,8 @@ const size_t power_switch_controller_address[2] =
   3,
 };
 
-const size_t audio_controller_address[4] =
+const size_t audio_controller_address[3] =
 {
-  3,
   3,
   3,
   3,
