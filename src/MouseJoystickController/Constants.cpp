@@ -21,7 +21,7 @@ const modular_server::FirmwareInfo firmware_info =
   .name_ptr=&firmware_name,
   .version_major=3,
   .version_minor=2,
-  .version_patch=4,
+  .version_patch=5,
 };
 
 CONSTANT_STRING(trial_index_string,"trial_index");
@@ -152,6 +152,10 @@ const long velocity_min_element_default = 10;
 const long acceleration_max_element_default = 800;
 
 const long home_velocity_element_default = -85;
+
+const bool right_switches_enabled_element_default = false;
+
+const bool right_switch_stop_enabled_element_default = false;
 
 const long invert_driver_direction_element_0_default = false;
 const long invert_driver_direction_element_1_default = true;

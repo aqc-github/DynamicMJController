@@ -72,6 +72,12 @@ void MouseJoystickController::setup()
   modular_server::Property & home_velocity_property = modular_server_.property(step_dir_controller::constants::home_velocity_property_name);
   home_velocity_property.setDefaultValue(constants::home_velocity_default);
 
+  modular_server::Property & right_switches_enabled_property = modular_server_.property(step_dir_controller::constants::right_switches_enabled_property_name);
+  right_switches_enabled_property.setDefaultValue(constants::right_switches_enabled_default);
+
+  modular_server::Property & right_switch_stop_enabled_property = modular_server_.property(step_dir_controller::constants::right_switch_stop_enabled_property_name);
+  right_switch_stop_enabled_property.setDefaultValue(constants::right_switch_stop_enabled_default);
+
   modular_server::Property & invert_driver_direction_property = modular_server_.property(stepper_controller::constants::invert_driver_direction_property_name);
   invert_driver_direction_property.setDefaultValue(constants::invert_driver_direction_default);
 

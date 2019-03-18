@@ -180,6 +180,12 @@ extern const long acceleration_max_element_default;
 
 extern const long home_velocity_element_default;
 
+extern const bool right_switches_enabled_default[step_dir_controller::constants::CONTROLLER_COUNT_MAX];
+extern const bool right_switches_enabled_element_default;
+
+extern const bool right_switch_stop_enabled_default[step_dir_controller::constants::CHANNEL_COUNT_MAX];
+extern const bool right_switch_stop_enabled_element_default;
+
 extern const long invert_driver_direction_element_0_default;
 extern const long invert_driver_direction_element_1_default;
 

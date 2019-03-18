@@ -45,6 +45,26 @@ const long acceleration_max_default[CHANNEL_COUNT] =
   acceleration_max_element_default,
 };
 
+const bool right_switches_enabled_default[step_dir_controller::constants::CONTROLLER_COUNT_MAX] =
+{
+  right_switches_enabled_element_default,
+  right_switches_enabled_element_default,
+  right_switches_enabled_element_default,
+};
+
+const bool right_switch_stop_enabled_default[step_dir_controller::constants::CHANNEL_COUNT_MAX] =
+{
+  right_switch_stop_enabled_element_default,
+  right_switch_stop_enabled_element_default,
+  right_switch_stop_enabled_element_default,
+  right_switch_stop_enabled_element_default,
+  right_switch_stop_enabled_element_default,
+  right_switch_stop_enabled_element_default,
+  right_switch_stop_enabled_element_default,
+  right_switch_stop_enabled_element_default,
+  right_switch_stop_enabled_element_default,
+};
+
 const long home_velocity_default[CHANNEL_COUNT] =
 {
   home_velocity_element_default,
