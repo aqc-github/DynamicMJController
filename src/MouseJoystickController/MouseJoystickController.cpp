@@ -671,8 +671,8 @@ void MouseJoystickController::checkForPullOrPush()
     assay_status_.state_ptr = &constants::state_reward_string;
   }
 
-  StaticJsonBuffer<constants::ENCODER_POSITIONS_JSON_BUFFER_SIZE> json_buffer;
-  JsonArray & position_array = encoder_interface_simple_ptr_->callGetResult(json_buffer,encoder_interface_simple::constants::get_positions_function_name);
+  StaticJsonDocument<constants::ENCODER_POSITIONS_JSON_DOCUMENT_SIZE> json_document;
+  JsonArray position_array = encoder_interface_simple_ptr_->callGetResult(json_document,encoder_interface_simple::constants::get_positions_function_name);
   long position;
   if (encoder_interface_simple_ptr_->callWasSuccessful())
   {

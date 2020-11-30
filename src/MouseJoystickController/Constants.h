@@ -132,7 +132,7 @@ extern const long joystick_ready_tone_count;
 // Pull
 extern const size_t pull_encoder_index;
 extern const size_t pull_encoder_initial_value;
-enum{ENCODER_POSITIONS_JSON_BUFFER_SIZE=256};
+enum{ENCODER_POSITIONS_JSON_DOCUMENT_SIZE=256};
 extern const size_t pull_channel;
 extern const long pull_pwm_offset_min;
 extern const long pull_pwm_offset_max;
