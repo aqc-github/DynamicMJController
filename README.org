@@ -4,7 +4,7 @@
 
 * Library Information
   - Name :: MouseJoystickController
-  - Version :: 3.3.0
+  - Version :: 3.3.1
   - License :: BSD
   - URL :: https://github.com/janelia-arduino/MouseJoystickController
   - Author :: Peter Polidoro

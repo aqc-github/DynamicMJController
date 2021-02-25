@@ -8,7 +8,7 @@
 #ifndef MOUSE_JOYSTICK_CONTROLLER_CONSTANTS_H
 #define MOUSE_JOYSTICK_CONTROLLER_CONSTANTS_H
 #include <ConstantVariable.h>
-#include <Time.h>
+#include <TimeLib.h>
 
 #include <StepDirController.h>
 #include <StepperController.h>
