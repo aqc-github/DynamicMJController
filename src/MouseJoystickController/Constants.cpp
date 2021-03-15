@@ -274,9 +274,9 @@ CONSTANT_STRING(wait_until_trial_timing_data_read_property_name,"waitUntilTrialT
 const bool wait_until_trial_timing_data_read_default = true;
 
 // Parameters
-CONSTANT_STRING(count_parameter_name,"count");
-const long count_min = 1;
-const long count_max = 20;
+CONSTANT_STRING(activation_count_parameter_name,"activation_count");
+const long activation_count_min = 1;
+const long activation_count_max = 20;
 
 // Functions
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");

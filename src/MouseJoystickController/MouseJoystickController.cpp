@@ -169,8 +169,8 @@ void MouseJoystickController::setup()
   modular_server_.createProperty(constants::wait_until_trial_timing_data_read_property_name,constants::wait_until_trial_timing_data_read_default);
 
   // Parameters
-  modular_server::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
-  count_parameter.setRange(constants::count_min,constants::count_max);
+  modular_server::Parameter & activation_count_parameter = modular_server_.createParameter(constants::activation_count_parameter_name);
+  activation_count_parameter.setRange(constants::activation_count_min,constants::activation_count_max);
 
   // Functions
   modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
@@ -185,7 +185,7 @@ void MouseJoystickController::setup()
 
   modular_server::Function & activate_lickport_function = modular_server_.createFunction(constants::activate_lickport_function_name);
   activate_lickport_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::activateLickportHandler));
-  activate_lickport_function.addParameter(count_parameter);
+  activate_lickport_function.addParameter(activation_count_parameter);
 
   modular_server::Function & get_trial_timing_data_function = modular_server_.createFunction(constants::get_trial_timing_data_function_name);
   get_trial_timing_data_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getTrialTimingDataHandler));
@@ -1045,10 +1045,10 @@ void MouseJoystickController::moveJoystickToReachPositionHandler()
 
 void MouseJoystickController::activateLickportHandler()
 {
-  long count;
-  modular_server_.parameter(constants::count_parameter_name).getValue(count);
+  long activation_count;
+  modular_server_.parameter(constants::activation_count_parameter_name).getValue(activation_count);
 
-  activateLickport(count);
+  activateLickport(activation_count);
 }
 
 void MouseJoystickController::getTrialTimingDataHandler()

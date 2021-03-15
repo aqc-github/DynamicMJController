@@ -293,9 +293,9 @@ extern ConstantString wait_until_trial_timing_data_read_property_name;
 extern const bool wait_until_trial_timing_data_read_default;
 
 // Parameters
-extern ConstantString count_parameter_name;
-extern const long count_min;
-extern const long count_max;
+extern ConstantString activation_count_parameter_name;
+extern const long activation_count_min;
+extern const long activation_count_max;
 
 // Functions
 extern ConstantString get_assay_status_function_name;
