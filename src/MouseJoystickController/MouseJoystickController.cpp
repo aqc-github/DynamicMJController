@@ -116,12 +116,6 @@ void MouseJoystickController::setup()
   modular_server::Property & push_threshold_property = modular_server_.createProperty(constants::push_threshold_property_name,constants::push_threshold_default);
   push_threshold_property.setRange(constants::push_threshold_min,constants::push_threshold_max);
 
-  modular_server::Property & pull_torque_means_property = modular_server_.createProperty(constants::pull_torque_means_property_name,constants::pull_torque_means_default);
-  pull_torque_means_property.setRange(constants::pull_torque_min,constants::pull_torque_max);
-  pull_torque_means_property.setUnits(constants::percent_units);
-  pull_torque_means_property.setArrayLengthRange(constants::pull_torque_array_length_min,
-    constants::pull_torque_array_length_max);
-
   modular_server::Property & joystick_ready_tone_frequency_property = modular_server_.createProperty(constants::joystick_ready_tone_frequency_property_name,constants::joystick_ready_tone_frequency_default);
   joystick_ready_tone_frequency_property.setRange(audio_controller::constants::frequency_min,audio_controller::constants::frequency_max);
   joystick_ready_tone_frequency_property.setUnits(audio_controller::constants::hz_units);
@@ -156,9 +150,6 @@ void MouseJoystickController::setup()
 
   modular_server_.createProperty(constants::repeat_aborted_trial_property_name,constants::repeat_aborted_trial_default);
 
-  modular_server::Property & trial_count_property = modular_server_.createProperty(constants::trial_count_property_name,constants::trial_count_default);
-  trial_count_property.setRange(constants::trial_count_min,constants::trial_count_max);
-
   modular_server::Property & set_count_property = modular_server_.createProperty(constants::set_count_property_name,constants::set_count_default);
   set_count_property.setRange(constants::set_count_min,constants::set_count_max);
 
@@ -169,8 +160,15 @@ void MouseJoystickController::setup()
   modular_server_.createProperty(constants::wait_until_trial_timing_data_read_property_name,constants::wait_until_trial_timing_data_read_default);
 
   // Parameters
-  modular_server::Parameter & activation_count_parameter = modular_server_.createParameter(constants::activation_count_parameter_name);
-  activation_count_parameter.setRange(constants::activation_count_min,constants::activation_count_max);
+  modular_server::Parameter & trial_count_parameter = modular_server_.createParameter(constants::trial_count_parameter_name);
+  trial_count_parameter.setRange(constants::trial_count_min,constants::trial_count_max);
+
+  modular_server::Parameter & pull_torque_parameter = modular_server_.createParameter(constants::pull_torque_parameter_name);
+  pull_torque_parameter.setRange(constants::pull_torque_min,constants::pull_torque_max);
+  pull_torque_parameter.setUnits(constants::percent_units);
+
+  modular_server::Parameter & lickport_activation_count_parameter = modular_server_.createParameter(constants::lickport_activation_count_parameter_name);
+  lickport_activation_count_parameter.setRange(constants::lickport_activation_count_min,constants::lickport_activation_count_max);
 
   // Functions
   modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
@@ -185,7 +183,7 @@ void MouseJoystickController::setup()
 
   modular_server::Function & activate_lickport_function = modular_server_.createFunction(constants::activate_lickport_function_name);
   activate_lickport_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::activateLickportHandler));
-  activate_lickport_function.addParameter(activation_count_parameter);
+  activate_lickport_function.addParameter(lickport_activation_count_parameter);
 
   modular_server::Function & get_trial_timing_data_function = modular_server_.createFunction(constants::get_trial_timing_data_function_name);
   get_trial_timing_data_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getTrialTimingDataHandler));
@@ -777,14 +775,13 @@ void MouseJoystickController::resetTrialTimingData()
 
 void MouseJoystickController::updateTrialBlockSet()
 {
-  long trial_count;
-  modular_server_.property(constants::trial_count_property_name).getValue(trial_count);
+  long trial_count = 2;
   if (++assay_status_.trial >= (size_t)trial_count)
   {
     assay_status_.trial = 0;
 
     ++assay_status_.block;
-    const size_t pull_torque_array_length = modular_server_.property(constants::pull_torque_means_property_name).getArrayLength();
+    const size_t pull_torque_array_length = 4;
     if (++pull_torque_index_ >= pull_torque_array_length)
     {
       pull_torque_index_ = 0;
@@ -823,10 +820,7 @@ void MouseJoystickController::updateReachPosition()
 
 void MouseJoystickController::updatePullTorque()
 {
-  long pull_torque_mean;
-  modular_server_.property(constants::pull_torque_means_property_name).getElementValue(pull_torque_index_,
-    pull_torque_mean);
-  assay_status_.pull_torque = pull_torque_mean;
+  assay_status_.pull_torque = 50;
 }
 
 void MouseJoystickController::updatePullThreshold()
@@ -1045,10 +1039,10 @@ void MouseJoystickController::moveJoystickToReachPositionHandler()
 
 void MouseJoystickController::activateLickportHandler()
 {
-  long activation_count;
-  modular_server_.parameter(constants::activation_count_parameter_name).getValue(activation_count);
+  long lickport_activation_count;
+  modular_server_.parameter(constants::lickport_activation_count_parameter_name).getValue(lickport_activation_count);
 
-  activateLickport(activation_count);
+  activateLickport(lickport_activation_count);
 }
 
 void MouseJoystickController::getTrialTimingDataHandler()

@@ -24,8 +24,8 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=21};
-enum{PARAMETER_COUNT_MAX=1};
+enum{PROPERTY_COUNT_MAX=19};
+enum{PARAMETER_COUNT_MAX=5};
 enum{FUNCTION_COUNT_MAX=5};
 enum{CALLBACK_COUNT_MAX=5};
 
@@ -137,8 +137,6 @@ extern const size_t pull_channel;
 extern const long pull_pwm_offset_min;
 extern const long pull_pwm_offset_max;
 enum{PULL_TORQUE_COUNT_MAX=4};
-extern const long pull_torque_min;
-extern const long pull_torque_max;
 extern const long pull_torque_array_length_min;
 extern const long pull_torque_array_length_max;
 extern const unsigned long pull_push_poll_period;
@@ -232,9 +230,6 @@ extern const long push_threshold_min;
 extern const long push_threshold_max;
 extern const long push_threshold_default;
 
-extern ConstantString pull_torque_means_property_name;
-extern const long pull_torque_means_default[PULL_TORQUE_COUNT_MAX];
-
 extern ConstantString joystick_ready_tone_frequency_property_name;
 extern const long joystick_ready_tone_frequency_default;
 
@@ -274,11 +269,6 @@ extern const long trial_timeout_duration_default;
 extern ConstantString repeat_aborted_trial_property_name;
 extern const bool repeat_aborted_trial_default;
 
-extern ConstantString trial_count_property_name;
-extern const long trial_count_min;
-extern const long trial_count_max;
-extern const long trial_count_default;
-
 extern ConstantString set_count_property_name;
 extern const long set_count_min;
 extern const long set_count_max;
@@ -293,9 +283,17 @@ extern ConstantString wait_until_trial_timing_data_read_property_name;
 extern const bool wait_until_trial_timing_data_read_default;
 
 // Parameters
-extern ConstantString activation_count_parameter_name;
-extern const long activation_count_min;
-extern const long activation_count_max;
+extern ConstantString trial_count_parameter_name;
+extern const long trial_count_min;
+extern const long trial_count_max;
+
+extern ConstantString pull_torque_parameter_name;
+extern const long pull_torque_min;
+extern const long pull_torque_max;
+
+extern ConstantString lickport_activation_count_parameter_name;
+extern const long lickport_activation_count_min;
+extern const long lickport_activation_count_max;
 
 // Functions
 extern ConstantString get_assay_status_function_name;

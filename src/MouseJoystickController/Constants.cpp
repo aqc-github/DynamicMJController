@@ -98,8 +98,6 @@ const size_t pull_encoder_initial_value = 0;
 const size_t pull_channel = 0;
 const long pull_pwm_offset_min = 0;
 const long pull_pwm_offset_max = 80;
-const long pull_torque_min = 0;
-const long pull_torque_max = 100;
 const long pull_torque_array_length_min = 1;
 const long pull_torque_array_length_max = PULL_TORQUE_COUNT_MAX;
 const unsigned long pull_push_poll_period = 50;
@@ -207,15 +205,6 @@ const long push_threshold_min = 0;
 const long push_threshold_max = 1000;
 const long push_threshold_default = 50;
 
-CONSTANT_STRING(pull_torque_means_property_name,"pullTorqueMeans");
-const long pull_torque_means_default[PULL_TORQUE_COUNT_MAX] =
-{
-  20,
-  40,
-  60,
-  80,
-};
-
 CONSTANT_STRING(joystick_ready_tone_frequency_property_name,"joystickReadyToneFrequency");
 const long joystick_ready_tone_frequency_default = 8000;
 
@@ -255,11 +244,6 @@ const long trial_timeout_duration_default = 20;
 CONSTANT_STRING(repeat_aborted_trial_property_name,"repeatAbortedTrial");
 const bool repeat_aborted_trial_default = true;
 
-CONSTANT_STRING(trial_count_property_name,"trialCount");
-const long trial_count_min = 1;
-const long trial_count_max = 100;
-const long trial_count_default = 2;
-
 CONSTANT_STRING(set_count_property_name,"setCount");
 const long set_count_min = 1;
 const long set_count_max = 100;
@@ -274,9 +258,17 @@ CONSTANT_STRING(wait_until_trial_timing_data_read_property_name,"waitUntilTrialT
 const bool wait_until_trial_timing_data_read_default = true;
 
 // Parameters
-CONSTANT_STRING(activation_count_parameter_name,"activation_count");
-const long activation_count_min = 1;
-const long activation_count_max = 20;
+CONSTANT_STRING(trial_count_parameter_name,"trial_count");
+const long trial_count_min = 1;
+const long trial_count_max = 100;
+
+CONSTANT_STRING(pull_torque_parameter_name,"pull_torque");
+const long pull_torque_min = 0;
+const long pull_torque_max = 100;
+
+CONSTANT_STRING(lickport_activation_count_parameter_name,"lickport_activation_count");
+const long lickport_activation_count_min = 1;
+const long lickport_activation_count_max = 20;
 
 // Functions
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
