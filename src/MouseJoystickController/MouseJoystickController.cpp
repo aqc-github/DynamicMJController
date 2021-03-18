@@ -175,6 +175,9 @@ void MouseJoystickController::setup()
   get_set_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getSetHandler));
   get_set_function.setResultTypeArray();
 
+  modular_server::Function & clear_set_function = modular_server_.createFunction(constants::clear_set_function_name);
+  clear_set_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::clearSetHandler));
+
   modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
   get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getAssayStatusHandler));
   get_assay_status_function.setResultTypeObject();
@@ -213,7 +216,6 @@ void MouseJoystickController::setup()
 #if defined(__MK64FX512__)
   restart_assay_callback.attachTo(modular_device_base::constants::btn_b_pin_name,modular_server::constants::pin_mode_interrupt_falling);
 #endif
-
 }
 
 void MouseJoystickController::update()
@@ -536,6 +538,11 @@ bool MouseJoystickController::setupClients()
 
 
   return setup_was_successful;
+}
+
+void MouseJoystickController::clearSet()
+{
+	set_.clear();
 }
 
 StageController::PositionArray MouseJoystickController::getBasePosition()
@@ -1033,15 +1040,6 @@ void MouseJoystickController::getSetHandler()
 
 	modular_server_.response().beginArray();
 
-	set_.clear();
-	constants::Block blk;
-	blk.trial_count = 77;
-	blk.pull_torque = 123;
-	set_.push_back(blk);
-	blk.trial_count = 88;
-	blk.pull_torque = 321;
-	set_.push_back(blk);
-
 	for (auto& block : set_)
 		{
 
@@ -1055,6 +1053,11 @@ void MouseJoystickController::getSetHandler()
 		}
 
   modular_server_.response().endArray();
+}
+
+void MouseJoystickController::clearSetHandler()
+{
+	clearSet();
 }
 
 void MouseJoystickController::moveJoystickToBasePositionHandler()

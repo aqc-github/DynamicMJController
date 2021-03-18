@@ -267,6 +267,7 @@ const long lickport_activation_count_max = 20;
 
 // Functions
 CONSTANT_STRING(get_set_function_name,"getSet");
+CONSTANT_STRING(clear_set_function_name,"clearSet");
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
 CONSTANT_STRING(move_joystick_to_base_position_function_name,"moveJoystickToBasePosition");
 CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToReachPosition");

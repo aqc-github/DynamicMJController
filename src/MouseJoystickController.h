@@ -79,6 +79,9 @@ private:
   unsigned long pull_push_poll_time_previous_;
 
   bool setupClients();
+
+	void clearSet();
+
   StageController::PositionArray getBasePosition();
   StageController::PositionArray getReachPosition();
   long getPullTorque();
@@ -123,6 +126,7 @@ private:
 
   // Handlers
   void getSetHandler();
+  void clearSetHandler();
   void getAssayStatusHandler();
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();
