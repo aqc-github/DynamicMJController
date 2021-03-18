@@ -167,7 +167,11 @@ void MouseJoystickController::setup()
   pull_torque_parameter.setRange(constants::pull_torque_min,constants::pull_torque_max);
   pull_torque_parameter.setUnits(constants::percent_units);
 
-  modular_server::Parameter & lickport_activation_count_parameter = modular_server_.createParameter(constants::lickport_activation_count_parameter_name);
+  modular_server::Parameter & reach_position_array_parameter = modular_server_.createParameter(constants::reach_position_array_parameter_name);
+  reach_position_array_parameter.setRange(constants::reach_position_array_element_min,constants::reach_position_array_element_max);
+  reach_position_array_parameter.setArrayLengthRange(constants::reach_position_array_length_min,constants::reach_position_array_length_max);
+
+	modular_server::Parameter & lickport_activation_count_parameter = modular_server_.createParameter(constants::lickport_activation_count_parameter_name);
   lickport_activation_count_parameter.setRange(constants::lickport_activation_count_min,constants::lickport_activation_count_max);
 
   // Functions

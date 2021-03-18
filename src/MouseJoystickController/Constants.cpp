@@ -266,6 +266,12 @@ CONSTANT_STRING(pull_torque_parameter_name,"pull_torque");
 const long pull_torque_min = 0;
 const long pull_torque_max = 100;
 
+CONSTANT_STRING(reach_position_array_parameter_name,"reach_position_array");
+const long reach_position_array_element_min = 0;
+const long reach_position_array_element_max = 1000;
+const long reach_position_array_length_min = channel_count;
+const long reach_position_array_length_max = channel_count;
+
 CONSTANT_STRING(lickport_activation_count_parameter_name,"lickport_activation_count");
 const long lickport_activation_count_min = 1;
 const long lickport_activation_count_max = 20;

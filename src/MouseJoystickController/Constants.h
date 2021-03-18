@@ -25,7 +25,7 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=19};
-enum{PARAMETER_COUNT_MAX=5};
+enum{PARAMETER_COUNT_MAX=4};
 enum{FUNCTION_COUNT_MAX=5};
 enum{CALLBACK_COUNT_MAX=5};
 
@@ -290,6 +290,12 @@ extern const long trial_count_max;
 extern ConstantString pull_torque_parameter_name;
 extern const long pull_torque_min;
 extern const long pull_torque_max;
+
+extern ConstantString reach_position_array_parameter_name;
+extern const long reach_position_array_element_min;
+extern const long reach_position_array_element_max;
+extern const long reach_position_array_length_min;
+extern const long reach_position_array_length_max;
 
 extern ConstantString lickport_activation_count_parameter_name;
 extern const long lickport_activation_count_min;
