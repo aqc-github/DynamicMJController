@@ -171,6 +171,10 @@ void MouseJoystickController::setup()
   lickport_activation_count_parameter.setRange(constants::lickport_activation_count_min,constants::lickport_activation_count_max);
 
   // Functions
+  modular_server::Function & get_set_function = modular_server_.createFunction(constants::get_set_function_name);
+  get_set_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getSetHandler));
+  get_set_function.setResultTypeArray();
+
   modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
   get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getAssayStatusHandler));
   get_assay_status_function.setResultTypeObject();
@@ -1021,6 +1025,36 @@ void MouseJoystickController::getAssayStatusHandler()
 
   modular_server_.response().endObject();
 
+}
+
+void MouseJoystickController::getSetHandler()
+{
+  modular_server_.response().writeResultKey();
+
+	modular_server_.response().beginArray();
+
+	set_.clear();
+	constants::Block blk;
+	blk.trial_count = 77;
+	blk.pull_torque = 123;
+	set_.push_back(blk);
+	blk.trial_count = 88;
+	blk.pull_torque = 321;
+	set_.push_back(blk);
+
+	for (auto& block : set_)
+		{
+
+			modular_server_.response().beginObject();
+
+			modular_server_.response().write(constants::trial_count_string,block.trial_count);
+			modular_server_.response().write(constants::pull_torque_string,block.pull_torque);
+ 
+			modular_server_.response().endObject();
+
+		}
+
+  modular_server_.response().endArray();
 }
 
 void MouseJoystickController::moveJoystickToBasePositionHandler()

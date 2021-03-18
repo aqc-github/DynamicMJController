@@ -55,6 +55,11 @@ private:
   modular_server::Function functions_[mouse_joystick_controller::constants::FUNCTION_COUNT_MAX];
   modular_server::Callback callbacks_[mouse_joystick_controller::constants::CALLBACK_COUNT_MAX];
 
+  typedef Array<mouse_joystick_controller::constants::Block,
+    mouse_joystick_controller::constants::BLOCK_COUNT_MAX> set_t;
+
+	set_t set_;
+
   mouse_joystick_controller::constants::AssayStatus assay_status_;
   EventController<mouse_joystick_controller::constants::EVENT_COUNT_MAX> event_controller_;
   EventId trial_timeout_event_id_;
@@ -117,6 +122,7 @@ private:
   bool triggerTrialTerminationPulse();
 
   // Handlers
+  void getSetHandler();
   void getAssayStatusHandler();
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();

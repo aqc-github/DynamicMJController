@@ -26,15 +26,24 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=17};
 enum{PARAMETER_COUNT_MAX=4};
-enum{FUNCTION_COUNT_MAX=5};
+enum{FUNCTION_COUNT_MAX=8};
 enum{CALLBACK_COUNT_MAX=5};
 
 enum{EVENT_COUNT_MAX=32};
+
+enum{BLOCK_COUNT_MAX=32};
 
 extern ConstantString device_name;
 
 extern ConstantString firmware_name;
 extern const modular_server::FirmwareInfo firmware_info;
+
+struct Block
+{
+  long trial_count;
+	long pull_torque;
+  StageController::PositionArray reach_position;
+};
 
 struct AssayStatus
 {
@@ -50,16 +59,6 @@ struct AssayStatus
   bool unread_trial_timing_data;
 };
 
-extern ConstantString trial_index_string;
-extern ConstantString successful_trial_count_string;
-extern ConstantString trial_string;
-extern ConstantString block_string;
-extern ConstantString set_string;
-extern ConstantString reach_position_string;
-extern ConstantString pull_torque_string;
-extern ConstantString pull_threshold_string;
-extern ConstantString unread_trial_timing_data_string;
-
 struct TrialTimingData
 {
   time_t trial_start;
@@ -70,6 +69,17 @@ struct TrialTimingData
   time_t timeout;
   time_t trial_abort;
 };
+
+extern ConstantString trial_count_string;
+extern ConstantString trial_index_string;
+extern ConstantString successful_trial_count_string;
+extern ConstantString trial_string;
+extern ConstantString block_string;
+extern ConstantString set_string;
+extern ConstantString reach_position_string;
+extern ConstantString pull_torque_string;
+extern ConstantString pull_threshold_string;
+extern ConstantString unread_trial_timing_data_string;
 
 extern ConstantString trial_start_string;
 extern ConstantString mouse_ready_string;
@@ -294,6 +304,7 @@ extern const long lickport_activation_count_min;
 extern const long lickport_activation_count_max;
 
 // Functions
+extern ConstantString get_set_function_name;
 extern ConstantString get_assay_status_function_name;
 extern ConstantString move_joystick_to_base_position_function_name;
 extern ConstantString move_joystick_to_reach_position_function_name;

@@ -24,6 +24,7 @@ const modular_server::FirmwareInfo firmware_info =
   .version_patch=0,
 };
 
+CONSTANT_STRING(trial_count_string,"trial_count");
 CONSTANT_STRING(trial_index_string,"trial_index");
 CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
 CONSTANT_STRING(trial_string,"trial");
@@ -265,6 +266,7 @@ const long lickport_activation_count_min = 1;
 const long lickport_activation_count_max = 20;
 
 // Functions
+CONSTANT_STRING(get_set_function_name,"getSet");
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
 CONSTANT_STRING(move_joystick_to_base_position_function_name,"moveJoystickToBasePosition");
 CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToReachPosition");
