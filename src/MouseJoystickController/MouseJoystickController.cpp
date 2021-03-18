@@ -106,10 +106,6 @@ void MouseJoystickController::setup()
 
   modular_server_.createProperty(constants::base_position_property_name,constants::base_position_default);
 
-  modular_server_.createProperty(constants::reach_position_0_property_name,constants::reach_position_0_default);
-
-  modular_server_.createProperty(constants::reach_position_1_means_property_name,constants::reach_position_1_means_default);
-
   modular_server::Property & pull_threshold_property = modular_server_.createProperty(constants::pull_threshold_property_name,constants::pull_threshold_default);
   pull_threshold_property.setRange(constants::pull_threshold_min,constants::pull_threshold_max);
 
@@ -167,9 +163,9 @@ void MouseJoystickController::setup()
   pull_torque_parameter.setRange(constants::pull_torque_min,constants::pull_torque_max);
   pull_torque_parameter.setUnits(constants::percent_units);
 
-  modular_server::Parameter & reach_position_array_parameter = modular_server_.createParameter(constants::reach_position_array_parameter_name);
-  reach_position_array_parameter.setRange(constants::reach_position_array_element_min,constants::reach_position_array_element_max);
-  reach_position_array_parameter.setArrayLengthRange(constants::reach_position_array_length_min,constants::reach_position_array_length_max);
+  modular_server::Parameter & reach_position_parameter = modular_server_.createParameter(constants::reach_position_parameter_name);
+  reach_position_parameter.setRange(constants::reach_position_element_min,constants::reach_position_element_max);
+  reach_position_parameter.setArrayLengthRange(constants::reach_position_length_min,constants::reach_position_length_max);
 
 	modular_server::Parameter & lickport_activation_count_parameter = modular_server_.createParameter(constants::lickport_activation_count_parameter_name);
   lickport_activation_count_parameter.setRange(constants::lickport_activation_count_min,constants::lickport_activation_count_max);
@@ -791,7 +787,7 @@ void MouseJoystickController::updateTrialBlockSet()
       pull_torque_index_ = 0;
       assay_status_.block = 0;
 
-      const size_t reach_position_1_array_length = modular_server_.property(constants::reach_position_1_means_property_name).getArrayLength();
+      const size_t reach_position_1_array_length = 4;
       if (++reach_position_1_index_ >= reach_position_1_array_length)
       {
         reach_position_1_index_ = 0;
@@ -811,12 +807,9 @@ void MouseJoystickController::updateTrialBlockSet()
 
 void MouseJoystickController::updateReachPosition()
 {
-  long reach_position_0;
-  modular_server_.property(constants::reach_position_0_property_name).getValue(reach_position_0);
+  long reach_position_0 = 50;
 
-  long reach_position_1;
-  modular_server_.property(constants::reach_position_1_means_property_name).getElementValue(reach_position_1_index_,
-    reach_position_1);
+  long reach_position_1 = 100;
 
   assay_status_.reach_position[0] = reach_position_0;
   assay_status_.reach_position[1] = reach_position_1;
@@ -1021,8 +1014,7 @@ void MouseJoystickController::getAssayStatusHandler()
   modular_server_.response().write(constants::trial_string,assay_status_.trial);
   modular_server_.response().write(constants::block_string,assay_status_.block);
   modular_server_.response().write(constants::set_string,assay_status_.set);
-  modular_server_.response().write(constants::reach_position_0_string,assay_status_.reach_position[0]);
-  modular_server_.response().write(constants::reach_position_1_string,assay_status_.reach_position[1]);
+  modular_server_.response().write(constants::reach_position_string,assay_status_.reach_position);
   modular_server_.response().write(constants::pull_torque_string,assay_status_.pull_torque);
   modular_server_.response().write(constants::pull_threshold_string,assay_status_.pull_threshold);
   modular_server_.response().write(constants::unread_trial_timing_data_string,assay_status_.unread_trial_timing_data);

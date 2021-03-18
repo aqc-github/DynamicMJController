@@ -24,7 +24,7 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=19};
+enum{PROPERTY_COUNT_MAX=17};
 enum{PARAMETER_COUNT_MAX=4};
 enum{FUNCTION_COUNT_MAX=5};
 enum{CALLBACK_COUNT_MAX=5};
@@ -55,8 +55,7 @@ extern ConstantString successful_trial_count_string;
 extern ConstantString trial_string;
 extern ConstantString block_string;
 extern ConstantString set_string;
-extern ConstantString reach_position_0_string;
-extern ConstantString reach_position_1_string;
+extern ConstantString reach_position_string;
 extern ConstantString pull_torque_string;
 extern ConstantString pull_threshold_string;
 extern ConstantString unread_trial_timing_data_string;
@@ -213,13 +212,6 @@ extern ConstantString base_position_property_name;
 extern const long base_position_element_0_default;
 extern const long base_position_element_1_default;
 
-extern ConstantString reach_position_0_property_name;
-extern const long reach_position_0_default;
-
-extern ConstantString reach_position_1_means_property_name;
-enum{REACH_POSITION_1_COUNT_MAX=3};
-extern const long reach_position_1_means_default[REACH_POSITION_1_COUNT_MAX];
-
 extern ConstantString pull_threshold_property_name;
 extern const long pull_threshold_min;
 extern const long pull_threshold_max;
@@ -291,11 +283,11 @@ extern ConstantString pull_torque_parameter_name;
 extern const long pull_torque_min;
 extern const long pull_torque_max;
 
-extern ConstantString reach_position_array_parameter_name;
-extern const long reach_position_array_element_min;
-extern const long reach_position_array_element_max;
-extern const long reach_position_array_length_min;
-extern const long reach_position_array_length_max;
+extern ConstantString reach_position_parameter_name;
+extern const long reach_position_element_min;
+extern const long reach_position_element_max;
+extern const long reach_position_length_min;
+extern const long reach_position_length_max;
 
 extern ConstantString lickport_activation_count_parameter_name;
 extern const long lickport_activation_count_min;

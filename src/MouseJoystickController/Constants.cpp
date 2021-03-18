@@ -29,8 +29,7 @@ CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
 CONSTANT_STRING(trial_string,"trial");
 CONSTANT_STRING(block_string,"block");
 CONSTANT_STRING(set_string,"set");
-CONSTANT_STRING(reach_position_0_string,"reach_position_0");
-CONSTANT_STRING(reach_position_1_string,"reach_position_1");
+CONSTANT_STRING(reach_position_string,"reach_position");
 CONSTANT_STRING(pull_torque_string,"pull_torque");
 CONSTANT_STRING(pull_threshold_string,"pull_threshold");
 CONSTANT_STRING(unread_trial_timing_data_string,"unread_trial_timing_data");
@@ -184,17 +183,6 @@ CONSTANT_STRING(base_position_property_name,"basePosition");
 const long base_position_element_0_default = not_touching_switch_position;
 const long base_position_element_1_default = 300;
 
-CONSTANT_STRING(reach_position_0_property_name,"reachPosition0");
-const long reach_position_0_default = 145;
-
-CONSTANT_STRING(reach_position_1_means_property_name,"reachPosition1Means");
-const long reach_position_1_means_default[REACH_POSITION_1_COUNT_MAX] =
-{
-  110,
-  150,
-  190,
-};
-
 CONSTANT_STRING(pull_threshold_property_name,"pullThreshold");
 const long pull_threshold_min = -1000;
 const long pull_threshold_max = 0;
@@ -266,11 +254,11 @@ CONSTANT_STRING(pull_torque_parameter_name,"pull_torque");
 const long pull_torque_min = 0;
 const long pull_torque_max = 100;
 
-CONSTANT_STRING(reach_position_array_parameter_name,"reach_position_array");
-const long reach_position_array_element_min = 0;
-const long reach_position_array_element_max = 1000;
-const long reach_position_array_length_min = channel_count;
-const long reach_position_array_length_max = channel_count;
+CONSTANT_STRING(reach_position_parameter_name,"reach_position");
+const long reach_position_element_min = 0;
+const long reach_position_element_max = 1000;
+const long reach_position_length_min = channel_count;
+const long reach_position_length_max = channel_count;
 
 CONSTANT_STRING(lickport_activation_count_parameter_name,"lickport_activation_count");
 const long lickport_activation_count_min = 1;
