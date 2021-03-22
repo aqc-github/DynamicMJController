@@ -30,9 +30,10 @@ CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
 CONSTANT_STRING(trial_string,"trial");
 CONSTANT_STRING(block_string,"block");
 CONSTANT_STRING(set_string,"set");
-CONSTANT_STRING(reach_position_string,"reach_position");
 CONSTANT_STRING(pull_torque_string,"pull_torque");
 CONSTANT_STRING(pull_threshold_string,"pull_threshold");
+CONSTANT_STRING(reach_position_string,"reach_position");
+CONSTANT_STRING(reward_lickport_duration_string,"reward_lickport_duration");
 CONSTANT_STRING(unread_trial_timing_data_string,"unread_trial_timing_data");
 
 CONSTANT_STRING(trial_start_string,"trial_start");
@@ -98,8 +99,6 @@ const size_t pull_encoder_initial_value = 0;
 const size_t pull_channel = 0;
 const long pull_pwm_offset_min = 0;
 const long pull_pwm_offset_max = 80;
-const long pull_torque_array_length_min = 1;
-const long pull_torque_array_length_max = PULL_TORQUE_COUNT_MAX;
 const unsigned long pull_push_poll_period = 50;
 
 // Reward

@@ -42,6 +42,7 @@ struct Block
 {
   long trial_count;
 	long pull_torque;
+	long reward_lickport_duration;
   StageController::PositionArray reach_position;
 };
 
@@ -76,9 +77,10 @@ extern ConstantString successful_trial_count_string;
 extern ConstantString trial_string;
 extern ConstantString block_string;
 extern ConstantString set_string;
-extern ConstantString reach_position_string;
 extern ConstantString pull_torque_string;
 extern ConstantString pull_threshold_string;
+extern ConstantString reach_position_string;
+extern ConstantString reward_lickport_duration_string;
 extern ConstantString unread_trial_timing_data_string;
 
 extern ConstantString trial_start_string;

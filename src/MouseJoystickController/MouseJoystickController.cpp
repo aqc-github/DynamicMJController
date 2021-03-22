@@ -216,6 +216,22 @@ void MouseJoystickController::setup()
 #if defined(__MK64FX512__)
   restart_assay_callback.attachTo(modular_device_base::constants::btn_b_pin_name,modular_server::constants::pin_mode_interrupt_falling);
 #endif
+
+	//
+	clearSet();
+	constants::Block block;
+	block.trial_count = 2;
+	block.pull_torque = 50;
+	block.reward_lickport_duration = 101;
+	block.reach_position.push_back(77);
+	block.reach_position.push_back(88);
+	set_.push_back(block);
+	block.trial_count = 3;
+	block.pull_torque = 75;
+	block.reward_lickport_duration = 222;
+	block.reach_position[0] = 99;
+	block.reach_position[1] = 100;
+	set_.push_back(block);
 }
 
 void MouseJoystickController::update()
@@ -1046,6 +1062,8 @@ void MouseJoystickController::getSetHandler()
 
 			modular_server_.response().write(constants::trial_count_string,block.trial_count);
 			modular_server_.response().write(constants::pull_torque_string,block.pull_torque);
+			modular_server_.response().write(constants::reward_lickport_duration_string,block.reward_lickport_duration);
+			modular_server_.response().write(constants::reach_position_string,block.reach_position);
  
 			modular_server_.response().endObject();
 
