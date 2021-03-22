@@ -178,9 +178,9 @@ void MouseJoystickController::setup()
   modular_server::Function & clear_set_function = modular_server_.createFunction(constants::clear_set_function_name);
   clear_set_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::clearSetHandler));
 
-  modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
-  get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getAssayStatusHandler));
-  get_assay_status_function.setResultTypeObject();
+  modular_server::Function & get_block_count_function = modular_server_.createFunction(constants::get_block_count_function_name);
+  get_block_count_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getBlockCountHandler));
+  get_block_count_function.setResultTypeLong();
 
   modular_server::Function & add_block_to_set_function = modular_server_.createFunction(constants::add_block_to_set_function_name);
   add_block_to_set_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::addBlockToSetHandler));
@@ -188,6 +188,10 @@ void MouseJoystickController::setup()
   add_block_to_set_function.addParameter(pull_torque_parameter);
   add_block_to_set_function.addParameter(reward_lickport_duration_parameter);
   add_block_to_set_function.addParameter(reach_position_parameter);
+
+  modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
+  get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getAssayStatusHandler));
+  get_assay_status_function.setResultTypeObject();
 
   modular_server::Function & move_joystick_to_base_position_function = modular_server_.createFunction(constants::move_joystick_to_base_position_function_name);
   move_joystick_to_base_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::moveJoystickToBasePositionHandler));
@@ -223,22 +227,6 @@ void MouseJoystickController::setup()
 #if defined(__MK64FX512__)
   restart_assay_callback.attachTo(modular_device_base::constants::btn_b_pin_name,modular_server::constants::pin_mode_interrupt_falling);
 #endif
-
-	//
-	clearSet();
-	constants::Block block;
-	block.trial_count = 2;
-	block.pull_torque = 50;
-	block.reward_lickport_duration = 101;
-	block.reach_position.push_back(77);
-	block.reach_position.push_back(88);
-	set_.push_back(block);
-	block.trial_count = 3;
-	block.pull_torque = 75;
-	block.reward_lickport_duration = 222;
-	block.reach_position[0] = 99;
-	block.reach_position[1] = 100;
-	set_.push_back(block);
 }
 
 void MouseJoystickController::update()
@@ -444,6 +432,11 @@ MouseJoystickController::set_t MouseJoystickController::getSet()
 void MouseJoystickController::clearSet()
 {
 	set_.clear();
+}
+
+long MouseJoystickController::getBlockCount()
+{
+	return set_.size();
 }
 
 void MouseJoystickController::addBlockToSet(mouse_joystick_controller::constants::Block & block)
@@ -1103,6 +1096,12 @@ void MouseJoystickController::getSetHandler()
 void MouseJoystickController::clearSetHandler()
 {
 	clearSet();
+}
+
+void MouseJoystickController::getBlockCountHandler()
+{
+	long block_count = getBlockCount();
+  modular_server_.response().returnResult(block_count);
 }
 
 void MouseJoystickController::addBlockToSetHandler()

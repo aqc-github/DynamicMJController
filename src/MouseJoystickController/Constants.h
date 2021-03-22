@@ -26,7 +26,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=16};
 enum{PARAMETER_COUNT_MAX=5};
-enum{FUNCTION_COUNT_MAX=8};
+enum{FUNCTION_COUNT_MAX=9};
 enum{CALLBACK_COUNT_MAX=5};
 
 enum{EVENT_COUNT_MAX=32};
@@ -307,6 +307,7 @@ extern const long lickport_activation_count_max;
 // Functions
 extern ConstantString get_set_function_name;
 extern ConstantString clear_set_function_name;
+extern ConstantString get_block_count_function_name;
 extern ConstantString add_block_to_set_function_name;
 extern ConstantString get_assay_status_function_name;
 extern ConstantString move_joystick_to_base_position_function_name;
