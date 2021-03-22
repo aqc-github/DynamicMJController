@@ -182,6 +182,13 @@ void MouseJoystickController::setup()
   get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getAssayStatusHandler));
   get_assay_status_function.setResultTypeObject();
 
+  modular_server::Function & add_block_to_set_function = modular_server_.createFunction(constants::add_block_to_set_function_name);
+  add_block_to_set_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::addBlockToSetHandler));
+  add_block_to_set_function.addParameter(trial_count_parameter);
+  add_block_to_set_function.addParameter(pull_torque_parameter);
+  add_block_to_set_function.addParameter(reward_lickport_duration_parameter);
+  add_block_to_set_function.addParameter(reach_position_parameter);
+
   modular_server::Function & move_joystick_to_base_position_function = modular_server_.createFunction(constants::move_joystick_to_base_position_function_name);
   move_joystick_to_base_position_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::moveJoystickToBasePositionHandler));
 
@@ -437,6 +444,11 @@ MouseJoystickController::set_t MouseJoystickController::getSet()
 void MouseJoystickController::clearSet()
 {
 	set_.clear();
+}
+
+void MouseJoystickController::addBlockToSet(mouse_joystick_controller::constants::Block & block)
+{
+	set_.push_back(block);
 }
 
 constants::AssayStatus MouseJoystickController::getAssayStatus()
@@ -1091,6 +1103,26 @@ void MouseJoystickController::getSetHandler()
 void MouseJoystickController::clearSetHandler()
 {
 	clearSet();
+}
+
+void MouseJoystickController::addBlockToSetHandler()
+{
+	constants::Block block;
+  modular_server_.parameter(constants::trial_count_parameter_name).getValue(block.trial_count);
+
+  modular_server_.parameter(constants::pull_torque_parameter_name).getValue(block.pull_torque);
+
+  modular_server_.parameter(constants::reward_lickport_duration_parameter_name).getValue(block.reward_lickport_duration);
+
+  ArduinoJson::JsonArray reach_position;
+  modular_server_.parameter(constants::reach_position_parameter_name).getValue(reach_position);
+
+	for (JsonVariant value : reach_position)
+		{
+			block.reach_position.push_back(value);
+		}
+
+	addBlockToSet(block);
 }
 
 void MouseJoystickController::moveJoystickToBasePositionHandler()

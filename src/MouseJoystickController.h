@@ -42,6 +42,7 @@ public:
 
 	set_t getSet();
 	void clearSet();
+	void addBlockToSet(mouse_joystick_controller::constants::Block & block);
 
   mouse_joystick_controller::constants::AssayStatus getAssayStatus();
 
@@ -130,6 +131,7 @@ private:
   // Handlers
   void getSetHandler();
   void clearSetHandler();
+  void addBlockToSetHandler();
   void getAssayStatusHandler();
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();
