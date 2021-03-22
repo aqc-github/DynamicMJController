@@ -220,11 +220,6 @@ const long reward_lickport_delay_min = 100;
 const long reward_lickport_delay_max = 5000;
 const long reward_lickport_delay_default = 1000;
 
-CONSTANT_STRING(lickport_duration_property_name,"rewardLickportDuration");
-const long lickport_duration_min = 5;
-const long lickport_duration_max = 1000;
-const long lickport_duration_default = 80;
-
 CONSTANT_STRING(trial_timeout_duration_property_name,"trialTimeoutDuration");
 const long trial_timeout_duration_min = 1;
 const long trial_timeout_duration_max = 20;
@@ -254,6 +249,10 @@ const long trial_count_max = 100;
 CONSTANT_STRING(pull_torque_parameter_name,"pull_torque");
 const long pull_torque_min = 0;
 const long pull_torque_max = 100;
+
+CONSTANT_STRING(reward_lickport_duration_parameter_name,"reward_lickport_duration");
+const long reward_lickport_duration_min = 5;
+const long reward_lickport_duration_max = 1000;
 
 CONSTANT_STRING(reach_position_parameter_name,"reach_position");
 const long reach_position_element_min = 0;

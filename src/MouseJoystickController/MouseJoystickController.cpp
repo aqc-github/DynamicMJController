@@ -136,10 +136,6 @@ void MouseJoystickController::setup()
   reward_lickport_delay_property.setRange(constants::reward_lickport_delay_min,constants::reward_lickport_delay_max);
   reward_lickport_delay_property.setUnits(power_switch_controller::constants::ms_units);
 
-  modular_server::Property & lickport_duration_property = modular_server_.createProperty(constants::lickport_duration_property_name,constants::lickport_duration_default);
-  lickport_duration_property.setRange(constants::lickport_duration_min,constants::lickport_duration_max);
-  lickport_duration_property.setUnits(power_switch_controller::constants::ms_units);
-
   modular_server::Property & trial_timeout_duration_property = modular_server_.createProperty(constants::trial_timeout_duration_property_name,constants::trial_timeout_duration_default);
   trial_timeout_duration_property.setRange(constants::trial_timeout_duration_min,constants::trial_timeout_duration_max);
   trial_timeout_duration_property.setUnits(constants::seconds_units);
@@ -162,6 +158,10 @@ void MouseJoystickController::setup()
   modular_server::Parameter & pull_torque_parameter = modular_server_.createParameter(constants::pull_torque_parameter_name);
   pull_torque_parameter.setRange(constants::pull_torque_min,constants::pull_torque_max);
   pull_torque_parameter.setUnits(constants::percent_units);
+
+  modular_server::Parameter & reward_lickport_duration_parameter = modular_server_.createParameter(constants::reward_lickport_duration_parameter_name);
+  reward_lickport_duration_parameter.setRange(constants::reward_lickport_duration_min,constants::reward_lickport_duration_max);
+  reward_lickport_duration_parameter.setUnits(constants::ms_units);
 
   modular_server::Parameter & reach_position_parameter = modular_server_.createParameter(constants::reach_position_parameter_name);
   reach_position_parameter.setRange(constants::reach_position_element_min,constants::reach_position_element_max);
@@ -904,15 +904,14 @@ void MouseJoystickController::triggerLickportReward()
 void MouseJoystickController::triggerLickport(long delay,
   long count)
 {
-  long lickport_duration;
-  modular_server_.property(constants::lickport_duration_property_name).getValue(lickport_duration);
+  long reward_lickport_duration = 80;
 
   Array<long,constants::REWARD_LICKPORT_CHANNEL_COUNT> lickport_channels(constants::reward_lickport_channels);
   power_switch_controller_ptr_->callUntilSuccessful(power_switch_controller::constants::add_pwm_function_name,
     lickport_channels,
     delay,
-    lickport_duration*2,
-    lickport_duration,
+    reward_lickport_duration*2,
+    reward_lickport_duration,
     count);
 }
 

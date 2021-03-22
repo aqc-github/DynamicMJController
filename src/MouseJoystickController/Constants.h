@@ -24,8 +24,8 @@ namespace mouse_joystick_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=17};
-enum{PARAMETER_COUNT_MAX=4};
+enum{PROPERTY_COUNT_MAX=16};
+enum{PARAMETER_COUNT_MAX=5};
 enum{FUNCTION_COUNT_MAX=8};
 enum{CALLBACK_COUNT_MAX=5};
 
@@ -258,11 +258,6 @@ extern const long reward_lickport_delay_min;
 extern const long reward_lickport_delay_max;
 extern const long reward_lickport_delay_default;
 
-extern ConstantString lickport_duration_property_name;
-extern const long lickport_duration_min;
-extern const long lickport_duration_max;
-extern const long lickport_duration_default;
-
 extern ConstantString trial_timeout_duration_property_name;
 extern const long trial_timeout_duration_min;
 extern const long trial_timeout_duration_max;
@@ -292,6 +287,10 @@ extern const long trial_count_max;
 extern ConstantString pull_torque_parameter_name;
 extern const long pull_torque_min;
 extern const long pull_torque_max;
+
+extern ConstantString reward_lickport_duration_parameter_name;
+extern const long reward_lickport_duration_min;
+extern const long reward_lickport_duration_max;
 
 extern ConstantString reach_position_parameter_name;
 extern const long reach_position_element_min;
