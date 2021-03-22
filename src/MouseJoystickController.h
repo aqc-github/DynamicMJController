@@ -37,11 +37,19 @@ public:
   virtual void setup();
   virtual void update();
 
+  typedef Array<mouse_joystick_controller::constants::Block,
+    mouse_joystick_controller::constants::BLOCK_COUNT_MAX> set_t;
+
+	set_t getSet();
+	void clearSet();
+
   mouse_joystick_controller::constants::AssayStatus getAssayStatus();
 
   void moveJoystickToBasePosition();
   void moveJoystickToReachPosition();
   void activateLickport(long count);
+
+  mouse_joystick_controller::constants::TrialTimingData getTrialTimingData();
 
   void startTrial();
   void startAssay();
@@ -54,9 +62,6 @@ private:
   modular_server::Parameter parameters_[mouse_joystick_controller::constants::PARAMETER_COUNT_MAX];
   modular_server::Function functions_[mouse_joystick_controller::constants::FUNCTION_COUNT_MAX];
   modular_server::Callback callbacks_[mouse_joystick_controller::constants::CALLBACK_COUNT_MAX];
-
-  typedef Array<mouse_joystick_controller::constants::Block,
-    mouse_joystick_controller::constants::BLOCK_COUNT_MAX> set_t;
 
 	set_t set_;
 
@@ -79,8 +84,6 @@ private:
   unsigned long pull_push_poll_time_previous_;
 
   bool setupClients();
-
-	void clearSet();
 
   StageController::PositionArray getBasePosition();
   StageController::PositionArray getReachPosition();

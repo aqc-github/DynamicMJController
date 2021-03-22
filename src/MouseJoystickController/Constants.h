@@ -307,6 +307,7 @@ extern const long lickport_activation_count_max;
 // Functions
 extern ConstantString get_set_function_name;
 extern ConstantString clear_set_function_name;
+extern ConstantString add_block_to_set_function_name;
 extern ConstantString get_assay_status_function_name;
 extern ConstantString move_joystick_to_base_position_function_name;
 extern ConstantString move_joystick_to_reach_position_function_name;
