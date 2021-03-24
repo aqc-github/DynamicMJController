@@ -104,7 +104,8 @@ void MouseJoystickController::setup()
 
   modular_server::Property & pull_threshold_property = modular_server_.createProperty(constants::pull_threshold_property_name,constants::pull_threshold_default);
   pull_threshold_property.setRange(constants::pull_threshold_min,constants::pull_threshold_max);
-
+  pull_threshold_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::updatePullThreshold));
+ 
   modular_server::Property & push_threshold_property = modular_server_.createProperty(constants::push_threshold_property_name,constants::push_threshold_default);
   push_threshold_property.setRange(constants::push_threshold_min,constants::push_threshold_max);
 
@@ -140,6 +141,7 @@ void MouseJoystickController::setup()
 
   modular_server::Property & set_count_property = modular_server_.createProperty(constants::set_count_property_name,constants::set_count_default);
   set_count_property.setRange(constants::set_count_min,constants::set_count_max);
+  set_count_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::updateSetCount));
 
   modular_server::Property & start_trial_duration_property = modular_server_.createProperty(constants::start_trial_duration_property_name,constants::start_trial_duration_default);
   start_trial_duration_property.setRange(constants::start_trial_duration_min,constants::start_trial_duration_max);
@@ -436,6 +438,7 @@ void MouseJoystickController::clearSet()
     (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
     set_.clear();
+    updateBlock();
   }
 }
 
@@ -444,7 +447,7 @@ size_t MouseJoystickController::getBlockCount()
 	return set_.size();
 }
 
-constants::Block MouseJoystickController::addBlockToSet(constants::Block & block)
+MouseJoystickController::block_t MouseJoystickController::addBlockToSet(block_t block)
 {
   if (set_.full())
   {
@@ -454,6 +457,7 @@ constants::Block MouseJoystickController::addBlockToSet(constants::Block & block
     (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
     set_.push_back(block);
+    updateBlock();
     return set_.back();
   }
   else
@@ -462,7 +466,7 @@ constants::Block MouseJoystickController::addBlockToSet(constants::Block & block
   }
 }
 
-constants::AssayStatus MouseJoystickController::getAssayStatus()
+MouseJoystickController::assay_status_t MouseJoystickController::getAssayStatus()
 {
   return assay_status_;
 }
@@ -494,7 +498,7 @@ void MouseJoystickController::activateLickport(long count)
   }
 }
 
-constants::TrialTimingData MouseJoystickController::getTrialTimingData()
+MouseJoystickController::trial_timing_data_t MouseJoystickController::getTrialTimingData()
 {
   assay_status_.unread_trial_timing_data = false;
 
@@ -599,19 +603,13 @@ StageController::PositionArray MouseJoystickController::getBasePosition()
   return base_position_array;
 }
 
-size_t MouseJoystickController::getSetCount()
-{
-  long set_count;
-  modular_server_.property(constants::set_count_property_name).getValue(set_count);
-  return set_count;
-}
-
 void MouseJoystickController::resetAssayStatus()
 {
-	constants::AssayStatus assay_status;
+	assay_status_t assay_status;
 	assay_status_ = assay_status;
-  updateBlock();
   updatePullThreshold();
+  updateSetCount();
+  updateBlock();
 }
 
 void MouseJoystickController::setupAssay()
@@ -803,22 +801,24 @@ void MouseJoystickController::finishTrial()
 void MouseJoystickController::prepareNextTrial()
 {
   updateTrialBlockSet();
-  updateBlock();
   updatePullThreshold();
+  updateSetCount();
+  updateBlock();
 }
 
 void MouseJoystickController::resetTrialTimingData()
 {
-  constants::TrialTimingData ttd;
+  trial_timing_data_t ttd;
   trial_timing_data_ = ttd;
 }
 
 void MouseJoystickController::updateBlock()
 {
+  assay_status_.block_count = getBlockCount();
   assay_status_.block = dummy_block_;
-  if (assay_status_.block_in_set < getBlockCount())
+  if (assay_status_.block_in_set < assay_status_.block_count)
   {
-    if (assay_status_.set_in_assay < getSetCount())
+    if (assay_status_.set_in_assay < assay_status_.set_count)
     {
       assay_status_.block = set_[assay_status_.block_in_set];
     }
@@ -831,11 +831,11 @@ void MouseJoystickController::updateTrialBlockSet()
   {
     assay_status_.trial_in_block = 0;
 
-    if (++assay_status_.block_in_set >= getBlockCount())
+    if (++assay_status_.block_in_set >= assay_status_.block_count)
     {
       assay_status_.block_in_set = 0;
 
-			if (++assay_status_.set_in_assay >= getSetCount())
+			if (++assay_status_.set_in_assay >= assay_status_.set_count)
       {
         assay_status_.set_in_assay = 0;
 
@@ -851,6 +851,14 @@ void MouseJoystickController::updatePullThreshold()
   modular_server_.property(constants::pull_threshold_property_name).getValue(pull_threshold);
 
   assay_status_.pull_threshold = pull_threshold;
+}
+
+void MouseJoystickController::updateSetCount()
+{
+  long set_count;
+  modular_server_.property(constants::set_count_property_name).getValue(set_count);
+
+  assay_status_.set_count = set_count;
 }
 
 void MouseJoystickController::moveToBasePosition()
@@ -1008,7 +1016,7 @@ bool MouseJoystickController::triggerTrialTerminationPulse()
   return power_switch_controller_ptr_->callWasSuccessful();
 }
 
-void MouseJoystickController::writeBlockToResponse(constants::Block block)
+void MouseJoystickController::writeBlockToResponse(block_t block)
 {
   modular_server_.response().beginObject();
 
@@ -1040,7 +1048,7 @@ void MouseJoystickController::writeBlockToResponse(constants::Block block)
 
 void MouseJoystickController::getAssayStatusHandler()
 {
-	constants::AssayStatus assay_status = getAssayStatus();
+	assay_status_t assay_status = getAssayStatus();
 
   modular_server_.response().writeResultKey();
 
@@ -1051,11 +1059,13 @@ void MouseJoystickController::getAssayStatusHandler()
   modular_server_.response().write(constants::assay_aborted_string,assay_status.assay_aborted);
   modular_server_.response().write(constants::finished_trial_count_string,assay_status.finished_trial_count);
   modular_server_.response().write(constants::successful_trial_count_string,assay_status.successful_trial_count);
-  modular_server_.response().write(constants::trial_in_block_string,assay_status.trial_in_block);
-  modular_server_.response().write(constants::block_in_set_string,assay_status.block_in_set);
-  modular_server_.response().write(constants::set_in_assay_string,assay_status.set_in_assay);
   modular_server_.response().write(constants::pull_threshold_string,assay_status.pull_threshold);
   modular_server_.response().write(constants::unread_trial_timing_data_string,assay_status.unread_trial_timing_data);
+  modular_server_.response().write(constants::set_in_assay_string,assay_status.set_in_assay);
+  modular_server_.response().write(constants::set_count_string,assay_status.set_count);
+  modular_server_.response().write(constants::block_in_set_string,assay_status.block_in_set);
+  modular_server_.response().write(constants::block_count_string,assay_status.block_count);
+  modular_server_.response().write(constants::trial_in_block_string,assay_status.trial_in_block);
   modular_server_.response().writeKey(constants::block_string);
   writeBlockToResponse(assay_status.block);
 
@@ -1092,7 +1102,7 @@ void MouseJoystickController::getBlockCountHandler()
 
 void MouseJoystickController::addBlockToSetHandler()
 {
-	constants::Block block;
+	block_t block;
   modular_server_.parameter(constants::trial_count_parameter_name).getValue(block.trial_count);
 
   modular_server_.parameter(constants::pull_torque_parameter_name).getValue(block.pull_torque);
@@ -1107,7 +1117,7 @@ void MouseJoystickController::addBlockToSetHandler()
     block.reach_position.push_back(value);
   }
 
-	constants::Block block_added = addBlockToSet(block);
+	block_t block_added = addBlockToSet(block);
 
   modular_server_.response().writeResultKey();
   writeBlockToResponse(block_added);
@@ -1133,7 +1143,7 @@ void MouseJoystickController::activateLickportHandler()
 
 void MouseJoystickController::getTrialTimingDataHandler()
 {
-	constants::TrialTimingData trial_timing_data = getTrialTimingData();
+	trial_timing_data_t trial_timing_data = getTrialTimingData();
 
   modular_server_.response().writeResultKey();
 

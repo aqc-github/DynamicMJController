@@ -53,11 +53,13 @@ struct AssayStatus
   bool assay_aborted = false;
   size_t finished_trial_count = 0;
   size_t successful_trial_count = 0;
-  size_t trial_in_block = 0;
-  size_t block_in_set = 0;
-  size_t set_in_assay = 0;
   long pull_threshold = 0;
   bool unread_trial_timing_data = false;
+  size_t set_in_assay = 0;
+  size_t set_count = 0;
+  size_t block_in_set = 0;
+  size_t block_count = 0;
+  size_t trial_in_block = 0;
 	Block block;
 };
 
@@ -81,12 +83,14 @@ extern ConstantString trial_aborted_string;
 extern ConstantString assay_aborted_string;
 extern ConstantString finished_trial_count_string;
 extern ConstantString successful_trial_count_string;
-extern ConstantString trial_in_block_string;
-extern ConstantString block_in_set_string;
-extern ConstantString set_in_assay_string;
-extern ConstantString block_string;
 extern ConstantString pull_threshold_string;
 extern ConstantString unread_trial_timing_data_string;
+extern ConstantString set_in_assay_string;
+extern ConstantString set_count_string;
+extern ConstantString block_in_set_string;
+extern ConstantString block_count_string;
+extern ConstantString trial_in_block_string;
+extern ConstantString block_string;
 
 extern ConstantString trial_start_string;
 extern ConstantString mouse_ready_string;

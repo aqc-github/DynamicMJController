@@ -37,21 +37,24 @@ public:
   virtual void setup();
   virtual void update();
 
-  typedef Array<mouse_joystick_controller::constants::Block,
+  typedef mouse_joystick_controller::constants::Block block_t;
+  typedef Array<block_t,
     mouse_joystick_controller::constants::BLOCK_COUNT_MAX> set_t;
 
 	set_t getSet();
 	void clearSet();
 	size_t getBlockCount();
-	mouse_joystick_controller::constants::Block addBlockToSet(mouse_joystick_controller::constants::Block & block);
+	block_t addBlockToSet(block_t block);
 
-  mouse_joystick_controller::constants::AssayStatus getAssayStatus();
+  typedef mouse_joystick_controller::constants::AssayStatus assay_status_t;
+  assay_status_t getAssayStatus();
 
   void moveJoystickToBasePosition();
   void moveJoystickToReachPosition();
   void activateLickport(long count);
 
-  mouse_joystick_controller::constants::TrialTimingData getTrialTimingData();
+  typedef mouse_joystick_controller::constants::TrialTimingData trial_timing_data_t;
+  trial_timing_data_t getTrialTimingData();
 
   void startTrial();
   void startAssay();
@@ -66,13 +69,13 @@ private:
   modular_server::Callback callbacks_[mouse_joystick_controller::constants::CALLBACK_COUNT_MAX];
 
 	set_t set_;
-  mouse_joystick_controller::constants::Block dummy_block_;
+  block_t dummy_block_;
 
-  mouse_joystick_controller::constants::AssayStatus assay_status_;
+  assay_status_t assay_status_;
   EventController<mouse_joystick_controller::constants::EVENT_COUNT_MAX> event_controller_;
   EventId trial_timeout_event_id_;
 
-  mouse_joystick_controller::constants::TrialTimingData trial_timing_data_;
+  trial_timing_data_t trial_timing_data_;
 
   ModularClient * encoder_interface_simple_ptr_;
   ModularClient * power_switch_controller_ptr_;
@@ -84,7 +87,6 @@ private:
   bool setupClients();
 
   StageController::PositionArray getBasePosition();
-	size_t getSetCount();
 
   void resetAssayStatus();
 
@@ -105,6 +107,7 @@ private:
   void updateTrialBlockSet();
   void updateBlock();
   void updatePullThreshold();
+  void updateSetCount();
   void moveToBasePosition();
   void moveToReachPosition();
   void playJoystickReadyTone();
@@ -123,7 +126,7 @@ private:
   bool setupTrialTerminationPulse();
   bool triggerTrialTerminationPulse();
 
-  void writeBlockToResponse(mouse_joystick_controller::constants::Block block);
+  void writeBlockToResponse(block_t block);
 
   // Handlers
   void getSetHandler();
