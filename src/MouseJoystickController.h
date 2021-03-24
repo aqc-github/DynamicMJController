@@ -42,8 +42,8 @@ public:
 
 	set_t getSet();
 	void clearSet();
-	long getBlockCount();
-	void addBlockToSet(mouse_joystick_controller::constants::Block & block);
+	size_t getBlockCount();
+	mouse_joystick_controller::constants::Block addBlockToSet(mouse_joystick_controller::constants::Block & block);
 
   mouse_joystick_controller::constants::AssayStatus getAssayStatus();
 
@@ -66,6 +66,7 @@ private:
   modular_server::Callback callbacks_[mouse_joystick_controller::constants::CALLBACK_COUNT_MAX];
 
 	set_t set_;
+  mouse_joystick_controller::constants::Block dummy_block_;
 
   mouse_joystick_controller::constants::AssayStatus assay_status_;
   EventController<mouse_joystick_controller::constants::EVENT_COUNT_MAX> event_controller_;
@@ -77,19 +78,13 @@ private:
   ModularClient * power_switch_controller_ptr_;
   ModularClient * audio_controller_ptr_;
 
-  bool trial_aborted_;
-  bool assay_aborted_;
-  size_t reach_position_1_index_;
-  size_t pull_torque_index_;
-
   unsigned long time_;
   unsigned long pull_push_poll_time_previous_;
 
   bool setupClients();
 
   StageController::PositionArray getBasePosition();
-  StageController::PositionArray getReachPosition();
-  long getPullTorque();
+	size_t getSetCount();
 
   void resetAssayStatus();
 
@@ -108,8 +103,7 @@ private:
   void prepareNextTrial();
   void resetTrialTimingData();
   void updateTrialBlockSet();
-  void updateReachPosition();
-  void updatePullTorque();
+  void updateBlock();
   void updatePullThreshold();
   void moveToBasePosition();
   void moveToReachPosition();
@@ -128,6 +122,8 @@ private:
   bool triggerRewardPulse();
   bool setupTrialTerminationPulse();
   bool triggerTrialTerminationPulse();
+
+  void writeBlockToResponse(mouse_joystick_controller::constants::Block block);
 
   // Handlers
   void getSetHandler();

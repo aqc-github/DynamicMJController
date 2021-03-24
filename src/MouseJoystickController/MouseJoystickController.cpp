@@ -32,10 +32,6 @@ void MouseJoystickController::setup()
 
   // Pin Setup
 
-  // Assay Status Setup
-  resetAssayStatus();
-  assay_status_.state_ptr = &constants::state_assay_not_started_string;
-
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
 
@@ -188,6 +184,7 @@ void MouseJoystickController::setup()
   add_block_to_set_function.addParameter(pull_torque_parameter);
   add_block_to_set_function.addParameter(reward_lickport_duration_parameter);
   add_block_to_set_function.addParameter(reach_position_parameter);
+  add_block_to_set_function.setResultTypeObject();
 
   modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
   get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getAssayStatusHandler));
@@ -227,6 +224,10 @@ void MouseJoystickController::setup()
 #if defined(__MK64FX512__)
   restart_assay_callback.attachTo(modular_device_base::constants::btn_b_pin_name,modular_server::constants::pin_mode_interrupt_falling);
 #endif
+
+  // Assay Status Setup
+  resetAssayStatus();
+  assay_status_.state_ptr = &constants::state_assay_not_started_string;
 }
 
 void MouseJoystickController::update()
@@ -431,17 +432,34 @@ MouseJoystickController::set_t MouseJoystickController::getSet()
 
 void MouseJoystickController::clearSet()
 {
-	set_.clear();
+  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
+    (assay_status_.state_ptr == &constants::state_assay_finished_string))
+  {
+    set_.clear();
+  }
 }
 
-long MouseJoystickController::getBlockCount()
+size_t MouseJoystickController::getBlockCount()
 {
 	return set_.size();
 }
 
-void MouseJoystickController::addBlockToSet(mouse_joystick_controller::constants::Block & block)
+constants::Block MouseJoystickController::addBlockToSet(constants::Block & block)
 {
-	set_.push_back(block);
+  if (set_.full())
+  {
+    return dummy_block_;
+  }
+  if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
+    (assay_status_.state_ptr == &constants::state_assay_finished_string))
+  {
+    set_.push_back(block);
+    return set_.back();
+  }
+  else
+  {
+    return dummy_block_;
+  }
 }
 
 constants::AssayStatus MouseJoystickController::getAssayStatus()
@@ -504,16 +522,11 @@ void MouseJoystickController::startAssay()
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
     (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
-    resetAssayStatus();
-    trial_aborted_ = false;
-    assay_aborted_ = false;
-    reach_position_1_index_ = 0;
-    updateReachPosition();
-    pull_torque_index_ = 0;
-    updatePullTorque();
-    updatePullThreshold();
-
-    assay_status_.state_ptr = &constants::state_assay_started_string;
+    if (getBlockCount() > 0)
+    {
+      resetAssayStatus();
+      assay_status_.state_ptr = &constants::state_assay_started_string;
+    }
   }
 }
 
@@ -525,7 +538,7 @@ void MouseJoystickController::abortTrial()
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::stop_sampling_callback_name);
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::disable_outputs_callback_name);
 
-  trial_aborted_ = true;
+  assay_status_.trial_aborted = true;
   if (timeIsSet())
   {
     trial_timing_data_.trial_abort = getTime();
@@ -538,7 +551,7 @@ void MouseJoystickController::abortTrial()
 
 void MouseJoystickController::abortAssay()
 {
-  assay_aborted_ = true;
+  assay_status_.assay_aborted = true;
   abortTrial();
 }
 
@@ -586,30 +599,19 @@ StageController::PositionArray MouseJoystickController::getBasePosition()
   return base_position_array;
 }
 
-StageController::PositionArray MouseJoystickController::getReachPosition()
+size_t MouseJoystickController::getSetCount()
 {
-  return assay_status_.reach_position;
-}
-
-long MouseJoystickController::getPullTorque()
-{
-  return assay_status_.pull_torque;
+  long set_count;
+  modular_server_.property(constants::set_count_property_name).getValue(set_count);
+  return set_count;
 }
 
 void MouseJoystickController::resetAssayStatus()
 {
-  assay_status_.trial_index = 0;
-  assay_status_.successful_trial_count = 0;
-  assay_status_.trial = 0;
-  assay_status_.block = 0;
-  assay_status_.set = 0;
-  for (size_t channel=0; channel < constants::CHANNEL_COUNT; ++channel)
-  {
-    assay_status_.reach_position.push_back(0);
-  }
-  assay_status_.pull_torque = 0;
-  assay_status_.pull_threshold = 0;
-  assay_status_.unread_trial_timing_data = false;
+	constants::AssayStatus assay_status;
+	assay_status_ = assay_status;
+  updateBlock();
+  updatePullThreshold();
 }
 
 void MouseJoystickController::setupAssay()
@@ -624,8 +626,8 @@ void MouseJoystickController::setupAssay()
 void MouseJoystickController::setupTrial()
 {
   resetTrialTimingData();
+  assay_status_.trial_aborted = false;
   assay_status_.unread_trial_timing_data = false;
-  trial_aborted_ = false;
 }
 
 void MouseJoystickController::addStartTrialEvent()
@@ -667,7 +669,7 @@ void MouseJoystickController::setupPull()
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::clear_samples_callback_name);
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::start_sampling_callback_name);
 
-  long pull_torque = getPullTorque();
+  long pull_torque = assay_status_.block.pull_torque;
 
   long pwm_offset = map(pull_torque,
     constants::pull_torque_min,
@@ -765,7 +767,7 @@ void MouseJoystickController::reward()
 
 void MouseJoystickController::checkTrialTermination()
 {
-  if (assay_aborted_)
+  if (assay_status_.assay_aborted)
   {
     assay_status_.state_ptr = &constants::state_move_to_base_stop_string;
   }
@@ -787,12 +789,12 @@ void MouseJoystickController::checkTrialTermination()
 void MouseJoystickController::finishTrial()
 {
   assay_status_.state_ptr = &constants::state_move_to_base_start_string;
-  ++assay_status_.trial_index;
+  ++assay_status_.finished_trial_count;
 
   bool repeat_aborted_trial;
   modular_server_.property(constants::repeat_aborted_trial_property_name).getValue(repeat_aborted_trial);
 
-  if (!trial_aborted_ || !repeat_aborted_trial)
+  if (!assay_status_.trial_aborted || !repeat_aborted_trial)
   {
     prepareNextTrial();
   }
@@ -801,67 +803,46 @@ void MouseJoystickController::finishTrial()
 void MouseJoystickController::prepareNextTrial()
 {
   updateTrialBlockSet();
-  updateReachPosition();
-  updatePullTorque();
+  updateBlock();
   updatePullThreshold();
 }
 
 void MouseJoystickController::resetTrialTimingData()
 {
-  trial_timing_data_.trial_start = 0;
-  trial_timing_data_.mouse_ready = 0;
-  trial_timing_data_.joystick_ready = 0;
-  trial_timing_data_.pull = 0;
-  trial_timing_data_.push = 0;
-  trial_timing_data_.timeout = 0;
-  trial_timing_data_.trial_abort = 0;
+  constants::TrialTimingData ttd;
+  trial_timing_data_ = ttd;
 }
 
-void MouseJoystickController::updateTrialBlockSet()
+void MouseJoystickController::updateBlock()
 {
-  long trial_count = 2;
-  if (++assay_status_.trial >= (size_t)trial_count)
+  assay_status_.block = dummy_block_;
+  if (assay_status_.block_in_set < getBlockCount())
   {
-    assay_status_.trial = 0;
-
-    ++assay_status_.block;
-    const size_t pull_torque_array_length = 4;
-    if (++pull_torque_index_ >= pull_torque_array_length)
+    if (assay_status_.set_in_assay < getSetCount())
     {
-      pull_torque_index_ = 0;
-      assay_status_.block = 0;
-
-      const size_t reach_position_1_array_length = 4;
-      if (++reach_position_1_index_ >= reach_position_1_array_length)
-      {
-        reach_position_1_index_ = 0;
-
-        long set_count;
-        modular_server_.property(constants::set_count_property_name).getValue(set_count);
-        if (++assay_status_.set >= (size_t)set_count)
-        {
-          assay_status_.set = 0;
-
-          assay_status_.state_ptr = &constants::state_move_to_base_stop_string;
-        }
-      }
+      assay_status_.block = set_[assay_status_.block_in_set];
     }
   }
 }
 
-void MouseJoystickController::updateReachPosition()
+void MouseJoystickController::updateTrialBlockSet()
 {
-  long reach_position_0 = 50;
+  if (++assay_status_.trial_in_block >= assay_status_.block.trial_count)
+  {
+    assay_status_.trial_in_block = 0;
 
-  long reach_position_1 = 100;
+    if (++assay_status_.block_in_set >= getBlockCount())
+    {
+      assay_status_.block_in_set = 0;
 
-  assay_status_.reach_position[0] = reach_position_0;
-  assay_status_.reach_position[1] = reach_position_1;
-}
+			if (++assay_status_.set_in_assay >= getSetCount())
+      {
+        assay_status_.set_in_assay = 0;
 
-void MouseJoystickController::updatePullTorque()
-{
-  assay_status_.pull_torque = 50;
+        assay_status_.state_ptr = &constants::state_move_to_base_stop_string;
+      }
+    }
+  }
 }
 
 void MouseJoystickController::updatePullThreshold()
@@ -880,7 +861,7 @@ void MouseJoystickController::moveToBasePosition()
 
 void MouseJoystickController::moveToReachPosition()
 {
-  StageController::PositionArray reach_position = getReachPosition();
+  StageController::PositionArray reach_position = assay_status_.block.reach_position;
   moveStageTo(reach_position);
 }
 
@@ -1027,6 +1008,18 @@ bool MouseJoystickController::triggerTrialTerminationPulse()
   return power_switch_controller_ptr_->callWasSuccessful();
 }
 
+void MouseJoystickController::writeBlockToResponse(constants::Block block)
+{
+  modular_server_.response().beginObject();
+
+  modular_server_.response().write(constants::trial_count_string,block.trial_count);
+  modular_server_.response().write(constants::pull_torque_string,block.pull_torque);
+  modular_server_.response().write(constants::reward_lickport_duration_string,block.reward_lickport_duration);
+  modular_server_.response().write(constants::reach_position_string,block.reach_position);
+  
+  modular_server_.response().endObject();
+}
+
 // Handlers must be non-blocking (avoid 'delay')
 //
 // modular_server_.parameter(parameter_name).getValue(value) value type must be either:
@@ -1054,15 +1047,17 @@ void MouseJoystickController::getAssayStatusHandler()
   modular_server_.response().beginObject();
 
   modular_server_.response().write(constants::state_string,assay_status.state_ptr);
-  modular_server_.response().write(constants::trial_index_string,assay_status.trial_index);
+  modular_server_.response().write(constants::trial_aborted_string,assay_status.trial_aborted);
+  modular_server_.response().write(constants::assay_aborted_string,assay_status.assay_aborted);
+  modular_server_.response().write(constants::finished_trial_count_string,assay_status.finished_trial_count);
   modular_server_.response().write(constants::successful_trial_count_string,assay_status.successful_trial_count);
-  modular_server_.response().write(constants::trial_string,assay_status.trial);
-  modular_server_.response().write(constants::block_string,assay_status.block);
-  modular_server_.response().write(constants::set_string,assay_status.set);
-  modular_server_.response().write(constants::reach_position_string,assay_status.reach_position);
-  modular_server_.response().write(constants::pull_torque_string,assay_status.pull_torque);
+  modular_server_.response().write(constants::trial_in_block_string,assay_status.trial_in_block);
+  modular_server_.response().write(constants::block_in_set_string,assay_status.block_in_set);
+  modular_server_.response().write(constants::set_in_assay_string,assay_status.set_in_assay);
   modular_server_.response().write(constants::pull_threshold_string,assay_status.pull_threshold);
   modular_server_.response().write(constants::unread_trial_timing_data_string,assay_status.unread_trial_timing_data);
+  modular_server_.response().writeKey(constants::block_string);
+  writeBlockToResponse(assay_status.block);
 
   modular_server_.response().endObject();
 
@@ -1077,18 +1072,9 @@ void MouseJoystickController::getSetHandler()
 	modular_server_.response().beginArray();
 
 	for (auto& block : set)
-		{
-
-			modular_server_.response().beginObject();
-
-			modular_server_.response().write(constants::trial_count_string,block.trial_count);
-			modular_server_.response().write(constants::pull_torque_string,block.pull_torque);
-			modular_server_.response().write(constants::reward_lickport_duration_string,block.reward_lickport_duration);
-			modular_server_.response().write(constants::reach_position_string,block.reach_position);
- 
-			modular_server_.response().endObject();
-
-		}
+  {
+    writeBlockToResponse(block);
+  }
 
   modular_server_.response().endArray();
 }
@@ -1117,11 +1103,14 @@ void MouseJoystickController::addBlockToSetHandler()
   modular_server_.parameter(constants::reach_position_parameter_name).getValue(reach_position);
 
 	for (JsonVariant value : reach_position)
-		{
-			block.reach_position.push_back(value);
-		}
+  {
+    block.reach_position.push_back(value);
+  }
 
-	addBlockToSet(block);
+	constants::Block block_added = addBlockToSet(block);
+
+  modular_server_.response().writeResultKey();
+  writeBlockToResponse(block_added);
 }
 
 void MouseJoystickController::moveJoystickToBasePositionHandler()

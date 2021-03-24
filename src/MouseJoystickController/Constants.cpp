@@ -25,15 +25,19 @@ const modular_server::FirmwareInfo firmware_info =
 };
 
 CONSTANT_STRING(trial_count_string,"trial_count");
-CONSTANT_STRING(trial_index_string,"trial_index");
-CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
-CONSTANT_STRING(trial_string,"trial");
-CONSTANT_STRING(block_string,"block");
-CONSTANT_STRING(set_string,"set");
 CONSTANT_STRING(pull_torque_string,"pull_torque");
-CONSTANT_STRING(pull_threshold_string,"pull_threshold");
-CONSTANT_STRING(reach_position_string,"reach_position");
 CONSTANT_STRING(reward_lickport_duration_string,"reward_lickport_duration");
+CONSTANT_STRING(reach_position_string,"reach_position");
+
+CONSTANT_STRING(trial_aborted_string,"trial_aborted");
+CONSTANT_STRING(assay_aborted_string,"assay_aborted");
+CONSTANT_STRING(finished_trial_count_string,"finished_trial_count");
+CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
+CONSTANT_STRING(trial_in_block_string,"trial_in_block");
+CONSTANT_STRING(block_in_set_string,"block_in_set");
+CONSTANT_STRING(set_in_assay_string,"set_in_assay");
+CONSTANT_STRING(block_string,"block");
+CONSTANT_STRING(pull_threshold_string,"pull_threshold");
 CONSTANT_STRING(unread_trial_timing_data_string,"unread_trial_timing_data");
 
 CONSTANT_STRING(trial_start_string,"trial_start");

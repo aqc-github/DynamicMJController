@@ -40,47 +40,52 @@ extern const modular_server::FirmwareInfo firmware_info;
 
 struct Block
 {
-  long trial_count;
-	long pull_torque;
-	long reward_lickport_duration;
+  size_t trial_count = 0;
+	size_t pull_torque = 0;
+	size_t reward_lickport_duration = 0;
   StageController::PositionArray reach_position;
 };
 
 struct AssayStatus
 {
   const ConstantString * state_ptr;
-  size_t trial_index;
-  size_t successful_trial_count;
-  size_t trial;
-  size_t block;
-  size_t set;
-  StageController::PositionArray reach_position;
-  long pull_torque;
-  long pull_threshold;
-  bool unread_trial_timing_data;
+  bool trial_aborted = false;
+  bool assay_aborted = false;
+  size_t finished_trial_count = 0;
+  size_t successful_trial_count = 0;
+  size_t trial_in_block = 0;
+  size_t block_in_set = 0;
+  size_t set_in_assay = 0;
+  long pull_threshold = 0;
+  bool unread_trial_timing_data = false;
+	Block block;
 };
 
 struct TrialTimingData
 {
-  time_t trial_start;
-  time_t mouse_ready;
-  time_t joystick_ready;
-  time_t pull;
-  time_t push;
-  time_t timeout;
-  time_t trial_abort;
+  time_t trial_start = 0;
+  time_t mouse_ready = 0;
+  time_t joystick_ready = 0;
+  time_t pull = 0;
+  time_t push = 0;
+  time_t timeout = 0;
+  time_t trial_abort = 0;
 };
 
 extern ConstantString trial_count_string;
-extern ConstantString trial_index_string;
-extern ConstantString successful_trial_count_string;
-extern ConstantString trial_string;
-extern ConstantString block_string;
-extern ConstantString set_string;
 extern ConstantString pull_torque_string;
-extern ConstantString pull_threshold_string;
-extern ConstantString reach_position_string;
 extern ConstantString reward_lickport_duration_string;
+extern ConstantString reach_position_string;
+
+extern ConstantString trial_aborted_string;
+extern ConstantString assay_aborted_string;
+extern ConstantString finished_trial_count_string;
+extern ConstantString successful_trial_count_string;
+extern ConstantString trial_in_block_string;
+extern ConstantString block_in_set_string;
+extern ConstantString set_in_assay_string;
+extern ConstantString block_string;
+extern ConstantString pull_threshold_string;
 extern ConstantString unread_trial_timing_data_string;
 
 extern ConstantString trial_start_string;
