@@ -26,7 +26,7 @@ const modular_server::FirmwareInfo firmware_info =
 
 CONSTANT_STRING(trial_count_string,"trial_count");
 CONSTANT_STRING(pull_torque_string,"pull_torque");
-CONSTANT_STRING(reward_lickport_duration_string,"reward_lickport_duration");
+CONSTANT_STRING(lickport_reward_duration_string,"lickport_reward_duration");
 CONSTANT_STRING(reach_position_string,"reach_position");
 
 CONSTANT_STRING(trial_aborted_string,"trial_aborted");
@@ -110,11 +110,11 @@ const unsigned long pull_push_poll_period = 50;
 // Reward
 const long reward_tone_delay = 40;
 const long reward_tone_count = 1;
-const long reward_lickport_channels[REWARD_LICKPORT_CHANNEL_COUNT] =
+const long lickport_reward_channels[LICKPORT_REWARD_CHANNEL_COUNT] =
 {
   0,
 };
-const long reward_lickport_count = 1;
+const long lickport_reward_count = 1;
 
 // Clients
 const size_t encoder_interface_simple_address[1] =
@@ -220,10 +220,10 @@ const long tone_volume_min = 0;
 const long tone_volume_max = 100;
 const long tone_volume_default = 25;
 
-CONSTANT_STRING(reward_lickport_delay_property_name,"rewardLickportDelay");
-const long reward_lickport_delay_min = 100;
-const long reward_lickport_delay_max = 5000;
-const long reward_lickport_delay_default = 1000;
+CONSTANT_STRING(lickport_reward_delay_property_name,"rewardLickportDelay");
+const long lickport_reward_delay_min = 100;
+const long lickport_reward_delay_max = 5000;
+const long lickport_reward_delay_default = 1000;
 
 CONSTANT_STRING(trial_timeout_duration_property_name,"trialTimeoutDuration");
 const long trial_timeout_duration_min = 1;
@@ -255,15 +255,19 @@ CONSTANT_STRING(pull_torque_parameter_name,"pull_torque");
 const long pull_torque_min = 0;
 const long pull_torque_max = 100;
 
-CONSTANT_STRING(reward_lickport_duration_parameter_name,"reward_lickport_duration");
-const long reward_lickport_duration_min = 5;
-const long reward_lickport_duration_max = 1000;
+CONSTANT_STRING(lickport_reward_duration_parameter_name,"lickport_reward_duration");
+const long lickport_reward_duration_min = 5;
+const long lickport_reward_duration_max = 1000;
 
 CONSTANT_STRING(reach_position_parameter_name,"reach_position");
 const long reach_position_element_min = 0;
 const long reach_position_element_max = 1000;
 const long reach_position_length_min = channel_count;
 const long reach_position_length_max = channel_count;
+
+CONSTANT_STRING(lickport_activation_duration_parameter_name,"lickport_activation_duration");
+const long lickport_activation_duration_min = 1;
+const long lickport_activation_duration_max = 20;
 
 CONSTANT_STRING(lickport_activation_count_parameter_name,"lickport_activation_count");
 const long lickport_activation_count_min = 1;

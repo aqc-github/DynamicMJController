@@ -129,9 +129,9 @@ void MouseJoystickController::setup()
   tone_volume_property.setRange(constants::tone_volume_min,constants::tone_volume_max);
   tone_volume_property.setUnits(audio_controller::constants::percent_units);
 
-  modular_server::Property & reward_lickport_delay_property = modular_server_.createProperty(constants::reward_lickport_delay_property_name,constants::reward_lickport_delay_default);
-  reward_lickport_delay_property.setRange(constants::reward_lickport_delay_min,constants::reward_lickport_delay_max);
-  reward_lickport_delay_property.setUnits(power_switch_controller::constants::ms_units);
+  modular_server::Property & lickport_reward_delay_property = modular_server_.createProperty(constants::lickport_reward_delay_property_name,constants::lickport_reward_delay_default);
+  lickport_reward_delay_property.setRange(constants::lickport_reward_delay_min,constants::lickport_reward_delay_max);
+  lickport_reward_delay_property.setUnits(power_switch_controller::constants::ms_units);
 
   modular_server::Property & trial_timeout_duration_property = modular_server_.createProperty(constants::trial_timeout_duration_property_name,constants::trial_timeout_duration_default);
   trial_timeout_duration_property.setRange(constants::trial_timeout_duration_min,constants::trial_timeout_duration_max);
@@ -157,13 +157,16 @@ void MouseJoystickController::setup()
   pull_torque_parameter.setRange(constants::pull_torque_min,constants::pull_torque_max);
   pull_torque_parameter.setUnits(constants::percent_units);
 
-  modular_server::Parameter & reward_lickport_duration_parameter = modular_server_.createParameter(constants::reward_lickport_duration_parameter_name);
-  reward_lickport_duration_parameter.setRange(constants::reward_lickport_duration_min,constants::reward_lickport_duration_max);
-  reward_lickport_duration_parameter.setUnits(constants::ms_units);
+  modular_server::Parameter & lickport_reward_duration_parameter = modular_server_.createParameter(constants::lickport_reward_duration_parameter_name);
+  lickport_reward_duration_parameter.setRange(constants::lickport_reward_duration_min,constants::lickport_reward_duration_max);
+  lickport_reward_duration_parameter.setUnits(constants::ms_units);
 
   modular_server::Parameter & reach_position_parameter = modular_server_.createParameter(constants::reach_position_parameter_name);
   reach_position_parameter.setRange(constants::reach_position_element_min,constants::reach_position_element_max);
   reach_position_parameter.setArrayLengthRange(constants::reach_position_length_min,constants::reach_position_length_max);
+
+	modular_server::Parameter & lickport_activation_duration_parameter = modular_server_.createParameter(constants::lickport_activation_duration_parameter_name);
+  lickport_activation_duration_parameter.setRange(constants::lickport_activation_duration_min,constants::lickport_activation_duration_max);
 
 	modular_server::Parameter & lickport_activation_count_parameter = modular_server_.createParameter(constants::lickport_activation_count_parameter_name);
   lickport_activation_count_parameter.setRange(constants::lickport_activation_count_min,constants::lickport_activation_count_max);
@@ -184,7 +187,7 @@ void MouseJoystickController::setup()
   add_block_to_set_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::addBlockToSetHandler));
   add_block_to_set_function.addParameter(trial_count_parameter);
   add_block_to_set_function.addParameter(pull_torque_parameter);
-  add_block_to_set_function.addParameter(reward_lickport_duration_parameter);
+  add_block_to_set_function.addParameter(lickport_reward_duration_parameter);
   add_block_to_set_function.addParameter(reach_position_parameter);
   add_block_to_set_function.setResultTypeObject();
 
@@ -200,6 +203,7 @@ void MouseJoystickController::setup()
 
   modular_server::Function & activate_lickport_function = modular_server_.createFunction(constants::activate_lickport_function_name);
   activate_lickport_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::activateLickportHandler));
+  activate_lickport_function.addParameter(lickport_activation_duration_parameter);
   activate_lickport_function.addParameter(lickport_activation_count_parameter);
 
   modular_server::Function & get_trial_timing_data_function = modular_server_.createFunction(constants::get_trial_timing_data_function_name);
@@ -485,16 +489,20 @@ void MouseJoystickController::moveJoystickToReachPosition()
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
     (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
-    moveToReachPosition();
+    if (getBlockCount() > 0)
+    {
+      moveToReachPosition();
+    }
   }
 }
 
-void MouseJoystickController::activateLickport(long count)
+void MouseJoystickController::activateLickport(long duration,
+  long count)
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
     (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
-    triggerLickport(constants::activate_lickport_delay,count);
+    triggerLickport(constants::activate_lickport_delay,duration,count);
   }
 }
 
@@ -917,23 +925,24 @@ void MouseJoystickController::playRewardTone()
 
 void MouseJoystickController::triggerLickportReward()
 {
-  long reward_lickport_delay;
-  modular_server_.property(constants::reward_lickport_delay_property_name).getValue(reward_lickport_delay);
+  long lickport_reward_delay;
+  modular_server_.property(constants::lickport_reward_delay_property_name).getValue(lickport_reward_delay);
 
-  triggerLickport(reward_lickport_delay,constants::reward_lickport_count);
+  long duration = assay_status_.block.lickport_reward_duration;
+
+  triggerLickport(lickport_reward_delay,duration,constants::lickport_reward_count);
 }
 
 void MouseJoystickController::triggerLickport(long delay,
+  long duration,
   long count)
 {
-  long reward_lickport_duration = 80;
-
-  Array<long,constants::REWARD_LICKPORT_CHANNEL_COUNT> lickport_channels(constants::reward_lickport_channels);
+  Array<long,constants::LICKPORT_REWARD_CHANNEL_COUNT> lickport_channels(constants::lickport_reward_channels);
   power_switch_controller_ptr_->callUntilSuccessful(power_switch_controller::constants::add_pwm_function_name,
     lickport_channels,
     delay,
-    reward_lickport_duration*2,
-    reward_lickport_duration,
+    duration*2,
+    duration,
     count);
 }
 
@@ -1022,7 +1031,7 @@ void MouseJoystickController::writeBlockToResponse(block_t block)
 
   modular_server_.response().write(constants::trial_count_string,block.trial_count);
   modular_server_.response().write(constants::pull_torque_string,block.pull_torque);
-  modular_server_.response().write(constants::reward_lickport_duration_string,block.reward_lickport_duration);
+  modular_server_.response().write(constants::lickport_reward_duration_string,block.lickport_reward_duration);
   modular_server_.response().write(constants::reach_position_string,block.reach_position);
   
   modular_server_.response().endObject();
@@ -1107,7 +1116,7 @@ void MouseJoystickController::addBlockToSetHandler()
 
   modular_server_.parameter(constants::pull_torque_parameter_name).getValue(block.pull_torque);
 
-  modular_server_.parameter(constants::reward_lickport_duration_parameter_name).getValue(block.reward_lickport_duration);
+  modular_server_.parameter(constants::lickport_reward_duration_parameter_name).getValue(block.lickport_reward_duration);
 
   ArduinoJson::JsonArray reach_position;
   modular_server_.parameter(constants::reach_position_parameter_name).getValue(reach_position);
@@ -1135,10 +1144,13 @@ void MouseJoystickController::moveJoystickToReachPositionHandler()
 
 void MouseJoystickController::activateLickportHandler()
 {
+  long lickport_activation_duration;
+  modular_server_.parameter(constants::lickport_activation_duration_parameter_name).getValue(lickport_activation_duration);
+
   long lickport_activation_count;
   modular_server_.parameter(constants::lickport_activation_count_parameter_name).getValue(lickport_activation_count);
 
-  activateLickport(lickport_activation_count);
+  activateLickport(lickport_activation_duration,lickport_activation_count);
 }
 
 void MouseJoystickController::getTrialTimingDataHandler()

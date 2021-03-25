@@ -51,7 +51,8 @@ public:
 
   void moveJoystickToBasePosition();
   void moveJoystickToReachPosition();
-  void activateLickport(long count);
+  void activateLickport(long duration,
+    long count);
 
   typedef mouse_joystick_controller::constants::TrialTimingData trial_timing_data_t;
   trial_timing_data_t getTrialTimingData();
@@ -114,6 +115,7 @@ private:
   void playRewardTone();
   void triggerLickportReward();
   void triggerLickport(long delay,
+    long duration,
     long count);
   void setHomeCurrent(size_t channel);
   void setIdleCurrent();

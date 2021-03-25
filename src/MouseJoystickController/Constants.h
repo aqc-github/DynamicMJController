@@ -25,7 +25,7 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=16};
-enum{PARAMETER_COUNT_MAX=5};
+enum{PARAMETER_COUNT_MAX=6};
 enum{FUNCTION_COUNT_MAX=9};
 enum{CALLBACK_COUNT_MAX=5};
 
@@ -42,7 +42,7 @@ struct Block
 {
   size_t trial_count = 0;
 	size_t pull_torque = 0;
-	size_t reward_lickport_duration = 0;
+	size_t lickport_reward_duration = 0;
   StageController::PositionArray reach_position;
 };
 
@@ -76,7 +76,7 @@ struct TrialTimingData
 
 extern ConstantString trial_count_string;
 extern ConstantString pull_torque_string;
-extern ConstantString reward_lickport_duration_string;
+extern ConstantString lickport_reward_duration_string;
 extern ConstantString reach_position_string;
 
 extern ConstantString trial_aborted_string;
@@ -164,9 +164,9 @@ extern const unsigned long pull_push_poll_period;
 // Reward
 extern const long reward_tone_delay;
 extern const long reward_tone_count;
-enum{REWARD_LICKPORT_CHANNEL_COUNT=1};
-extern const long reward_lickport_channels[REWARD_LICKPORT_CHANNEL_COUNT];
-extern const long reward_lickport_count;
+enum{LICKPORT_REWARD_CHANNEL_COUNT=1};
+extern const long lickport_reward_channels[LICKPORT_REWARD_CHANNEL_COUNT];
+extern const long lickport_reward_count;
 
 // Clients
 extern const size_t encoder_interface_simple_address[1];
@@ -264,10 +264,10 @@ extern const long tone_volume_min;
 extern const long tone_volume_max;
 extern const long tone_volume_default;
 
-extern ConstantString reward_lickport_delay_property_name;
-extern const long reward_lickport_delay_min;
-extern const long reward_lickport_delay_max;
-extern const long reward_lickport_delay_default;
+extern ConstantString lickport_reward_delay_property_name;
+extern const long lickport_reward_delay_min;
+extern const long lickport_reward_delay_max;
+extern const long lickport_reward_delay_default;
 
 extern ConstantString trial_timeout_duration_property_name;
 extern const long trial_timeout_duration_min;
@@ -299,15 +299,19 @@ extern ConstantString pull_torque_parameter_name;
 extern const long pull_torque_min;
 extern const long pull_torque_max;
 
-extern ConstantString reward_lickport_duration_parameter_name;
-extern const long reward_lickport_duration_min;
-extern const long reward_lickport_duration_max;
+extern ConstantString lickport_reward_duration_parameter_name;
+extern const long lickport_reward_duration_min;
+extern const long lickport_reward_duration_max;
 
 extern ConstantString reach_position_parameter_name;
 extern const long reach_position_element_min;
 extern const long reach_position_element_max;
 extern const long reach_position_length_min;
 extern const long reach_position_length_max;
+
+extern ConstantString lickport_activation_duration_parameter_name;
+extern const long lickport_activation_duration_min;
+extern const long lickport_activation_duration_max;
 
 extern ConstantString lickport_activation_count_parameter_name;
 extern const long lickport_activation_count_min;
