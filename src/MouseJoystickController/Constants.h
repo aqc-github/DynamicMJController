@@ -40,7 +40,7 @@ extern const modular_server::FirmwareInfo firmware_info;
 
 struct Block
 {
-  size_t trial_count = 0;
+  size_t trial_repeat_count = 0;
 	size_t pull_torque = 0;
 	size_t lickport_reward_duration = 0;
   StageController::PositionArray reach_position;
@@ -56,7 +56,7 @@ struct AssayStatus
   long pull_threshold = 0;
   bool unread_trial_timing_data = false;
   size_t set_in_assay = 0;
-  size_t set_count = 0;
+  size_t set_repeat_count = 0;
   size_t block_in_set = 0;
   size_t block_count = 0;
   size_t trial_in_block = 0;
@@ -74,7 +74,7 @@ struct TrialTimingData
   time_t trial_abort = 0;
 };
 
-extern ConstantString trial_count_string;
+extern ConstantString trial_repeat_count_string;
 extern ConstantString pull_torque_string;
 extern ConstantString lickport_reward_duration_string;
 extern ConstantString reach_position_string;
@@ -86,7 +86,7 @@ extern ConstantString successful_trial_count_string;
 extern ConstantString pull_threshold_string;
 extern ConstantString unread_trial_timing_data_string;
 extern ConstantString set_in_assay_string;
-extern ConstantString set_count_string;
+extern ConstantString set_repeat_count_string;
 extern ConstantString block_in_set_string;
 extern ConstantString block_count_string;
 extern ConstantString trial_in_block_string;
@@ -277,10 +277,10 @@ extern const long trial_timeout_duration_default;
 extern ConstantString repeat_aborted_trial_property_name;
 extern const bool repeat_aborted_trial_default;
 
-extern ConstantString set_count_property_name;
-extern const long set_count_min;
-extern const long set_count_max;
-extern const long set_count_default;
+extern ConstantString set_repeat_count_property_name;
+extern const long set_repeat_count_min;
+extern const long set_repeat_count_max;
+extern const long set_repeat_count_default;
 
 extern ConstantString start_trial_duration_property_name;
 extern const long start_trial_duration_min;
@@ -291,9 +291,9 @@ extern ConstantString wait_until_trial_timing_data_read_property_name;
 extern const bool wait_until_trial_timing_data_read_default;
 
 // Parameters
-extern ConstantString trial_count_parameter_name;
-extern const long trial_count_min;
-extern const long trial_count_max;
+extern ConstantString trial_repeat_count_parameter_name;
+extern const long trial_repeat_count_min;
+extern const long trial_repeat_count_max;
 
 extern ConstantString pull_torque_parameter_name;
 extern const long pull_torque_min;

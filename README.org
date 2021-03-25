@@ -17,60 +17,39 @@
 * API NAMES
 
   #+BEGIN_SRC js
-    {
-      "id": "getApi",
-      "result": {
-        "firmware": [
-          "MouseJoystickController"
-        ],
-        "verbosity": "NAMES",
-        "functions": [
-          "getAssayStatus",
-          "moveJoystickToBasePosition",
-          "moveJoystickToReachPosition",
-          "activateLickport",
-          "getTrialTimingData"
-        ],
-        "parameters": [
-          "count"
-        ],
-        "properties": [
-          "homeCurrent",
-          "idleCurrent",
-          "basePosition",
-          "reachPosition0",
-          "reachPosition1Means",
-          "pullThreshold",
-          "pushThreshold",
-          "pullTorqueMeans",
-          "joystickReadyToneFrequency",
-          "joystickReadyToneDuration",
-          "rewardToneFrequency",
-          "rewardToneDuration",
-          "toneVolume",
-          "rewardLickportDelay",
-          "rewardLickportDuration",
-          "trialTimeoutDuration",
-          "repeatAbortedTrial",
-          "trialCount",
-          "setCount",
-          "startTrialDuration",
-          "waitUntilTrialTimingDataRead"
-        ],
-        "callbacks": [
-          "startTrial",
-          "startAssay",
-          "abortTrial",
-          "abortAssay",
-          "restartAssay"
-        ]
-      }
-    }
   #+END_SRC
 
 * API GENERAL
 
   [[./api/]]
+
+* Assay
+
+  An assay consists of a series of trials.
+
+** Trial
+
+   
+
+** Block
+
+  #+BEGIN_SRC js
+  #+END_SRC
+
+** Set
+
+  #+BEGIN_SRC js
+  #+END_SRC
+
+** Assay Status
+
+  #+BEGIN_SRC js
+  #+END_SRC
+
+** Trial Timing Data
+
+  #+BEGIN_SRC js
+  #+END_SRC
 
 * Ancestors
 
