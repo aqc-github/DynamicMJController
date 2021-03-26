@@ -24,7 +24,7 @@ const modular_server::FirmwareInfo firmware_info =
   .version_patch=0,
 };
 
-CONSTANT_STRING(trial_repeat_count_string,"trial_repeat_count");
+CONSTANT_STRING(repeat_trial_count_string,"repeat_trial_count");
 CONSTANT_STRING(pull_torque_string,"pull_torque");
 CONSTANT_STRING(lickport_reward_duration_string,"lickport_reward_duration");
 CONSTANT_STRING(reach_position_string,"reach_position");
@@ -36,7 +36,7 @@ CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
 CONSTANT_STRING(pull_threshold_string,"pull_threshold");
 CONSTANT_STRING(unread_trial_timing_data_string,"unread_trial_timing_data");
 CONSTANT_STRING(set_in_assay_string,"set_in_assay");
-CONSTANT_STRING(set_repeat_count_string,"set_repeat_count");
+CONSTANT_STRING(repeat_set_count_string,"repeat_set_count");
 CONSTANT_STRING(block_in_set_string,"block_in_set");
 CONSTANT_STRING(block_count_string,"block_count");
 CONSTANT_STRING(trial_in_block_string,"trial_in_block");
@@ -233,10 +233,10 @@ const long trial_timeout_duration_default = 20;
 CONSTANT_STRING(repeat_aborted_trial_property_name,"repeatAbortedTrial");
 const bool repeat_aborted_trial_default = true;
 
-CONSTANT_STRING(set_repeat_count_property_name,"setRepeatCount");
-const long set_repeat_count_min = 1;
-const long set_repeat_count_max = 100;
-const long set_repeat_count_default = 2;
+CONSTANT_STRING(repeat_set_count_property_name,"repeatSetCount");
+const long repeat_set_count_min = 1;
+const long repeat_set_count_max = 100;
+const long repeat_set_count_default = 2;
 
 CONSTANT_STRING(start_trial_duration_property_name,"startTrialDuration");
 const long start_trial_duration_min = 0;
@@ -247,9 +247,9 @@ CONSTANT_STRING(wait_until_trial_timing_data_read_property_name,"waitUntilTrialT
 const bool wait_until_trial_timing_data_read_default = true;
 
 // Parameters
-CONSTANT_STRING(trial_repeat_count_parameter_name,"trial_repeat_count");
-const long trial_repeat_count_min = 1;
-const long trial_repeat_count_max = 100;
+CONSTANT_STRING(repeat_trial_count_parameter_name,"repeat_trial_count");
+const long repeat_trial_count_min = 1;
+const long repeat_trial_count_max = 100;
 
 CONSTANT_STRING(pull_torque_parameter_name,"pull_torque");
 const long pull_torque_min = 0;

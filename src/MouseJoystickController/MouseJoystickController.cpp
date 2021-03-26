@@ -139,9 +139,9 @@ void MouseJoystickController::setup()
 
   modular_server_.createProperty(constants::repeat_aborted_trial_property_name,constants::repeat_aborted_trial_default);
 
-  modular_server::Property & set_repeat_count_property = modular_server_.createProperty(constants::set_repeat_count_property_name,constants::set_repeat_count_default);
-  set_repeat_count_property.setRange(constants::set_repeat_count_min,constants::set_repeat_count_max);
-  set_repeat_count_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::updateSetCount));
+  modular_server::Property & repeat_set_count_property = modular_server_.createProperty(constants::repeat_set_count_property_name,constants::repeat_set_count_default);
+  repeat_set_count_property.setRange(constants::repeat_set_count_min,constants::repeat_set_count_max);
+  repeat_set_count_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::updateSetCount));
 
   modular_server::Property & start_trial_duration_property = modular_server_.createProperty(constants::start_trial_duration_property_name,constants::start_trial_duration_default);
   start_trial_duration_property.setRange(constants::start_trial_duration_min,constants::start_trial_duration_max);
@@ -150,8 +150,8 @@ void MouseJoystickController::setup()
   modular_server_.createProperty(constants::wait_until_trial_timing_data_read_property_name,constants::wait_until_trial_timing_data_read_default);
 
   // Parameters
-  modular_server::Parameter & trial_repeat_count_parameter = modular_server_.createParameter(constants::trial_repeat_count_parameter_name);
-  trial_repeat_count_parameter.setRange(constants::trial_repeat_count_min,constants::trial_repeat_count_max);
+  modular_server::Parameter & repeat_trial_count_parameter = modular_server_.createParameter(constants::repeat_trial_count_parameter_name);
+  repeat_trial_count_parameter.setRange(constants::repeat_trial_count_min,constants::repeat_trial_count_max);
 
   modular_server::Parameter & pull_torque_parameter = modular_server_.createParameter(constants::pull_torque_parameter_name);
   pull_torque_parameter.setRange(constants::pull_torque_min,constants::pull_torque_max);
@@ -185,7 +185,7 @@ void MouseJoystickController::setup()
 
   modular_server::Function & add_block_to_set_function = modular_server_.createFunction(constants::add_block_to_set_function_name);
   add_block_to_set_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::addBlockToSetHandler));
-  add_block_to_set_function.addParameter(trial_repeat_count_parameter);
+  add_block_to_set_function.addParameter(repeat_trial_count_parameter);
   add_block_to_set_function.addParameter(pull_torque_parameter);
   add_block_to_set_function.addParameter(lickport_reward_duration_parameter);
   add_block_to_set_function.addParameter(reach_position_parameter);
@@ -826,7 +826,7 @@ void MouseJoystickController::updateBlock()
   assay_status_.block = dummy_block_;
   if (assay_status_.block_in_set < assay_status_.block_count)
   {
-    if (assay_status_.set_in_assay < assay_status_.set_repeat_count)
+    if (assay_status_.set_in_assay < assay_status_.repeat_set_count)
     {
       assay_status_.block = set_[assay_status_.block_in_set];
     }
@@ -835,7 +835,7 @@ void MouseJoystickController::updateBlock()
 
 void MouseJoystickController::updateTrialBlockSet()
 {
-  if (++assay_status_.trial_in_block >= assay_status_.block.trial_repeat_count)
+  if (++assay_status_.trial_in_block >= assay_status_.block.repeat_trial_count)
   {
     assay_status_.trial_in_block = 0;
 
@@ -843,7 +843,7 @@ void MouseJoystickController::updateTrialBlockSet()
     {
       assay_status_.block_in_set = 0;
 
-			if (++assay_status_.set_in_assay >= assay_status_.set_repeat_count)
+			if (++assay_status_.set_in_assay >= assay_status_.repeat_set_count)
       {
         assay_status_.set_in_assay = 0;
 
@@ -863,10 +863,10 @@ void MouseJoystickController::updatePullThreshold()
 
 void MouseJoystickController::updateSetCount()
 {
-  long set_repeat_count;
-  modular_server_.property(constants::set_repeat_count_property_name).getValue(set_repeat_count);
+  long repeat_set_count;
+  modular_server_.property(constants::repeat_set_count_property_name).getValue(repeat_set_count);
 
-  assay_status_.set_repeat_count = set_repeat_count;
+  assay_status_.repeat_set_count = repeat_set_count;
 }
 
 void MouseJoystickController::moveToBasePosition()
@@ -1029,7 +1029,7 @@ void MouseJoystickController::writeBlockToResponse(block_t block)
 {
   modular_server_.response().beginObject();
 
-  modular_server_.response().write(constants::trial_repeat_count_string,block.trial_repeat_count);
+  modular_server_.response().write(constants::repeat_trial_count_string,block.repeat_trial_count);
   modular_server_.response().write(constants::pull_torque_string,block.pull_torque);
   modular_server_.response().write(constants::lickport_reward_duration_string,block.lickport_reward_duration);
   modular_server_.response().write(constants::reach_position_string,block.reach_position);
@@ -1071,7 +1071,7 @@ void MouseJoystickController::getAssayStatusHandler()
   modular_server_.response().write(constants::pull_threshold_string,assay_status.pull_threshold);
   modular_server_.response().write(constants::unread_trial_timing_data_string,assay_status.unread_trial_timing_data);
   modular_server_.response().write(constants::set_in_assay_string,assay_status.set_in_assay);
-  modular_server_.response().write(constants::set_repeat_count_string,assay_status.set_repeat_count);
+  modular_server_.response().write(constants::repeat_set_count_string,assay_status.repeat_set_count);
   modular_server_.response().write(constants::block_in_set_string,assay_status.block_in_set);
   modular_server_.response().write(constants::block_count_string,assay_status.block_count);
   modular_server_.response().write(constants::trial_in_block_string,assay_status.trial_in_block);
@@ -1112,7 +1112,7 @@ void MouseJoystickController::getBlockCountHandler()
 void MouseJoystickController::addBlockToSetHandler()
 {
 	block_t block;
-  modular_server_.parameter(constants::trial_repeat_count_parameter_name).getValue(block.trial_repeat_count);
+  modular_server_.parameter(constants::repeat_trial_count_parameter_name).getValue(block.repeat_trial_count);
 
   modular_server_.parameter(constants::pull_torque_parameter_name).getValue(block.pull_torque);
 
