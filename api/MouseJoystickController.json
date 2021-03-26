@@ -7,6 +7,34 @@
     "verbosity": "GENERAL",
     "functions": [
       {
+        "name": "getSet",
+        "result_info": {
+          "type": "array",
+          "array_element_type": null
+        }
+      },
+      {
+        "name": "clearSet"
+      },
+      {
+        "name": "getBlockCount",
+        "result_info": {
+          "type": "long"
+        }
+      },
+      {
+        "name": "addBlockToSet",
+        "parameters": [
+          "repeat_trial_count",
+          "pull_torque",
+          "lickport_reward_duration",
+          "reach_position"
+        ],
+        "result_info": {
+          "type": "object"
+        }
+      },
+      {
         "name": "getAssayStatus",
         "result_info": {
           "type": "object"
@@ -21,7 +49,8 @@
       {
         "name": "activateLickport",
         "parameters": [
-          "count"
+          "lickport_activation_duration",
+          "lickport_activation_count"
         ]
       },
       {
@@ -33,7 +62,28 @@
     ],
     "parameters": [
       {
-        "name": "count",
+        "name": "repeat_trial_count",
+        "type": "long"
+      },
+      {
+        "name": "pull_torque",
+        "type": "long"
+      },
+      {
+        "name": "lickport_reward_duration",
+        "type": "long"
+      },
+      {
+        "name": "reach_position",
+        "type": "array",
+        "array_element_type": "long"
+      },
+      {
+        "name": "lickport_activation_duration",
+        "type": "long"
+      },
+      {
+        "name": "lickport_activation_count",
         "type": "long"
       }
     ],
@@ -402,166 +452,6 @@
         ]
       },
       {
-        "name": "reachPosition0",
-        "type": "long",
-        "functions": [
-          {
-            "name": "getValue",
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setValue",
-            "parameters": [
-              "value"
-            ],
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "getDefaultValue",
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setValueToDefault",
-            "result_info": {
-              "type": "long"
-            }
-          }
-        ],
-        "parameters": [
-          {
-            "name": "value",
-            "type": "long"
-          }
-        ]
-      },
-      {
-        "name": "reachPosition1Means",
-        "type": "array",
-        "array_element_type": "long",
-        "functions": [
-          {
-            "name": "getValue",
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "setValue",
-            "parameters": [
-              "value"
-            ],
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "getDefaultValue",
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "setValueToDefault",
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "getElementValue",
-            "parameters": [
-              "element_index"
-            ],
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setElementValue",
-            "parameters": [
-              "element_index",
-              "element_value"
-            ],
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "getDefaultElementValue",
-            "parameters": [
-              "element_index"
-            ],
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setElementValueToDefault",
-            "parameters": [
-              "element_index"
-            ],
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "setAllElementValues",
-            "parameters": [
-              "element_value"
-            ],
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "getArrayLength",
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setArrayLength",
-            "parameters": [
-              "array_length"
-            ],
-            "result_info": {
-              "type": "long"
-            }
-          }
-        ],
-        "parameters": [
-          {
-            "name": "value",
-            "type": "array",
-            "array_element_type": "long"
-          },
-          {
-            "name": "element_index",
-            "type": "long"
-          },
-          {
-            "name": "element_value",
-            "type": "long"
-          },
-          {
-            "name": "array_length",
-            "type": "long"
-          }
-        ]
-      },
-      {
         "name": "pullThreshold",
         "type": "long",
         "functions": [
@@ -635,127 +525,6 @@
         "parameters": [
           {
             "name": "value",
-            "type": "long"
-          }
-        ]
-      },
-      {
-        "name": "pullTorqueMeans",
-        "type": "array",
-        "array_element_type": "long",
-        "functions": [
-          {
-            "name": "getValue",
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "setValue",
-            "parameters": [
-              "value"
-            ],
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "getDefaultValue",
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "setValueToDefault",
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "getElementValue",
-            "parameters": [
-              "element_index"
-            ],
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setElementValue",
-            "parameters": [
-              "element_index",
-              "element_value"
-            ],
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "getDefaultElementValue",
-            "parameters": [
-              "element_index"
-            ],
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setElementValueToDefault",
-            "parameters": [
-              "element_index"
-            ],
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "setAllElementValues",
-            "parameters": [
-              "element_value"
-            ],
-            "result_info": {
-              "type": "array",
-              "array_element_type": "long"
-            }
-          },
-          {
-            "name": "getArrayLength",
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setArrayLength",
-            "parameters": [
-              "array_length"
-            ],
-            "result_info": {
-              "type": "long"
-            }
-          }
-        ],
-        "parameters": [
-          {
-            "name": "value",
-            "type": "array",
-            "array_element_type": "long"
-          },
-          {
-            "name": "element_index",
-            "type": "long"
-          },
-          {
-            "name": "element_value",
-            "type": "long"
-          },
-          {
-            "name": "array_length",
             "type": "long"
           }
         ]
@@ -995,45 +764,6 @@
         ]
       },
       {
-        "name": "rewardLickportDuration",
-        "type": "long",
-        "functions": [
-          {
-            "name": "getValue",
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setValue",
-            "parameters": [
-              "value"
-            ],
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "getDefaultValue",
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setValueToDefault",
-            "result_info": {
-              "type": "long"
-            }
-          }
-        ],
-        "parameters": [
-          {
-            "name": "value",
-            "type": "long"
-          }
-        ]
-      },
-      {
         "name": "trialTimeoutDuration",
         "type": "long",
         "functions": [
@@ -1112,46 +842,7 @@
         ]
       },
       {
-        "name": "trialCount",
-        "type": "long",
-        "functions": [
-          {
-            "name": "getValue",
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setValue",
-            "parameters": [
-              "value"
-            ],
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "getDefaultValue",
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setValueToDefault",
-            "result_info": {
-              "type": "long"
-            }
-          }
-        ],
-        "parameters": [
-          {
-            "name": "value",
-            "type": "long"
-          }
-        ]
-      },
-      {
-        "name": "setCount",
+        "name": "repeatSetCount",
         "type": "long",
         "functions": [
           {

@@ -19,21 +19,28 @@ CONSTANT_STRING(firmware_name,"MouseJoystickController");
 const modular_server::FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
-  .version_major=3,
-  .version_minor=3,
-  .version_patch=1,
+  .version_major=4,
+  .version_minor=0,
+  .version_patch=0,
 };
 
-CONSTANT_STRING(trial_index_string,"trial_index");
-CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
-CONSTANT_STRING(trial_string,"trial");
-CONSTANT_STRING(block_string,"block");
-CONSTANT_STRING(set_string,"set");
-CONSTANT_STRING(reach_position_0_string,"reach_position_0");
-CONSTANT_STRING(reach_position_1_string,"reach_position_1");
+CONSTANT_STRING(repeat_trial_count_string,"repeat_trial_count");
 CONSTANT_STRING(pull_torque_string,"pull_torque");
+CONSTANT_STRING(lickport_reward_duration_string,"lickport_reward_duration");
+CONSTANT_STRING(reach_position_string,"reach_position");
+
+CONSTANT_STRING(trial_aborted_string,"trial_aborted");
+CONSTANT_STRING(assay_aborted_string,"assay_aborted");
+CONSTANT_STRING(finished_trial_count_string,"finished_trial_count");
+CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
 CONSTANT_STRING(pull_threshold_string,"pull_threshold");
 CONSTANT_STRING(unread_trial_timing_data_string,"unread_trial_timing_data");
+CONSTANT_STRING(set_in_assay_string,"set_in_assay");
+CONSTANT_STRING(repeat_set_count_string,"repeat_set_count");
+CONSTANT_STRING(block_in_set_string,"block_in_set");
+CONSTANT_STRING(block_count_string,"block_count");
+CONSTANT_STRING(trial_in_block_string,"trial_in_block");
+CONSTANT_STRING(block_string,"block");
 
 CONSTANT_STRING(trial_start_string,"trial_start");
 CONSTANT_STRING(mouse_ready_string,"mouse_ready");
@@ -98,20 +105,16 @@ const size_t pull_encoder_initial_value = 0;
 const size_t pull_channel = 0;
 const long pull_pwm_offset_min = 0;
 const long pull_pwm_offset_max = 80;
-const long pull_torque_min = 0;
-const long pull_torque_max = 100;
-const long pull_torque_array_length_min = 1;
-const long pull_torque_array_length_max = PULL_TORQUE_COUNT_MAX;
 const unsigned long pull_push_poll_period = 50;
 
 // Reward
 const long reward_tone_delay = 40;
 const long reward_tone_count = 1;
-const long reward_lickport_channels[REWARD_LICKPORT_CHANNEL_COUNT] =
+const long lickport_reward_channels[LICKPORT_REWARD_CHANNEL_COUNT] =
 {
   0,
 };
-const long reward_lickport_count = 1;
+const long lickport_reward_count = 1;
 
 // Clients
 const size_t encoder_interface_simple_address[1] =
@@ -186,17 +189,6 @@ CONSTANT_STRING(base_position_property_name,"basePosition");
 const long base_position_element_0_default = not_touching_switch_position;
 const long base_position_element_1_default = 300;
 
-CONSTANT_STRING(reach_position_0_property_name,"reachPosition0");
-const long reach_position_0_default = 145;
-
-CONSTANT_STRING(reach_position_1_means_property_name,"reachPosition1Means");
-const long reach_position_1_means_default[REACH_POSITION_1_COUNT_MAX] =
-{
-  110,
-  150,
-  190,
-};
-
 CONSTANT_STRING(pull_threshold_property_name,"pullThreshold");
 const long pull_threshold_min = -1000;
 const long pull_threshold_max = 0;
@@ -206,15 +198,6 @@ CONSTANT_STRING(push_threshold_property_name,"pushThreshold");
 const long push_threshold_min = 0;
 const long push_threshold_max = 1000;
 const long push_threshold_default = 50;
-
-CONSTANT_STRING(pull_torque_means_property_name,"pullTorqueMeans");
-const long pull_torque_means_default[PULL_TORQUE_COUNT_MAX] =
-{
-  20,
-  40,
-  60,
-  80,
-};
 
 CONSTANT_STRING(joystick_ready_tone_frequency_property_name,"joystickReadyToneFrequency");
 const long joystick_ready_tone_frequency_default = 8000;
@@ -237,15 +220,10 @@ const long tone_volume_min = 0;
 const long tone_volume_max = 100;
 const long tone_volume_default = 25;
 
-CONSTANT_STRING(reward_lickport_delay_property_name,"rewardLickportDelay");
-const long reward_lickport_delay_min = 100;
-const long reward_lickport_delay_max = 5000;
-const long reward_lickport_delay_default = 1000;
-
-CONSTANT_STRING(lickport_duration_property_name,"rewardLickportDuration");
-const long lickport_duration_min = 5;
-const long lickport_duration_max = 1000;
-const long lickport_duration_default = 80;
+CONSTANT_STRING(lickport_reward_delay_property_name,"rewardLickportDelay");
+const long lickport_reward_delay_min = 100;
+const long lickport_reward_delay_max = 5000;
+const long lickport_reward_delay_default = 1000;
 
 CONSTANT_STRING(trial_timeout_duration_property_name,"trialTimeoutDuration");
 const long trial_timeout_duration_min = 1;
@@ -255,15 +233,10 @@ const long trial_timeout_duration_default = 20;
 CONSTANT_STRING(repeat_aborted_trial_property_name,"repeatAbortedTrial");
 const bool repeat_aborted_trial_default = true;
 
-CONSTANT_STRING(trial_count_property_name,"trialCount");
-const long trial_count_min = 1;
-const long trial_count_max = 100;
-const long trial_count_default = 2;
-
-CONSTANT_STRING(set_count_property_name,"setCount");
-const long set_count_min = 1;
-const long set_count_max = 100;
-const long set_count_default = 2;
+CONSTANT_STRING(repeat_set_count_property_name,"repeatSetCount");
+const long repeat_set_count_min = 1;
+const long repeat_set_count_max = 100;
+const long repeat_set_count_default = 2;
 
 CONSTANT_STRING(start_trial_duration_property_name,"startTrialDuration");
 const long start_trial_duration_min = 0;
@@ -274,11 +247,37 @@ CONSTANT_STRING(wait_until_trial_timing_data_read_property_name,"waitUntilTrialT
 const bool wait_until_trial_timing_data_read_default = true;
 
 // Parameters
-CONSTANT_STRING(count_parameter_name,"count");
-const long count_min = 1;
-const long count_max = 20;
+CONSTANT_STRING(repeat_trial_count_parameter_name,"repeat_trial_count");
+const long repeat_trial_count_min = 1;
+const long repeat_trial_count_max = 100;
+
+CONSTANT_STRING(pull_torque_parameter_name,"pull_torque");
+const long pull_torque_min = 0;
+const long pull_torque_max = 100;
+
+CONSTANT_STRING(lickport_reward_duration_parameter_name,"lickport_reward_duration");
+const long lickport_reward_duration_min = 5;
+const long lickport_reward_duration_max = 1000;
+
+CONSTANT_STRING(reach_position_parameter_name,"reach_position");
+const long reach_position_element_min = 0;
+const long reach_position_element_max = 1000;
+const long reach_position_length_min = channel_count;
+const long reach_position_length_max = channel_count;
+
+CONSTANT_STRING(lickport_activation_duration_parameter_name,"lickport_activation_duration");
+const long lickport_activation_duration_min = 1;
+const long lickport_activation_duration_max = 20;
+
+CONSTANT_STRING(lickport_activation_count_parameter_name,"lickport_activation_count");
+const long lickport_activation_count_min = 1;
+const long lickport_activation_count_max = 20;
 
 // Functions
+CONSTANT_STRING(get_set_function_name,"getSet");
+CONSTANT_STRING(clear_set_function_name,"clearSet");
+CONSTANT_STRING(get_block_count_function_name,"getBlockCount");
+CONSTANT_STRING(add_block_to_set_function_name,"addBlockToSet");
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
 CONSTANT_STRING(move_joystick_to_base_position_function_name,"moveJoystickToBasePosition");
 CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToReachPosition");

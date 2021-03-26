@@ -37,11 +37,25 @@ public:
   virtual void setup();
   virtual void update();
 
-  mouse_joystick_controller::constants::AssayStatus getAssayStatus();
+  typedef mouse_joystick_controller::constants::Block block_t;
+  typedef Array<block_t,
+    mouse_joystick_controller::constants::BLOCK_COUNT_MAX> set_t;
+
+	set_t getSet();
+	void clearSet();
+	size_t getBlockCount();
+	block_t addBlockToSet(block_t block);
+
+  typedef mouse_joystick_controller::constants::AssayStatus assay_status_t;
+  assay_status_t getAssayStatus();
 
   void moveJoystickToBasePosition();
   void moveJoystickToReachPosition();
-  void activateLickport(long count);
+  void activateLickport(long duration,
+    long count);
+
+  typedef mouse_joystick_controller::constants::TrialTimingData trial_timing_data_t;
+  trial_timing_data_t getTrialTimingData();
 
   void startTrial();
   void startAssay();
@@ -55,28 +69,25 @@ private:
   modular_server::Function functions_[mouse_joystick_controller::constants::FUNCTION_COUNT_MAX];
   modular_server::Callback callbacks_[mouse_joystick_controller::constants::CALLBACK_COUNT_MAX];
 
-  mouse_joystick_controller::constants::AssayStatus assay_status_;
+	set_t set_;
+  block_t dummy_block_;
+
+  assay_status_t assay_status_;
   EventController<mouse_joystick_controller::constants::EVENT_COUNT_MAX> event_controller_;
   EventId trial_timeout_event_id_;
 
-  mouse_joystick_controller::constants::TrialTimingData trial_timing_data_;
+  trial_timing_data_t trial_timing_data_;
 
   ModularClient * encoder_interface_simple_ptr_;
   ModularClient * power_switch_controller_ptr_;
   ModularClient * audio_controller_ptr_;
 
-  bool trial_aborted_;
-  bool assay_aborted_;
-  size_t reach_position_1_index_;
-  size_t pull_torque_index_;
-
   unsigned long time_;
   unsigned long pull_push_poll_time_previous_;
 
   bool setupClients();
+
   StageController::PositionArray getBasePosition();
-  StageController::PositionArray getReachPosition();
-  long getPullTorque();
 
   void resetAssayStatus();
 
@@ -95,15 +106,16 @@ private:
   void prepareNextTrial();
   void resetTrialTimingData();
   void updateTrialBlockSet();
-  void updateReachPosition();
-  void updatePullTorque();
+  void updateBlock();
   void updatePullThreshold();
+  void updateSetCount();
   void moveToBasePosition();
   void moveToReachPosition();
   void playJoystickReadyTone();
   void playRewardTone();
   void triggerLickportReward();
   void triggerLickport(long delay,
+    long duration,
     long count);
   void setHomeCurrent(size_t channel);
   void setIdleCurrent();
@@ -116,7 +128,13 @@ private:
   bool setupTrialTerminationPulse();
   bool triggerTrialTerminationPulse();
 
+  void writeBlockToResponse(block_t block);
+
   // Handlers
+  void getSetHandler();
+  void clearSetHandler();
+  void getBlockCountHandler();
+  void addBlockToSetHandler();
   void getAssayStatusHandler();
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();
