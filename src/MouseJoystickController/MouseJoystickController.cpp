@@ -443,6 +443,7 @@ void MouseJoystickController::clearSet()
     (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
     set_.clear();
+    assay_status_.block_count = getBlockCount();
     updateBlock();
   }
 }
@@ -462,6 +463,7 @@ MouseJoystickController::block_t MouseJoystickController::addBlockToSet(block_t 
     (assay_status_.state_ptr == &constants::state_assay_finished_string))
   {
     set_.push_back(block);
+    assay_status_.block_count = getBlockCount();
     updateBlock();
     return set_.back();
   }
@@ -620,6 +622,7 @@ void MouseJoystickController::resetAssayStatus()
 	assay_status_ = assay_status;
   updatePullThreshold();
   updateSetCount();
+  assay_status_.block_count = getBlockCount();
   updateBlock();
 }
 
@@ -811,10 +814,11 @@ void MouseJoystickController::finishTrial()
 
 void MouseJoystickController::prepareNextTrial()
 {
-  updateTrialBlockSet();
-  updatePullThreshold();
-  updateSetCount();
-  updateBlock();
+  bool block_needs_updating = updateTrialBlockSet();
+  if (block_needs_updating)
+  {
+    updateBlock();
+  }
 }
 
 void MouseJoystickController::resetTrialTimingData()
@@ -823,24 +827,13 @@ void MouseJoystickController::resetTrialTimingData()
   trial_timing_data_ = ttd;
 }
 
-void MouseJoystickController::updateBlock()
+bool MouseJoystickController::updateTrialBlockSet()
 {
-  assay_status_.block_count = getBlockCount();
-  assay_status_.block = dummy_block_;
-  if (assay_status_.block_in_set < assay_status_.block_count)
-  {
-    if (assay_status_.set_in_assay < assay_status_.repeat_set_count)
-    {
-      assay_status_.block = set_[assay_status_.block_in_set];
-    }
-  }
-}
-
-void MouseJoystickController::updateTrialBlockSet()
-{
+  bool block_needs_updating = false;
   if (++assay_status_.trial_in_block >= assay_status_.block.repeat_trial_count)
   {
     assay_status_.trial_in_block = 0;
+    block_needs_updating = true;
 
     if (++assay_status_.block_in_set >= assay_status_.block_count)
     {
@@ -849,9 +842,22 @@ void MouseJoystickController::updateTrialBlockSet()
 			if (++assay_status_.set_in_assay >= assay_status_.repeat_set_count)
       {
         assay_status_.set_in_assay = 0;
+        block_needs_updating = false;
 
         assay_status_.state_ptr = &constants::state_move_to_base_stop_string;
       }
+    }
+  }
+  return block_needs_updating;
+}
+
+void MouseJoystickController::updateBlock()
+{
+  if (assay_status_.block_in_set < assay_status_.block_count)
+  {
+    if (assay_status_.set_in_assay < assay_status_.repeat_set_count)
+    {
+      assay_status_.block = set_[assay_status_.block_in_set];
     }
   }
 }

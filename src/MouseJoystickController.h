@@ -105,7 +105,7 @@ private:
 
   void prepareNextTrial();
   void resetTrialTimingData();
-  void updateTrialBlockSet();
+  bool updateTrialBlockSet();
   void updateBlock();
   void updatePullThreshold();
   void updateSetCount();
