@@ -29,12 +29,12 @@ CONSTANT_STRING(pull_torque_string,"pull_torque");
 CONSTANT_STRING(lickport_reward_duration_string,"lickport_reward_duration");
 CONSTANT_STRING(reach_position_string,"reach_position");
 
-CONSTANT_STRING(trial_aborted_string,"trial_aborted");
-CONSTANT_STRING(assay_aborted_string,"assay_aborted");
+CONSTANT_STRING(unread_trial_timing_data_string,"unread_trial_timing_data");
 CONSTANT_STRING(finished_trial_count_string,"finished_trial_count");
 CONSTANT_STRING(successful_trial_count_string,"successful_trial_count");
+CONSTANT_STRING(trial_aborted_string,"trial_aborted");
+CONSTANT_STRING(assay_aborted_string,"assay_aborted");
 CONSTANT_STRING(pull_threshold_string,"pull_threshold");
-CONSTANT_STRING(unread_trial_timing_data_string,"unread_trial_timing_data");
 CONSTANT_STRING(set_in_assay_string,"set_in_assay");
 CONSTANT_STRING(repeat_set_count_string,"repeat_set_count");
 CONSTANT_STRING(block_in_set_string,"block_in_set");
@@ -278,6 +278,7 @@ CONSTANT_STRING(get_set_function_name,"getSet");
 CONSTANT_STRING(clear_set_function_name,"clearSet");
 CONSTANT_STRING(get_block_count_function_name,"getBlockCount");
 CONSTANT_STRING(add_block_to_set_function_name,"addBlockToSet");
+CONSTANT_STRING(start_assay_function_name,"startAssay");
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
 CONSTANT_STRING(move_joystick_to_base_position_function_name,"moveJoystickToBasePosition");
 CONSTANT_STRING(move_joystick_to_reach_position_function_name,"moveJoystickToReachPosition");
@@ -286,7 +287,6 @@ CONSTANT_STRING(get_trial_timing_data_function_name,"getTrialTimingData");
 
 // Callbacks
 CONSTANT_STRING(start_trial_callback_name,"startTrial");
-CONSTANT_STRING(start_assay_callback_name,"startAssay");
 CONSTANT_STRING(abort_trial_callback_name,"abortTrial");
 CONSTANT_STRING(abort_assay_callback_name,"abortAssay");
 CONSTANT_STRING(restart_assay_callback_name,"restartAssay");

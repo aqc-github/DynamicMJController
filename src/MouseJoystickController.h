@@ -58,7 +58,7 @@ public:
   trial_timing_data_t getTrialTimingData();
 
   void startTrial();
-  void startAssay();
+  bool startAssay();
   void abortTrial();
   void abortAssay();
   void restartAssay();
@@ -135,13 +135,13 @@ private:
   void clearSetHandler();
   void getBlockCountHandler();
   void addBlockToSetHandler();
+  void startAssayHandler();
   void getAssayStatusHandler();
   void moveJoystickToBasePositionHandler();
   void moveJoystickToReachPositionHandler();
   void activateLickportHandler();
   void getTrialTimingDataHandler();
   void startTrialHandler(modular_server::Pin * pin_ptr);
-  void startAssayHandler(modular_server::Pin * pin_ptr);
   void abortTrialHandler(modular_server::Pin * pin_ptr);
   void abortAssayHandler(modular_server::Pin * pin_ptr);
   void restartAssayHandler(modular_server::Pin * pin_ptr);

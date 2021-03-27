@@ -191,6 +191,10 @@ void MouseJoystickController::setup()
   add_block_to_set_function.addParameter(reach_position_parameter);
   add_block_to_set_function.setResultTypeObject();
 
+  modular_server::Function & start_assay_function = modular_server_.createFunction(constants::start_assay_function_name);
+  start_assay_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::startAssayHandler));
+  start_assay_function.setResultTypeBool();
+
   modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
   get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::getAssayStatusHandler));
   get_assay_status_function.setResultTypeObject();
@@ -213,9 +217,6 @@ void MouseJoystickController::setup()
   // Callbacks
   modular_server::Callback & start_trial_callback = modular_server_.createCallback(constants::start_trial_callback_name);
   start_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&MouseJoystickController::startTrialHandler));
-
-  modular_server::Callback & start_assay_callback = modular_server_.createCallback(constants::start_assay_callback_name);
-  start_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&MouseJoystickController::startAssayHandler));
 
   modular_server::Callback & abort_trial_callback = modular_server_.createCallback(constants::abort_trial_callback_name);
   abort_trial_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&MouseJoystickController::abortTrialHandler));
@@ -529,7 +530,7 @@ void MouseJoystickController::startTrial()
   }
 }
 
-void MouseJoystickController::startAssay()
+bool MouseJoystickController::startAssay()
 {
   if ((assay_status_.state_ptr == &constants::state_assay_not_started_string) ||
     (assay_status_.state_ptr == &constants::state_assay_finished_string))
@@ -538,8 +539,10 @@ void MouseJoystickController::startAssay()
     {
       resetAssayStatus();
       assay_status_.state_ptr = &constants::state_assay_started_string;
+      return true;
     }
   }
+  return false;
 }
 
 void MouseJoystickController::abortTrial()
@@ -1055,33 +1058,6 @@ void MouseJoystickController::writeBlockToResponse(block_t block)
 // modular_server_.property(property_name).getElementValue(element_index,value) value type must match the property array element default type
 // modular_server_.property(property_name).setElementValue(element_index,value) value type must match the property array element default type
 
-void MouseJoystickController::getAssayStatusHandler()
-{
-	assay_status_t assay_status = getAssayStatus();
-
-  modular_server_.response().writeResultKey();
-
-  modular_server_.response().beginObject();
-
-  modular_server_.response().write(constants::state_string,assay_status.state_ptr);
-  modular_server_.response().write(constants::trial_aborted_string,assay_status.trial_aborted);
-  modular_server_.response().write(constants::assay_aborted_string,assay_status.assay_aborted);
-  modular_server_.response().write(constants::finished_trial_count_string,assay_status.finished_trial_count);
-  modular_server_.response().write(constants::successful_trial_count_string,assay_status.successful_trial_count);
-  modular_server_.response().write(constants::pull_threshold_string,assay_status.pull_threshold);
-  modular_server_.response().write(constants::unread_trial_timing_data_string,assay_status.unread_trial_timing_data);
-  modular_server_.response().write(constants::set_in_assay_string,assay_status.set_in_assay);
-  modular_server_.response().write(constants::repeat_set_count_string,assay_status.repeat_set_count);
-  modular_server_.response().write(constants::block_in_set_string,assay_status.block_in_set);
-  modular_server_.response().write(constants::block_count_string,assay_status.block_count);
-  modular_server_.response().write(constants::trial_in_block_string,assay_status.trial_in_block);
-  modular_server_.response().writeKey(constants::block_string);
-  writeBlockToResponse(assay_status.block);
-
-  modular_server_.response().endObject();
-
-}
-
 void MouseJoystickController::getSetHandler()
 {
 	set_t set = getSet();
@@ -1132,6 +1108,39 @@ void MouseJoystickController::addBlockToSetHandler()
   writeBlockToResponse(block_added);
 }
 
+void MouseJoystickController::startAssayHandler()
+{
+  bool started = startAssay();
+  modular_server_.response().returnResult(started);
+}
+
+void MouseJoystickController::getAssayStatusHandler()
+{
+	assay_status_t assay_status = getAssayStatus();
+
+  modular_server_.response().writeResultKey();
+
+  modular_server_.response().beginObject();
+
+  modular_server_.response().write(constants::state_string,assay_status.state_ptr);
+  modular_server_.response().write(constants::unread_trial_timing_data_string,assay_status.unread_trial_timing_data);
+  modular_server_.response().write(constants::finished_trial_count_string,assay_status.finished_trial_count);
+  modular_server_.response().write(constants::successful_trial_count_string,assay_status.successful_trial_count);
+  modular_server_.response().write(constants::trial_aborted_string,assay_status.trial_aborted);
+  modular_server_.response().write(constants::assay_aborted_string,assay_status.assay_aborted);
+  modular_server_.response().write(constants::pull_threshold_string,assay_status.pull_threshold);
+  modular_server_.response().write(constants::set_in_assay_string,assay_status.set_in_assay);
+  modular_server_.response().write(constants::repeat_set_count_string,assay_status.repeat_set_count);
+  modular_server_.response().write(constants::block_in_set_string,assay_status.block_in_set);
+  modular_server_.response().write(constants::block_count_string,assay_status.block_count);
+  modular_server_.response().write(constants::trial_in_block_string,assay_status.trial_in_block);
+  modular_server_.response().writeKey(constants::block_string);
+  writeBlockToResponse(assay_status.block);
+
+  modular_server_.response().endObject();
+
+}
+
 void MouseJoystickController::moveJoystickToBasePositionHandler()
 {
   moveJoystickToBasePosition();
@@ -1175,11 +1184,6 @@ void MouseJoystickController::getTrialTimingDataHandler()
 void MouseJoystickController::startTrialHandler(modular_server::Pin * pin_ptr)
 {
   startTrial();
-}
-
-void MouseJoystickController::startAssayHandler(modular_server::Pin * pin_ptr)
-{
-  startAssay();
 }
 
 void MouseJoystickController::abortTrialHandler(modular_server::Pin * pin_ptr)

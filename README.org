@@ -29,6 +29,7 @@
           "clearSet",
           "getBlockCount",
           "addBlockToSet",
+          "startAssay",
           "getAssayStatus",
           "moveJoystickToBasePosition",
           "moveJoystickToReachPosition",
@@ -63,7 +64,6 @@
         ],
         "callbacks": [
           "startTrial",
-          "startAssay",
           "abortTrial",
           "abortAssay",
           "restartAssay"
@@ -148,16 +148,16 @@
    #+BEGIN_SRC js
      {
        "state": "ASSAY_NOT_STARTED",
-       "trial_aborted": false,
-       "assay_aborted": false,
+       "unread_trial_timing_data": false,
        "finished_trial_count": 0,
        "successful_trial_count": 0,
+       "trial_aborted": false,
+       "assay_aborted": false,
        "pull_threshold": -50,
-       "unread_trial_timing_data": false,
        "set_in_assay": 0,
        "repeat_set_count": 2,
        "block_in_set": 0,
-       "block_count": 2,
+       "block_count": 1,
        "trial_in_block": 0,
        "block": {
          "repeat_trial_count": 2,

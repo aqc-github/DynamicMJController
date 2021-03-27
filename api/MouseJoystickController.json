@@ -35,6 +35,12 @@
         }
       },
       {
+        "name": "startAssay",
+        "result_info": {
+          "type": "bool"
+        }
+      },
+      {
         "name": "getAssayStatus",
         "result_info": {
           "type": "object"
@@ -962,37 +968,6 @@
     "callbacks": [
       {
         "name": "startTrial",
-        "functions": [
-          {
-            "name": "trigger"
-          },
-          {
-            "name": "attachTo",
-            "parameters": [
-              "pin_name",
-              "pin_mode"
-            ]
-          },
-          {
-            "name": "detachFrom",
-            "parameters": [
-              "pin_name"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "pin_name",
-            "type": "string"
-          },
-          {
-            "name": "pin_mode",
-            "type": "string"
-          }
-        ]
-      },
-      {
-        "name": "startAssay",
         "functions": [
           {
             "name": "trigger"

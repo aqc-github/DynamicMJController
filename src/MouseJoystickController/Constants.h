@@ -26,8 +26,8 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=16};
 enum{PARAMETER_COUNT_MAX=6};
-enum{FUNCTION_COUNT_MAX=9};
-enum{CALLBACK_COUNT_MAX=5};
+enum{FUNCTION_COUNT_MAX=10};
+enum{CALLBACK_COUNT_MAX=4};
 
 enum{EVENT_COUNT_MAX=32};
 
@@ -49,12 +49,12 @@ struct Block
 struct AssayStatus
 {
   const ConstantString * state_ptr;
-  bool trial_aborted = false;
-  bool assay_aborted = false;
+  bool unread_trial_timing_data = false;
   size_t finished_trial_count = 0;
   size_t successful_trial_count = 0;
+  bool trial_aborted = false;
+  bool assay_aborted = false;
   long pull_threshold = 0;
-  bool unread_trial_timing_data = false;
   size_t set_in_assay = 0;
   size_t repeat_set_count = 0;
   size_t block_in_set = 0;
@@ -79,12 +79,12 @@ extern ConstantString pull_torque_string;
 extern ConstantString lickport_reward_duration_string;
 extern ConstantString reach_position_string;
 
+extern ConstantString unread_trial_timing_data_string;
 extern ConstantString trial_aborted_string;
 extern ConstantString assay_aborted_string;
 extern ConstantString finished_trial_count_string;
 extern ConstantString successful_trial_count_string;
 extern ConstantString pull_threshold_string;
-extern ConstantString unread_trial_timing_data_string;
 extern ConstantString set_in_assay_string;
 extern ConstantString repeat_set_count_string;
 extern ConstantString block_in_set_string;
@@ -322,6 +322,7 @@ extern ConstantString get_set_function_name;
 extern ConstantString clear_set_function_name;
 extern ConstantString get_block_count_function_name;
 extern ConstantString add_block_to_set_function_name;
+extern ConstantString start_assay_function_name;
 extern ConstantString get_assay_status_function_name;
 extern ConstantString move_joystick_to_base_position_function_name;
 extern ConstantString move_joystick_to_reach_position_function_name;
@@ -330,7 +331,6 @@ extern ConstantString get_trial_timing_data_function_name;
 
 // Callbacks
 extern ConstantString start_trial_callback_name;
-extern ConstantString start_assay_callback_name;
 extern ConstantString abort_trial_callback_name;
 extern ConstantString abort_assay_callback_name;
 extern ConstantString restart_assay_callback_name;
