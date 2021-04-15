@@ -552,7 +552,6 @@ void MouseJoystickController::abortTrial()
   stopAll();
   event_controller_.removeAllEvents();
 
-  encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::stop_sampling_callback_name);
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::disable_outputs_callback_name);
 
   assay_status_.trial_aborted = true;
@@ -630,7 +629,6 @@ void MouseJoystickController::setupAssay()
 {
   if (assay_status_.state_ptr == &constants::state_assay_started_string)
   {
-    encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::stop_sampling_callback_name);
     encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::disable_outputs_callback_name);
   }
 }
@@ -678,8 +676,6 @@ void MouseJoystickController::setupPull()
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::set_position_function_name,
     constants::pull_encoder_index,
     constants::pull_encoder_initial_value);
-  encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::clear_samples_callback_name);
-  encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::start_sampling_callback_name);
 
   long pull_torque = assay_status_.block.pull_torque;
 
@@ -767,7 +763,6 @@ void MouseJoystickController::reward()
 {
   playRewardTone();
 
-  encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::stop_sampling_callback_name);
   encoder_interface_simple_ptr_->callUntilSuccessful(encoder_interface_simple::constants::disable_outputs_callback_name);
 
   triggerLickportReward();
