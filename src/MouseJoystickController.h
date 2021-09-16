@@ -3,7 +3,7 @@
 //
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #ifndef MOUSE_JOYSTICK_CONTROLLER_H
 #define MOUSE_JOYSTICK_CONTROLLER_H
