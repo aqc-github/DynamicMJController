@@ -5,7 +5,7 @@
 // Authors:
 // Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
-#include "../MouseJoystickController.h"
+#include "MouseJoystickController.h"
 
 
 using namespace mouse_joystick_controller;

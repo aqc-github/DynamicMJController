@@ -4,7 +4,7 @@
 
 * Library Information
   - Name :: MouseJoystickController
-  - Version :: 4.1.1
+  - Version :: 4.1.2
   - License :: BSD
   - URL :: https://github.com/janelia-arduino/MouseJoystickController
   - Author :: Peter Polidoro
@@ -227,6 +227,18 @@
 
 * Development
 
+** Download this repository
+
+[[https://github.com/janelia-arduino/MouseJoystickController.git]]
+
+**** Example
+
+#+BEGIN_SRC sh
+sudo apt install -y git
+mkdir -p ~/tmp && cd ~/tmp
+git clone https://github.com/janelia-arduino/MouseJoystickController.git
+#+END_SRC
+
 ** PlatformIO
 
 *** Install PlatformIO Core
@@ -237,9 +249,9 @@
 
 #+BEGIN_SRC sh
 sudo apt install -y python3-venv
-mkdir -p ~/platformio/venv
-python3 -m venv ~/platformio/venv
-source ~/platformio/venv/bin/activate
+cd ~/tmp
+python3 -m venv .venv
+source .venv/bin/activate
 pip install platformio
 pio --version
 #+END_SRC
@@ -273,24 +285,13 @@ sudo usermod -a -G plugdev $USER
 sudo apt-get purge --auto-remove modemmanager
 #+END_SRC
 
-*** Download this repository
-
-[[https://github.com/janelia-arduino/MouseJoystickController.git]]
-
-**** Example
-
-#+BEGIN_SRC sh
-sudo apt install -y git
-cd ~/platformio
-git clone https://github.com/janelia-arduino/MouseJoystickController.git
-#+END_SRC
 
 *** Compile the firmware
 
 **** Example
 
 #+BEGIN_SRC sh
-cd ~/platformio/MouseJoystickController
+cd ~/tmp/MouseJoystickController
 pio run -e teensy35
 #+END_SRC
 
@@ -299,6 +300,6 @@ pio run -e teensy35
 **** Example
 
 #+BEGIN_SRC sh
-cd ~/platformio/MouseJoystickController
-pio run -e teensy35 -t upload --upload-port /dev/ttyACM0
+cd ~/tmp/MouseJoystickController
+pio run -e teensy35 -t upload
 #+END_SRC
