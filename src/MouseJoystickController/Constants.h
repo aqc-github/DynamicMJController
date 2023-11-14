@@ -25,7 +25,7 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=16};
-enum{PARAMETER_COUNT_MAX=6};
+enum{PARAMETER_COUNT_MAX=7};
 enum{FUNCTION_COUNT_MAX=10};
 enum{CALLBACK_COUNT_MAX=4};
 
@@ -43,6 +43,7 @@ struct Block
   size_t repeat_trial_count = 0;
 	size_t pull_torque = 0;
 	size_t lickport_reward_duration = 0;
+  size_t zero_torque_reward_delay = 0;
   StageController::PositionArray reach_position;
 };
 
@@ -77,6 +78,7 @@ struct TrialTimingData
 extern ConstantString repeat_trial_count_string;
 extern ConstantString pull_torque_string;
 extern ConstantString lickport_reward_duration_string;
+extern ConstantString zero_torque_reward_delay_string;
 extern ConstantString reach_position_string;
 
 extern ConstantString unread_trial_timing_data_string;

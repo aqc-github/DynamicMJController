@@ -105,7 +105,7 @@ void MouseJoystickController::setup()
   modular_server::Property & pull_threshold_property = modular_server_.createProperty(constants::pull_threshold_property_name,constants::pull_threshold_default);
   pull_threshold_property.setRange(constants::pull_threshold_min,constants::pull_threshold_max);
   pull_threshold_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&MouseJoystickController::updatePullThreshold));
- 
+
   modular_server::Property & push_threshold_property = modular_server_.createProperty(constants::push_threshold_property_name,constants::push_threshold_default);
   push_threshold_property.setRange(constants::push_threshold_min,constants::push_threshold_max);
 
@@ -160,6 +160,10 @@ void MouseJoystickController::setup()
   modular_server::Parameter & lickport_reward_duration_parameter = modular_server_.createParameter(constants::lickport_reward_duration_parameter_name);
   lickport_reward_duration_parameter.setRange(constants::lickport_reward_duration_min,constants::lickport_reward_duration_max);
   lickport_reward_duration_parameter.setUnits(constants::ms_units);
+
+  modular_server::Parameter & zero_torque_reward_delay_parameter = modular_server_.createParameter(constants::zero_torque_reward_delay_parameter_name);
+  zero_torque_reward_delay_parameter.setRange(constants::zero_torque_reward_delay_min,constants::zero_torque_reward_delay_max);
+  zero_torque_reward_delay_parameter.setUnits(constants::seconds_units);
 
   modular_server::Parameter & reach_position_parameter = modular_server_.createParameter(constants::reach_position_parameter_name);
   reach_position_parameter.setRange(constants::reach_position_element_min,constants::reach_position_element_max);

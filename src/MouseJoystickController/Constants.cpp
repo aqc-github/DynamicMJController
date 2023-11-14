@@ -19,14 +19,15 @@ CONSTANT_STRING(firmware_name,"MouseJoystickController");
 const modular_server::FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
-  .version_major=4,
-  .version_minor=1,
-  .version_patch=2,
+  .version_major=5,
+  .version_minor=0,
+  .version_patch=0,
 };
 
 CONSTANT_STRING(repeat_trial_count_string,"repeat_trial_count");
 CONSTANT_STRING(pull_torque_string,"pull_torque");
 CONSTANT_STRING(lickport_reward_duration_string,"lickport_reward_duration");
+CONSTANT_STRING(zero_torque_reward_delay_string,"zero_torque_reward_delay");
 CONSTANT_STRING(reach_position_string,"reach_position");
 
 CONSTANT_STRING(unread_trial_timing_data_string,"unread_trial_timing_data");
@@ -220,7 +221,7 @@ const long tone_volume_min = 0;
 const long tone_volume_max = 100;
 const long tone_volume_default = 25;
 
-CONSTANT_STRING(lickport_reward_delay_property_name,"rewardLickportDelay");
+CONSTANT_STRING(lickport_reward_delay_property_name,"lickportRewardDelay");
 const long lickport_reward_delay_min = 100;
 const long lickport_reward_delay_max = 5000;
 const long lickport_reward_delay_default = 1000;
@@ -258,6 +259,10 @@ const long pull_torque_max = 100;
 CONSTANT_STRING(lickport_reward_duration_parameter_name,"lickport_reward_duration");
 const long lickport_reward_duration_min = 5;
 const long lickport_reward_duration_max = 1000;
+
+CONSTANT_STRING(zero_torque_reward_delay_parameter_name,"zero_torque_reward_delay");
+const long zero_torque_reward_delay_min = 1;
+const long zero_torque_reward_delay_max = 20;
 
 CONSTANT_STRING(reach_position_parameter_name,"reach_position");
 const long reach_position_element_min = 0;
