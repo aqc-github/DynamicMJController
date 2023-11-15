@@ -305,6 +305,10 @@ extern ConstantString lickport_reward_duration_parameter_name;
 extern const long lickport_reward_duration_min;
 extern const long lickport_reward_duration_max;
 
+extern ConstantString zero_torque_reward_delay_parameter_name;
+extern const long zero_torque_reward_delay_min;
+extern const long zero_torque_reward_delay_max;
+
 extern ConstantString reach_position_parameter_name;
 extern const long reach_position_element_min;
 extern const long reach_position_element_max;
