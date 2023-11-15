@@ -192,6 +192,7 @@ void MouseJoystickController::setup()
   add_block_to_set_function.addParameter(repeat_trial_count_parameter);
   add_block_to_set_function.addParameter(pull_torque_parameter);
   add_block_to_set_function.addParameter(lickport_reward_duration_parameter);
+  add_block_to_set_function.addParameter(zero_torque_reward_delay_parameter);
   add_block_to_set_function.addParameter(reach_position_parameter);
   add_block_to_set_function.setResultTypeObject();
 
