@@ -1,7 +1,10 @@
 @startuml
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+[*] -> On
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: Another authentication Response
+state On {
+  [*] -> AssayNotStarted
+  AssayNotStarted -> AssayStarted : START
+  AssayStarted : entry / setupAssay
+  AssayStarted -> Homing0 : HOME0
+}
 @enduml
