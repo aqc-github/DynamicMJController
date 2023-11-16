@@ -198,7 +198,7 @@ repeatSetCount times.
 
 * State Machine
 
-#+html: <img src="./extras/plantuml.svg">
+#+html: <img src="./extras/plantuml.svg" width=1280px>
 
 * Ancestors
 
