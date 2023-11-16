@@ -198,15 +198,7 @@ repeatSetCount times.
 
 * State Machine
 
-#+BEGIN_SRC plantuml
-@startuml
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
-
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: Another authentication Response
-@enduml
-#+END_SRC
+#+html: <img src="./extras/plantuml.svg">
 
 * Ancestors
 
