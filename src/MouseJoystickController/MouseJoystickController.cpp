@@ -338,12 +338,18 @@ void MouseJoystickController::update()
   {
     if (stageAtTargetPosition())
     {
-      assay_status_.state_ptr = &constants::state_wait_for_pull_string;
+      if (assay_status_.block.pull_torque > 0)
+      {
+        setupPull();
+      }
+      else
+      {
+        setupZeroTorqueReward();
+      }
     }
   }
-  else if (state_ptr == &constants::state_wait_for_pull_string)
+  else if (state_ptr == &constants::state_waiting_for_zero_torque_reward_string)
   {
-    setupPull();
   }
   else if (state_ptr == &constants::state_waiting_for_pull_string)
   {
@@ -711,6 +717,18 @@ void MouseJoystickController::setupPull()
   pull_push_poll_time_previous_ = millis();
 
   assay_status_.state_ptr = &constants::state_waiting_for_pull_string;
+}
+
+void MouseJoystickController::setupZeroTorqueReward()
+{
+  EventId zero_torque_reward_event_id = event_controller_.addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&MouseJoystickController::zeroTorqueRewardEventHandler),
+    assay_status_.block.zero_torque_reward_delay*constants::milliseconds_per_second);
+  event_controller_.enable(zero_torque_reward_event_id);
+
+  playJoystickReadyTone();
+  triggerReadyPulse();
+
+  assay_status_.state_ptr = &constants::state_waiting_for_zero_torque_reward_string;
 }
 
 void MouseJoystickController::checkForPullOrPush()
@@ -1201,4 +1219,9 @@ void MouseJoystickController::trialTimeoutEventHandler(int arg)
     trial_timing_data_.timeout = getTime();
   }
   abortTrial();
+}
+
+void MouseJoystickController::zeroTorqueRewardEventHandler(int arg)
+{
+  assay_status_.state_ptr = &constants::state_reward_string;
 }

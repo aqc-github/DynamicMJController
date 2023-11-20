@@ -137,6 +137,7 @@ repeatSetCount times.
     "repeat_trial_count": 2,
     "pull_torque": 50,
     "lickport_reward_duration": 100,
+    "zero_torque_reward_delay": 3,
     "reach_position": [
       20,
       200
@@ -146,6 +147,7 @@ repeatSetCount times.
     "repeat_trial_count": 3,
     "pull_torque": 75,
     "lickport_reward_duration": 120,
+    "zero_torque_reward_delay": 3,
     "reach_position": [
       30,
       300
@@ -174,6 +176,7 @@ repeatSetCount times.
     "repeat_trial_count": 2,
     "pull_torque": 50,
     "lickport_reward_duration": 100,
+    "zero_torque_reward_delay": 3,
     "reach_position": [
       20,
       200

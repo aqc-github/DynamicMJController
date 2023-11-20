@@ -97,6 +97,7 @@ private:
   void checkForMouseReady();
 
   void setupPull();
+  void setupZeroTorqueReward();
   void checkForPullOrPush();
 
   void reward();
@@ -147,6 +148,7 @@ private:
   void restartAssayHandler(modular_server::Pin * pin_ptr);
   void startTrialEventHandler(int arg);
   void trialTimeoutEventHandler(int arg);
+  void zeroTorqueRewardEventHandler(int arg);
 
 };
 

@@ -1,8 +1,18 @@
 {
-  "id": "getApi",
+  "id": "getAPI",
   "result": {
+    "ancestors": [
+      "ModularServer",
+      "ModularDeviceBase",
+      "StepDirController",
+      "StepperController",
+      "StageController"
+    ],
     "firmware": [
-      "MouseJoystickController"
+      {
+        "name": "MouseJoystickController",
+        "version": "5.0.0"
+      }
     ],
     "verbosity": "GENERAL",
     "functions": [
@@ -28,6 +38,7 @@
           "repeat_trial_count",
           "pull_torque",
           "lickport_reward_duration",
+          "zero_torque_reward_delay",
           "reach_position"
         ],
         "result_info": {
@@ -77,6 +88,10 @@
       },
       {
         "name": "lickport_reward_duration",
+        "type": "long"
+      },
+      {
+        "name": "zero_torque_reward_delay",
         "type": "long"
       },
       {
@@ -731,7 +746,7 @@
         ]
       },
       {
-        "name": "rewardLickportDelay",
+        "name": "lickportRewardDelay",
         "type": "long",
         "functions": [
           {
