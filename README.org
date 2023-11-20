@@ -199,10 +199,6 @@ repeatSetCount times.
 }
 #+END_SRC
 
-* State Machine
-
-#+html: <img src="./extras/plantuml.svg" width=1280px>
-
 * Ancestors
 
 [[https://github.com/janelia-arduino/ModularServer]]
