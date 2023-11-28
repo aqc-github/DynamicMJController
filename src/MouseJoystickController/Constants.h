@@ -41,8 +41,8 @@ extern const modular_server::FirmwareInfo firmware_info;
 struct Block
 {
   size_t repeat_trial_count = 0;
-	size_t pull_torque = 0;
-	size_t lickport_reward_duration = 0;
+  size_t pull_torque = 0;
+  size_t lickport_reward_duration = 0;
   size_t zero_torque_reward_delay = 0;
   StageController::PositionArray reach_position;
 };
@@ -61,7 +61,7 @@ struct AssayStatus
   size_t block_in_set = 0;
   size_t block_count = 0;
   size_t trial_in_block = 0;
-	Block block;
+  Block block;
 };
 
 struct TrialTimingData

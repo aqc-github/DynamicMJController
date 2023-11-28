@@ -169,10 +169,10 @@ void MouseJoystickController::setup()
   reach_position_parameter.setRange(constants::reach_position_element_min,constants::reach_position_element_max);
   reach_position_parameter.setArrayLengthRange(constants::reach_position_length_min,constants::reach_position_length_max);
 
-	modular_server::Parameter & lickport_activation_duration_parameter = modular_server_.createParameter(constants::lickport_activation_duration_parameter_name);
+  modular_server::Parameter & lickport_activation_duration_parameter = modular_server_.createParameter(constants::lickport_activation_duration_parameter_name);
   lickport_activation_duration_parameter.setRange(constants::lickport_activation_duration_min,constants::lickport_activation_duration_max);
 
-	modular_server::Parameter & lickport_activation_count_parameter = modular_server_.createParameter(constants::lickport_activation_count_parameter_name);
+  modular_server::Parameter & lickport_activation_count_parameter = modular_server_.createParameter(constants::lickport_activation_count_parameter_name);
   lickport_activation_count_parameter.setRange(constants::lickport_activation_count_min,constants::lickport_activation_count_max);
 
   // Functions
@@ -445,7 +445,7 @@ void MouseJoystickController::update()
 
 MouseJoystickController::set_t MouseJoystickController::getSet()
 {
-	return set_;
+  return set_;
 }
 
 void MouseJoystickController::clearSet()
@@ -461,7 +461,7 @@ void MouseJoystickController::clearSet()
 
 size_t MouseJoystickController::getBlockCount()
 {
-	return set_.size();
+  return set_.size();
 }
 
 MouseJoystickController::block_t MouseJoystickController::addBlockToSet(block_t block)
@@ -628,8 +628,8 @@ StageController::PositionArray MouseJoystickController::getBasePosition()
 
 void MouseJoystickController::resetAssayStatus()
 {
-	assay_status_t assay_status;
-	assay_status_ = assay_status;
+  assay_status_t assay_status;
+  assay_status_ = assay_status;
   updatePullThreshold();
   updateSetCount();
   assay_status_.block_count = getBlockCount();
@@ -857,7 +857,7 @@ bool MouseJoystickController::updateTrialBlockSet()
     {
       assay_status_.block_in_set = 0;
 
-			if (++assay_status_.set_in_assay >= assay_status_.repeat_set_count)
+      if (++assay_status_.set_in_assay >= assay_status_.repeat_set_count)
       {
         assay_status_.set_in_assay = 0;
         block_needs_updating = false;
@@ -1059,20 +1059,21 @@ void MouseJoystickController::writeBlockToResponse(block_t block)
   modular_server_.response().write(constants::repeat_trial_count_string,block.repeat_trial_count);
   modular_server_.response().write(constants::pull_torque_string,block.pull_torque);
   modular_server_.response().write(constants::lickport_reward_duration_string,block.lickport_reward_duration);
+  modular_server_.response().write(constants::zero_torque_reward_delay_string,block.zero_torque_reward_delay);
   modular_server_.response().write(constants::reach_position_string,block.reach_position);
-  
+
   modular_server_.response().endObject();
 }
 
 void MouseJoystickController::getSetHandler()
 {
-	set_t set = getSet();
+  set_t set = getSet();
 
   modular_server_.response().writeResultKey();
 
-	modular_server_.response().beginArray();
+  modular_server_.response().beginArray();
 
-	for (auto& block : set)
+  for (auto& block : set)
   {
     writeBlockToResponse(block);
   }
@@ -1082,33 +1083,36 @@ void MouseJoystickController::getSetHandler()
 
 void MouseJoystickController::clearSetHandler()
 {
-	clearSet();
+  clearSet();
 }
 
 void MouseJoystickController::getBlockCountHandler()
 {
-	long block_count = getBlockCount();
+  long block_count = getBlockCount();
   modular_server_.response().returnResult(block_count);
 }
 
 void MouseJoystickController::addBlockToSetHandler()
 {
-	block_t block;
+  block_t block;
+
   modular_server_.parameter(constants::repeat_trial_count_parameter_name).getValue(block.repeat_trial_count);
 
   modular_server_.parameter(constants::pull_torque_parameter_name).getValue(block.pull_torque);
 
   modular_server_.parameter(constants::lickport_reward_duration_parameter_name).getValue(block.lickport_reward_duration);
 
+  modular_server_.parameter(constants::zero_torque_reward_delay_parameter_name).getValue(block.zero_torque_reward_delay);
+
   ArduinoJson::JsonArray reach_position;
   modular_server_.parameter(constants::reach_position_parameter_name).getValue(reach_position);
 
-	for (JsonVariant value : reach_position)
+  for (JsonVariant value : reach_position)
   {
     block.reach_position.push_back(value);
   }
 
-	block_t block_added = addBlockToSet(block);
+  block_t block_added = addBlockToSet(block);
 
   modular_server_.response().writeResultKey();
   writeBlockToResponse(block_added);
@@ -1122,7 +1126,7 @@ void MouseJoystickController::startAssayHandler()
 
 void MouseJoystickController::getAssayStatusHandler()
 {
-	assay_status_t assay_status = getAssayStatus();
+  assay_status_t assay_status = getAssayStatus();
 
   modular_server_.response().writeResultKey();
 
@@ -1170,7 +1174,7 @@ void MouseJoystickController::activateLickportHandler()
 
 void MouseJoystickController::getTrialTimingDataHandler()
 {
-	trial_timing_data_t trial_timing_data = getTrialTimingData();
+  trial_timing_data_t trial_timing_data = getTrialTimingData();
 
   modular_server_.response().writeResultKey();
 

@@ -21,7 +21,7 @@ const modular_server::FirmwareInfo firmware_info =
   .name_ptr=&firmware_name,
   .version_major=5,
   .version_minor=0,
-  .version_patch=0,
+  .version_patch=1,
 };
 
 CONSTANT_STRING(repeat_trial_count_string,"repeat_trial_count");
@@ -261,7 +261,7 @@ const long lickport_reward_duration_min = 5;
 const long lickport_reward_duration_max = 1000;
 
 CONSTANT_STRING(zero_torque_reward_delay_parameter_name,"zero_torque_reward_delay");
-const long zero_torque_reward_delay_min = 1;
+const long zero_torque_reward_delay_min = 0;
 const long zero_torque_reward_delay_max = 20;
 
 CONSTANT_STRING(reach_position_parameter_name,"reach_position");

@@ -41,10 +41,10 @@ public:
   typedef Array<block_t,
     mouse_joystick_controller::constants::BLOCK_COUNT_MAX> set_t;
 
-	set_t getSet();
-	void clearSet();
-	size_t getBlockCount();
-	block_t addBlockToSet(block_t block);
+  set_t getSet();
+  void clearSet();
+  size_t getBlockCount();
+  block_t addBlockToSet(block_t block);
 
   typedef mouse_joystick_controller::constants::AssayStatus assay_status_t;
   assay_status_t getAssayStatus();
@@ -69,7 +69,7 @@ private:
   modular_server::Function functions_[mouse_joystick_controller::constants::FUNCTION_COUNT_MAX];
   modular_server::Callback callbacks_[mouse_joystick_controller::constants::CALLBACK_COUNT_MAX];
 
-	set_t set_;
+  set_t set_;
   block_t dummy_block_;
 
   assay_status_t assay_status_;
