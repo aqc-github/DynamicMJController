@@ -129,6 +129,21 @@ private:
   bool setupTrialTerminationPulse();
   bool triggerTrialTerminationPulse();
 
+  void debugTorqueField();
+  void updateTorqueField();
+  void setMotorTorque(int axis, long current);
+    
+  struct TorqueField {
+    bool enabled = false;
+    long last_encoder_position = 0;
+    long last_time = 0;
+    long next_update_time = 0;
+    float damping_coefficient = 1.0f;
+    const long UPDATE_INTERVAL_US = 1000; // 1ms update rate
+    const long MIN_FIELD_CURRENT = -500;  // mA
+    const long MAX_FIELD_CURRENT = 500;   // mA
+  } torque_field_;
+
   void writeBlockToResponse(block_t block);
 
   // Handlers
