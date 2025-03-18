@@ -342,38 +342,6 @@ extern ConstantString abort_assay_callback_name;
 extern ConstantString restart_assay_callback_name;
 
 // Errors
-
-// Add constants for the encoded (pull) axis
-struct PullAxisConstants {
-    static const int PULL_AXIS = 0;  // Assuming axis 0 is the encoded pull axis
-    static const long ENCODER_COUNTS_PER_REV = 4096;  // TODO: Need to verify actual value
-    static const float MAX_TORQUE_CURRENT = 20;  // mA (from run_current_element_0_default)
-};
-
-struct TorqueField {
-    bool enabled = false;
-    float damping_coefficient = 1.0;  // N*s/m
-    
-    // Encoder-based state tracking
-    long last_encoder_position = 0;
-    long last_time = 0;
-    
-    // Current limits for the encoded axis
-    const long MAX_FIELD_CURRENT = 20;  // mA, from run_current_element_0_default
-    const long MIN_FIELD_CURRENT = 0;
-    
-    // Update rate control
-    const long UPDATE_INTERVAL_US = 1000;  // 1kHz update rate
-    long next_update_time = 0;
-};
-
-// Add these property names for the API
-CONSTANT_STRING(torque_field_enabled_property_name,"torqueFieldEnabled");
-CONSTANT_STRING(damping_coefficient_property_name,"dampingCoefficient");
-
-// Add default values
-extern const bool torque_field_enabled_default = false;
-extern const float damping_coefficient_default = 1.0;
 }
 }
 #include "5x3.h"

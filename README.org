@@ -1,25 +1,19 @@
-#+TITLE: Dynamic Mouse Joystick Controller
-#+AUTHOR: Alberto Quintana (based upon Peter Polidoro's MouseJoystickController)
-#+EMAIL: alberto.quintana.criado@proton.me
+#+TITLE: DynamicMJController
+#+AUTHOR: Alberto Quintana
+#+EMAIL: aq724@ic.ac.uk
 
 * Library Information
-- Name :: MouseJoystickController
-- Version :: 5.0.0
+- Name :: DynamicMJController
+- Version :: 1.0.0
 - License :: BSD
-- URL :: https://github.com/janelia-arduino/MouseJoystickController
-- Author :: Peter Polidoro
-- Email :: peter@polidoro.io
-
-___
-
-*Changes from original library*
-
-See [[./majorUpdates.md][Major Updates]] for a detailed list of changes from the original library.
-
-___
+- URL :: https://github.com/aqc-github/DynamicMJController
+- Author :: Alberto Quintana
+- Email :: aq724@ic.ac.uk
 
 ** Description
-Modular device mouse joystick controller library.
+Mouse joystick controller firmware based 
+upon janelia-arduino/MouseJoystickController to introduce 
+dynamic force fields, and parallel control capabilities.
 
 * API NAMES
 
